@@ -1,0 +1,49 @@
+{
+  "name": "luis",
+  "version": "1.0.30",
+  "description": "List-of-uis book and testing of uis",
+  "main": "dist/client/client.js",
+  "types": "dist/client/client.d.ts",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomitrescak/louis.git"
+  },
+  "keywords": [
+    "ui",
+    "react"
+  ],
+  "author": "tomi.trescak@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tomitrescak/louis/issues"
+  },
+  "homepage": "https://github.com/tomitrescak/louis#readme",
+  "dependencies": {
+    "@types/expect": "^1.20.0",
+    "connect-history-api-fallback": "^1.3.0",
+    "diff-view": "^1.0.5",
+    "enzyme": "^2.8.2",
+    "enzyme-to-json": "^1.4.5",
+    "expect": "^1.20.2",
+    "express": "^4.15.2",
+    "fuse-test-runner": "^1.0.12",
+    "marked": "^0.3.6",
+    "mobx": "x.x.x",
+    "mobx-react": "x.x.x",
+    "mobx-react-devtools": "^4.2.11",
+    "pretty-format": "^19.0.0",
+    "rc-collapse": "^1.6.12",
+    "react": "^15.4.2",
+    "react-split-pane": "^0.1.57",
+    "react-tabs": "^0.8.3",
+    "tslib": "^1.6.0",
+    "typestyle": "^1.1.1",
+    "yester": "x.x.x"
+  },
+  "devDependencies": {
+    "@types/react": "^15.0.10"
+  }
+}
