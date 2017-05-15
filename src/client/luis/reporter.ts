@@ -5,6 +5,21 @@ import { TestConfig } from 'fuse-test-runner';
 
 let currentStory: Story = null;
 
+export interface ITestItem {
+  title: string;
+  instance: any;
+  className: string;
+  cls: any;
+}
+
+export interface IReport {
+  data: {
+    success: boolean
+    error: { message: string } ;
+  }
+  item: ITestItem;
+}
+
 export class Reporter {
   public initialize(tests) { /* */
   }
@@ -12,15 +27,16 @@ export class Reporter {
   public startFile(name: string) {
     // console.log(name);
   }
-  public startClass(name: string, item: any) {
+  public startClass(name: string, item: ITestItem) {
     // console.log(item.title)
+    item.instance = new item.cls();
     const story = findStory(findTestPath(item));
     if (story) {
       story.testing = true;
     }
     currentStory = story;
   }
-  public endClass(name: string, item: any) {
+  public endClass(name: string, item: ITestItem) {
     // $printLine();
     // $printSubCategory(item.title)
     const story = findStory(findTestPath(item));
@@ -29,8 +45,8 @@ export class Reporter {
     }
   }
 
-  public testCase(report: any) {
-    const folder = report.item.cls.folder;
+  public testCase(report: IReport) {
+    const folder = report.item.instance.folder;
     let testPath = null;
 
     let story: Story = null;

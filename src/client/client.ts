@@ -71,3 +71,5 @@ export function render() {
   renderLuis();
 }
 
+export { IStory } from './luis/state/story';
+

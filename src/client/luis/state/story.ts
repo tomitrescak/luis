@@ -1,6 +1,13 @@
 import { IObservableArray, observable } from 'mobx';
 import { formatComponent } from './helpers';
 
+export interface IStory {
+  component: () => JSX.Element;
+  folder: string;
+  story: string;
+  decorator: (story: any) => JSX.Element;
+}
+
 export interface Snapshot {
   current: string;
   expected: string;

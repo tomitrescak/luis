@@ -57,7 +57,7 @@ export function initParent() {
 ///////////////////////////////
 // new functionality
 
-export function describe(storyName, func) {
+export function describe(storyName, func, decorator) {
 
   // add to stories
   let storyGroup = currentGroup.storyGroups.find(s => s.name === storyName);
@@ -67,6 +67,11 @@ export function describe(storyName, func) {
     currentGroup.addGroup(storyGroup);
   }
   currentGroup = storyGroup;
+
+  // add decorator
+  if (decorator) {
+    currentGroup.decorator = decorator;
+  }
 
   if (func()) {
     func();
@@ -135,12 +140,12 @@ export function findTestPath(item: any): string[] {
   return [...item.cls.folder.split('/'), item.cls.story, item.title];
 }
 
-function recursive(path: string[], finalFn: Function) {
+function recursive(path: string[], finalFn: Function, decorator: Function) {
     if (path.length == 0) {
         return finalFn;
     }
     var folder = path.shift();
-    return () => describe(folder, recursive(path, finalFn));
+    return () => describe(folder, recursive(path, finalFn, decorator), path.length === 0 ? decorator : null);
     
 }
 
@@ -160,9 +165,9 @@ export function process(modules: any[]) {
         let storyFn = () => story(cls['story'], cls.name, () => cls['component']);
         
         if (split.length == 1) {
-          describe(cls['folder'], storyFn);
+          describe(cls['folder'], storyFn, cls['decorator']);
         } else {
-          recursive(split, storyFn)();
+          recursive(split, storyFn, cls['decorator'])();
         }
       }
     }

@@ -12,8 +12,6 @@ import { Story } from '../state/story';
 import { RouteState } from '../state/state';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
-import './main.css';
-import './rc-collapse.css';
 import { StoryTestsTitle, StoryTests } from './story_tests';
 import { AllTestsTitle, AllTests } from './story_all_tests';
 import { Actions } from './story_actions';
