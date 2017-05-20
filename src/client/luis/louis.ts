@@ -162,7 +162,8 @@ export function process(modules: any[]) {
       // add story
       if (cls['folder']) {
         const split = cls['folder'].split('/');
-        let storyFn = () => story(cls['story'], cls.name, () => cls['component']);
+        const component = cls['createComponent'] ? cls['createComponent']() : cls['component'];
+        let storyFn = () => story(cls['story'], cls.name, () => component);
         
         if (split.length == 1) {
           describe(cls['folder'], storyFn, cls['decorator']);

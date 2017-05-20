@@ -7,7 +7,6 @@ let currentStory: Story = null;
 
 export interface ITestItem {
   title: string;
-  instance: any;
   className: string;
   cls: any;
 }
@@ -29,7 +28,6 @@ export class Reporter {
   }
   public startClass(name: string, item: ITestItem) {
     // console.log(item.title)
-    item.instance = new item.cls();
     const story = findStory(findTestPath(item));
     if (story) {
       story.testing = true;
@@ -46,7 +44,8 @@ export class Reporter {
   }
 
   public testCase(report: IReport) {
-    const folder = report.item.instance.folder;
+    TestConfig.snapshotCalls = null;
+    const folder = report.item.cls.folder;
     let testPath = null;
 
     let story: Story = null;

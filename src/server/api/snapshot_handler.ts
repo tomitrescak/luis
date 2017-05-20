@@ -18,7 +18,7 @@ export function handler(request, response, next) {
 
   if (update) {
     const execSync = require('child_process').execSync;
-    const jestPath = path.resolve('./fuse');
+    // const jestPath = path.resolve('./fuse');
     // console.log(`UPDATE_SNAPSHOTS=true SNAPSHOT="${snapshotName}" node fuse test`);
     const code = execSync(`UPDATE_SNAPSHOTS=true SNAPSHOT="${snapshotName}" node fuse test`);
     // console.log(code);

@@ -70,4 +70,14 @@ body {
   margin-right: 6px;
 }
 
+.diffadded {
+  font-weight: bold;
+  color: green;
+}
+
+.diffremoved {
+  font-weight: bold;
+  color: red;
+}
+
 /*# sourceMappingURL=bundle.css.map */

@@ -28,7 +28,7 @@ import { SnapshotsTitle, Snapshots } from './story_snapshots';
 //   }
 // });
 
-const resizeEvent = new Event('resize');
+const resizeEvent = typeof Event === 'undefined' ? null : new Event('resize');
 const Panel = Collapse.Panel;
 const container = style({
   width: '100%',

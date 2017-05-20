@@ -4,6 +4,7 @@ import { render as renderLuis } from './luis/index';
 import { Reporter } from './luis/reporter';
 import { state } from './luis/state/state';
 import { process, initParent } from './luis/louis';
+import { Story, StoryClass, Decorator } from './luis/state/story';
 
 // let myGlobal: any = global;
 // myGlobal.$_stubs_$ = {};
@@ -41,7 +42,7 @@ TestConfig.snapshotLoader = (name: string, className: string) => {
     name = '/tests/snapshots' + (name[0] == '/' ? '' : '/') + name;
   }
 
-  console.log(name);
+  // console.log(name);
 
   let val = FuseBox.import(name, m => {
     let test = { [className]: state.tests[className] };
@@ -71,5 +72,14 @@ export function render() {
   renderLuis();
 }
 
-export { IStory } from './luis/state/story';
+export function decorate(classes: (typeof StoryClass)[], folder: string, decorator: Decorator = null) {
+  for (let cls of classes) {
+    cls.folder = folder;
+    cls.decorator = decorator;
+  }
+}
+
+export { Story, StoryClass, Decorator } from './luis/state/story';
+
+
 

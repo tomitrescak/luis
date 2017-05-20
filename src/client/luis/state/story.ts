@@ -1,20 +1,22 @@
 import { IObservableArray, observable } from 'mobx';
 import { formatComponent } from './helpers';
 
-export interface IStory {
-  component: () => JSX.Element;
-  folder: string;
-  story: string;
-  decorator: (story: any) => JSX.Element;
-}
+export type Decorator = (story: Function) => JSX.Element;
 
-export interface Snapshot {
+export type Snapshot = {
   current: string;
   expected: string;
   name: string;
   storyName: string;
   matching: boolean;
   html: string;
+}
+
+export class StoryClass {
+  static component: JSX.Element;
+  static folder: string;
+  static story: string;
+  static decorator: Decorator;
 }
 
 export class Story {

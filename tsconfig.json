@@ -21,7 +21,8 @@
         "preserveConstEnums": true,
         "suppressImplicitAnyIndexErrors": true,
         "importHelpers": true,
-        "sourceMap": true
+        "sourceMap": true,
+        "skipDefaultLibCheck": true,"skipLibCheck": true
     },
     "exclude": ["node_modules", "dist"],
     "compileOnSave": false,
