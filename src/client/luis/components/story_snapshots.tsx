@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { style } from 'typestyle';
 import { observer } from 'mobx-react';
-import { Story } from '../state/story';
+import { StoryType } from '../state/story';
 
 import { MonacoEditor } from './editor';
 import { bottomTabPane, toolBelt } from './story_common';
-import { state } from "../state/state";
 import { TestConfig } from 'fuse-test-runner';
+import { initState } from "../state/state";
 
 const requireConfig = {
   url: 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.1/require.min.js',
@@ -21,7 +21,7 @@ const snapshotSelect = style({
 
 export interface SnapshotsProps {
   title?: any;
-  story: Story;
+  story: StoryType;
 }
 
 export const SnapshotsTitle = observer(({ story }: SnapshotsProps) => {
@@ -36,7 +36,7 @@ export const SnapshotsTitle = observer(({ story }: SnapshotsProps) => {
   );
 });
 
-function updateSnapshot(button: HTMLButtonElement, story: Story, snapshotName) {
+function updateSnapshot(button: HTMLButtonElement, story: StoryType, snapshotName: string) {
   while (snapshotName[snapshotName.length - 1].match(/[0-9 ]/)) {
     snapshotName = snapshotName.substring(0, snapshotName.length - 1);
   }
@@ -53,10 +53,11 @@ function updateSnapshot(button: HTMLButtonElement, story: Story, snapshotName) {
       console.log('Remove: ' + `/tests/snapshots/${story.className}_snapshots.json`)
       FuseBox.remove(`/tests/snapshots/${story.className}_snapshots.json`);
       TestConfig.snapshotCalls = null;
+      
       // rerun tests
-
-      let test = { [story.className]: state.tests[story.className] };
-      state.runner.startTests(test);
+      let state = initState();
+      // let story = state.findStoryByClassName(story.className);
+      story.startTests();
 
       // story.snapshots = [];
       // window.location.reload();

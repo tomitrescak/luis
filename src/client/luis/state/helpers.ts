@@ -7,9 +7,8 @@ const prettyFormat = require('pretty-format');
 
 let PLUGINS = [ReactElementPlugin, ReactTestComponentPlugin];
 
-const normalizeNewlines = string => string.replace(/\r\n|\r/g, '\n');
-
-const addExtraLineBreaks = string => string.includes('\n') ? `\n${string}\n` : string;
+const normalizeNewlines = (string: string) => string.replace(/\r\n|\r/g, '\n');
+const addExtraLineBreaks = (string: string) => string.includes('\n') ? `\n${string}\n` : string;
 
 export function formatComponent (component: any) {
   return addExtraLineBreaks (normalizeNewlines(prettyFormat(component, {

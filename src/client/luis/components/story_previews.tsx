@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { Story } from '../state/story';
+import { StoryType } from '../state/story';
 import { bottomTabPane, toolBelt } from './story_common';
 import { style } from 'typestyle/lib';
 
@@ -8,7 +8,7 @@ const resultsHTML = style({ display: 'table', width: '100%' });
 const resultHTML = style({ display: 'table-cell', width: '50%', padding: '6px' });
 
 export interface PreviewProps {
-  story: Story;
+  story: StoryType;
 }
 
 export const Previews = observer(({ story }: PreviewProps) => {

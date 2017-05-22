@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as Collapse from 'rc-collapse';
 import { style } from 'typestyle';
-import { link } from 'yester';
-import { StoryGroup } from '../louis';
+import { StoryType } from "../state/story";
+import { FolderType } from "../state/state";
 
 const Panel = Collapse.Panel;
 
@@ -42,11 +42,11 @@ export const menu = style({
 });
 
 export interface Props {
-  storyGroup: StoryGroup;
+  folder: FolderType;
   path: number[];
 }
 
-export const StoryGroupView = ({ storyGroup, path }: Props) => {
+export const StoryGroupView = ({ folder, path }: Props): any => {
   if (path) {
     // remove first element
     path.shift();
@@ -54,12 +54,12 @@ export const StoryGroupView = ({ storyGroup, path }: Props) => {
   return (
     <div>
       {
-        storyGroup.storyGroups.length > 0 ? (
+        folder.folders.length > 0 ? (
           <Collapse accordion={true} defaultActiveKey={path && path.length ? path[0].toString() : undefined}>
             {
-              storyGroup.storyGroups.map((g, i) => (
+              folder.folders.map((g, i) => (
                 <Panel key={i} header={g.name} className={menu}>
-                  <StoryGroupView storyGroup={g} path={path && path.length && i === path[0] ? path : undefined} />
+                  <StoryGroupView folder={g} path={path && path.length && i === path[0] ? path : undefined} />
                 </Panel>
               ))
             }
@@ -68,18 +68,18 @@ export const StoryGroupView = ({ storyGroup, path }: Props) => {
       }
       <ul>
         {
-          storyGroup.stories.map((s, i) => {
-            let currentPath = [storyGroup.parent.storyGroups.indexOf(storyGroup), i];
-            let parent = storyGroup.parent;
-            let name = toName(storyGroup.name) + '-' + toName(s.name);
+          folder.stories.map((s: StoryType, i: number) => {
+            let currentPath = [folder.parent.folders.indexOf(folder), i];
+            let parent = folder.parent;
+            let name = toName(folder.name) + '-' + toName(s.name);
             while (parent.parent != null) {
-              currentPath.unshift(parent.parent.storyGroups.indexOf(parent));
+              currentPath.unshift(parent.parent.folders.indexOf(parent));
               name = toName(parent.name) + '-' + name;
               parent = parent.parent;
             }
             const urlPath = currentPath.join('-');
             return (
-              <li key={s.name + i}><a href={link(`/${name}/${urlPath}`)}>{s.name}</a></li>
+              <li key={s.name + i}><a href={`/${name}/${urlPath}`}>{s.name}</a></li>
             );
           })
         }

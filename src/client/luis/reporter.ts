@@ -1,9 +1,9 @@
 import { findStory, findTestPath } from './louis';
-import { Story } from './state/story';
-import { state } from './state/state';
+import { Story, StoryType, Test, TestType } from './state/story';
 import { TestConfig } from 'fuse-test-runner';
+import { initState } from "./state/state";
 
-let currentStory: Story = null;
+let currentStory: StoryType = null;
 
 export interface ITestItem {
   title: string;
@@ -20,7 +20,10 @@ export interface IReport {
 }
 
 export class Reporter {
-  public initialize(tests) { /* */
+  currentStory: StoryType;
+  test: TestType;
+  
+  public initialize(tests: any) { /* */
   }
 
   public startFile(name: string) {
@@ -30,7 +33,7 @@ export class Reporter {
     // console.log(item.title)
     const story = findStory(findTestPath(item));
     if (story) {
-      story.testing = true;
+      story.isRunning(true);
     }
     currentStory = story;
   }
@@ -39,7 +42,7 @@ export class Reporter {
     // $printSubCategory(item.title)
     const story = findStory(findTestPath(item));
     if (story) {
-      story.testing = false;
+      story.isRunning(false);
     }
   }
 
@@ -48,53 +51,38 @@ export class Reporter {
     const folder = report.item.cls.folder;
     let testPath = null;
 
-    let story: Story = null;
+    let story: StoryType = null;
 
     if (folder) {
       testPath = findTestPath(report.item);
       story = findStory(testPath);
     }
 
-    if (report.data.success) {
-      // console.log('SUCCESS: ' + report.item.title);
+    let testName = testPath[testPath.length - 1];
+    this.test = story.tests.find(t => t.name === testName);
+    if (!this.test) {
+      this.test = Test.create({ name: testName });
+      story.tests.push(this.test);
+    }
 
-      if (testPath) {
-        state.catalogue.update(testPath);
-      }
+    if (report.data.success) {
+      this.test.result = null;
       // console.log(report.item.title || report.item.method)
     } else {
       if (report.data.error.message && report.data.error.message.match(/Snapshot file/)) {
-        let className = report.item.className;
-        let request = state.requests[className];
-        if (request.requesting) {
-          this.waitForSnapshot(request, className);
-        } else {
-          state.catalogue.update(testPath, report.data.error.message);
+        if (story.snapshots) {
+          this.test.result = report.data.error.message;
         }
       } else {
-        if (testPath) {
-          state.catalogue.update(testPath, report.data.error.message);
-        }
+        this.test.result = report.data.error.message;
       }
       // let message = report.data.error.message ? report.data.error.message : report.data.error;
       // console.log(report.item.title || report.item.method, message)
     }
   }
 
-  public endTest(stats, took) {
+  public endTest(stats: any, took: any) {
     // console.log(stats, took);
-  }
-
-  private waitForSnapshot(request: any, className: string) {
-
-    // if (request.requesting) {
-    //   setTimeout(() => this.waitForSnapshot(request, className), 200);
-    //   return;
-    // }
-
-    // // we finally have a response
-    // let test = { [className]: state.tests[className] };
-    // state.runner.startTests(test);
   }
 }
 

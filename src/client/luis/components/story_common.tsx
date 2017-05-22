@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { style } from 'typestyle';
-import { RouteState } from '../state/state';
+import { StateType } from '../state/state';
 
 const header = style({
   marginLeft: `20px`
@@ -48,7 +48,11 @@ export const testLine = style({
   marginLeft: '6px'
 });
 
-export function renderFields(state: RouteState, current: Object, path = '') {
+export type Indexable = {
+  [name: string]: Indexable
+};
+
+export function renderFields(state: StateType, current: Indexable, path = ''): any {
   if (!current) {
     return <div>No tests ...</div>;
   }
@@ -63,7 +67,7 @@ export function renderFields(state: RouteState, current: Object, path = '') {
 
       if (current[k]) {
         result.push(<div key={i} className={testLine}><div className="fail" dangerouslySetInnerHTML={{__html: `[FAIL] ${k}: ${current[k]}`}}></div></div>);
-      } else if (!state.catalogue.hidePassing) {
+      } else if (!state.hidePassing) {
         result.push(<div key={i} className={testLine}><div className="pass" >[PASS] {`${k}`}</div></div>);
       }
     }

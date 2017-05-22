@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import { bottomTabPane } from './story_common';
-import { Story } from '../state/story';
+import { StoryType } from '../state/story';
 
 export interface ActionProps {
   title: any;
-  story: Story;
+  story: StoryType;
 }
 export const Actions = observer(({ story }: ActionProps) => {
   return (

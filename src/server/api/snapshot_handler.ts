@@ -4,7 +4,7 @@ const fs = require('fs');
 
 const snapshots = path.resolve('./src/tests');
 
-export function handler(request, response, next) {
+export function handler(request: any, response: any, next: any) {
   let url_parts = url.parse(request.url, true);
   let query = url_parts.query;
   let snapPath = path.join(snapshots, url_parts.path.split('?')[0]);

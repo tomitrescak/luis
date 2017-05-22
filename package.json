@@ -34,14 +34,15 @@
     "mobx": "x.x.x",
     "mobx-react": "x.x.x",
     "mobx-react-devtools": "^4.2.11",
+    "mobx-state-tree": "^0.6.2",
+    "path-match": "^1.2.4",
     "pretty-format": "^20.0.1",
     "rc-collapse": "^1.6.12",
     "react": "^15.4.2",
     "react-split-pane": "^0.1.57",
     "react-tabs": "^0.8.3",
     "tslib": "^1.6.0",
-    "typestyle": "^1.1.1",
-    "yester": "x.x.x"
+    "typestyle": "^1.1.1"
   },
   "devDependencies": {
     "@types/react": "^15.0.10"

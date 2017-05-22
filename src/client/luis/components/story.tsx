@@ -1,15 +1,13 @@
 import * as React from 'react';
 import * as Collapse from 'rc-collapse';
 import { style } from 'typestyle';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import { toJS } from 'mobx';
 
-import { stories, changeStory } from '../louis';
 import { StoryGroupView, menu } from './story_group';
 import * as SplitPane from 'react-split-pane';
 import * as marked from 'marked';
-import { Story } from '../state/story';
-import { RouteState } from '../state/state';
+import { Story, StoryType } from '../state/story';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 import { StoryTestsTitle, StoryTests } from './story_tests';
@@ -18,6 +16,7 @@ import { Actions } from './story_actions';
 import { Previews } from './story_previews';
 import { bottomTabPane } from './story_common';
 import { SnapshotsTitle, Snapshots } from './story_snapshots';
+import { StateType } from "../state/state";
 
 // require('./highlighter');
 
@@ -142,53 +141,44 @@ const split = style({
 const defaultStory = () => <div>'No story'</div>;
 
 export interface Props {
-  state: RouteState;
+  state?: StateType;
   forceReload: number;
 }
 
-export const StoriesView = observer(({ state }: Props) => {
-  let RenderStory: any = null;
-  const rootGroup = stories(state);
-  let storyPath = state.path;
-  let activeKey = undefined;
+export const StoriesView = inject('state')(observer(({ state }: Props) => {
+  // const rootGroup = state.root;
+  // let storyPath = state.path;
+  // let activeKey = undefined;
 
-  let story: Story;
-  let groupPath = [];
+  const storyPath = state.view.selectedStoryId;
+  let activeKey: string = null;
+  const root = state.root;
+
+  let story: StoryType;
 
   if (storyPath && storyPath.length) {
     // select by path
     activeKey = storyPath[0].toString();
-    let group = rootGroup.storyGroups[storyPath[0]];
-    groupPath.push(group.name);
+    let folder = root.folders[storyPath[0]];
 
     for (let i = 1; i < storyPath.length - 1; i++) {
-      group = group.storyGroups[storyPath[i]];
+      folder = folder.folders[storyPath[i]];
 
-      if (!group) {
+      if (!folder) {
         location.href = '/';
         return <div>Invalid path. Please <a href="/">Go Back</a></div>;
       }
-
-      groupPath.push(group.name);
     }
 
     // now find the story
-    story = group.stories[storyPath[storyPath.length - 1]];
+    story = folder.stories[storyPath[storyPath.length - 1]];
     if (!story) {
       location.href = '/';
       return <div>Invalid path. Please <a href="/">Go Back</a></div>;
     }
-    groupPath.push(story.name);
-    const cmp = story.renderedComponent;
+  } 
 
-    // RenderStory = group.stories[storyPath[storyPath.length - 1]].component;
-    RenderStory = cmp;
-  } else {
-    RenderStory = defaultStory;
-  }
-
-  // change to current story
-  changeStory(story);
+  let RenderStory = story.renderedComponent ? story.renderedComponent : defaultStory;
 
   // sort by name
   // rootGroup.storyGroups.sort((a, b) => a.name < b.name ? -1 : 1);
@@ -198,13 +188,13 @@ export const StoriesView = observer(({ state }: Props) => {
       <SplitPane className={split} split="vertical"
         minSize={100}
         defaultSize={parseInt(localStorage.getItem('luis-v-splitPos'), 10)}
-        onChange={size => localStorage.setItem('luis-v-splitPos', size)}>
+        onChange={(size: string) => localStorage.setItem('luis-v-splitPos', size)}>
         <div className={container}>
           <Collapse accordion={true} defaultActiveKey={activeKey}>
             {
-              rootGroup.storyGroups.map((g, i) => (
+              root.folders.map((g, i) => (
                 <Panel key={i.toString()} header={g.name} className={menu}>
-                  <StoryGroupView storyGroup={g} path={storyPath && storyPath.length && i === storyPath[0] ? toJS(storyPath) : undefined} />
+                  <StoryGroupView folder={g} path={storyPath && storyPath.length && i === storyPath[0] ? toJS(storyPath) : undefined} />
                 </Panel>)
               )
             }
@@ -212,7 +202,7 @@ export const StoriesView = observer(({ state }: Props) => {
         </div>
         <SplitPane split="horizontal"
           defaultSize={parseInt(localStorage.getItem('luis-h-splitPos'), 10)}
-          onChange={size => {
+          onChange={(size: string) => {
             localStorage.setItem('luis-h-splitPos', size);
             window.dispatchEvent(resizeEvent);
           }} minSize={100}>
@@ -224,8 +214,8 @@ export const StoriesView = observer(({ state }: Props) => {
               <TabList>
                 <Tab>Info</Tab>
                 <Tab>Actions</Tab>
-                <Tab><StoryTestsTitle state={state} groupPath={groupPath} story={story} /></Tab>
-                <Tab><AllTestsTitle state={state} /></Tab>
+                <Tab><StoryTestsTitle story={story} /></Tab>
+                <Tab><AllTestsTitle /></Tab>
                 <Tab><SnapshotsTitle story={story} /></Tab>
                 <Tab>Snapshots HTML</Tab>
               </TabList>
@@ -238,10 +228,10 @@ export const StoriesView = observer(({ state }: Props) => {
                 <Actions title="Actions" story={story} />
               </TabPanel>
               <TabPanel>
-                <StoryTests state={state} story={story} groupPath={groupPath} />
+                <StoryTests story={story} />
               </TabPanel>
               <TabPanel>
-                <AllTests state={state} />
+                <AllTests />
               </TabPanel>
               <TabPanel><Snapshots story={story} /></TabPanel>
               <TabPanel>
@@ -253,5 +243,5 @@ export const StoriesView = observer(({ state }: Props) => {
       </SplitPane>
     </div>
   );
-});
+}));
 
