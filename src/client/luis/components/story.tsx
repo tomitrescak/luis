@@ -16,7 +16,7 @@ import { Actions } from './story_actions';
 import { Previews } from './story_previews';
 import { bottomTabPane } from './story_common';
 import { SnapshotsTitle, Snapshots } from './story_snapshots';
-import { StateType } from "../state/state";
+import { StateType } from '../state/state';
 
 // require('./highlighter');
 
@@ -132,7 +132,7 @@ const split = style({
       borderRight: '5px solid rgba(0, 0, 0, 0.5)'
     },
     '& .SplitPane.horizontal': {
-      position: 'inherit!important' as any
+      position: 'inherit!important' as {}
     }
   }
 });
@@ -150,45 +150,32 @@ export const StoriesView = inject('state')(observer(({ state }: Props) => {
   // let storyPath = state.path;
   // let activeKey = undefined;
 
+  // const rootGroup = state.root;
+  // let storyPath = state.path;
+  // let activeKey = undefined;
+
   const storyPath = state.view.selectedStoryId;
-  let activeKey: string = null;
+  const story = state.activeStory;
   const root = state.root;
+  const activeKey = storyPath && storyPath.length ? storyPath[0].toString() : '';
 
-  let story: StoryType;
-
-  if (storyPath && storyPath.length) {
-    // select by path
-    activeKey = storyPath[0].toString();
-    let folder = root.folders[storyPath[0]];
-
-    for (let i = 1; i < storyPath.length - 1; i++) {
-      folder = folder.folders[storyPath[i]];
-
-      if (!folder) {
-        location.href = '/';
-        return <div>Invalid path. Please <a href="/">Go Back</a></div>;
-      }
-    }
-
-    // now find the story
-    story = folder.stories[storyPath[storyPath.length - 1]];
-    if (!story) {
-      location.href = '/';
-      return <div>Invalid path. Please <a href="/">Go Back</a></div>;
-    }
-  } 
-
-  let RenderStory = story.renderedComponent ? story.renderedComponent : defaultStory;
+  if (storyPath && storyPath.length && !story) {
+    return <div>Invalid path.Please <a href="/">Go Back</a></div >;
+  }
+  let RenderStory = story && story.renderedComponent ? story.renderedComponent : defaultStory;
 
   // sort by name
   // rootGroup.storyGroups.sort((a, b) => a.name < b.name ? -1 : 1);
 
   return (
     <div>
-      <SplitPane className={split} split="vertical"
+      <SplitPane
+        className={split}
+        split="vertical"
         minSize={100}
         defaultSize={parseInt(localStorage.getItem('luis-v-splitPos'), 10)}
-        onChange={(size: string) => localStorage.setItem('luis-v-splitPos', size)}>
+        onChange={(size: string) => localStorage.setItem('luis-v-splitPos', size)}
+      >
         <div className={container}>
           <Collapse accordion={true} defaultActiveKey={activeKey}>
             {
@@ -200,21 +187,24 @@ export const StoriesView = inject('state')(observer(({ state }: Props) => {
             }
           </Collapse>
         </div>
-        <SplitPane split="horizontal"
+        <SplitPane
+          split="horizontal"
           defaultSize={parseInt(localStorage.getItem('luis-h-splitPos'), 10)}
           onChange={(size: string) => {
             localStorage.setItem('luis-h-splitPos', size);
             window.dispatchEvent(resizeEvent);
-          }} minSize={100}>
+          }}
+          minSize={100}
+        >
           <div className={content}>
             <RenderStory />
           </div>
           <div className={tabs}>
-            <Tabs>
+            <Tabs selectedIndex={state.selectedTab} onSelect={(index: number) => state.selectedTab = index}>
               <TabList>
                 <Tab>Info</Tab>
                 <Tab>Actions</Tab>
-                <Tab><StoryTestsTitle story={story} /></Tab>
+                {state.view.selectedStoryId && <Tab><StoryTestsTitle story={story} /></Tab>}
                 <Tab><AllTestsTitle /></Tab>
                 <Tab><SnapshotsTitle story={story} /></Tab>
                 <Tab>Snapshots HTML</Tab>
@@ -227,9 +217,9 @@ export const StoriesView = inject('state')(observer(({ state }: Props) => {
               <TabPanel>
                 <Actions title="Actions" story={story} />
               </TabPanel>
-              <TabPanel>
+              {state.view.selectedStoryId && <TabPanel>
                 <StoryTests story={story} />
-              </TabPanel>
+              </TabPanel>}
               <TabPanel>
                 <AllTests />
               </TabPanel>

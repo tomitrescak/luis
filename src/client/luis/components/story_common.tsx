@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { style } from 'typestyle';
-import { StateType } from '../state/state';
+import { StateType, Folder } from '../state/state';
+import { StoryType } from '../state/story';
+import { Loader } from 'semantic-ui-react';
 
 const header = style({
   marginLeft: `20px`
@@ -52,32 +54,38 @@ export type Indexable = {
   [name: string]: Indexable
 };
 
-export function renderFields(state: StateType, current: Indexable, path = ''): any {
+export function renderFolder(state: StateType, current: Folder, path = ''): JSX.Element | JSX.Element[] {
   if (!current) {
     return <div>No tests ...</div>;
   }
-  let keys = Object.keys(current);
 
-  if (typeof current[keys[0]] !== 'object') {
-    let result = [];
-    for (let i=0; i<keys.length; i++) {
-      let k = keys[i];
-      let c = current[k];
-      let name = k;
+  let result: JSX.Element[] = [];
 
-      if (current[k]) {
-        result.push(<div key={i} className={testLine}><div className="fail" dangerouslySetInnerHTML={{__html: `[FAIL] ${k}: ${current[k]}`}}></div></div>);
-      } else if (!state.hidePassing) {
-        result.push(<div key={i} className={testLine}><div className="pass" >[PASS] {`${k}`}</div></div>);
+  for (let folder of current.folders) {
+    if (folder.stories && folder.stories.length) {
+      for (let story of folder.stories) {
+        let storyHeader = path + ' > ' + story.name;
+        if (!state.hidePassing || story.tests.some(t => t.result != null && t.result !== '')) {
+          result.push(<div className={testHeaderLine} key={storyHeader}>{storyHeader}</div>);
+        }
+        result.push(renderStory(state, story));
       }
     }
-    if (result.length) {
-      result.unshift(<div className={testHeaderLine} key={path}>{path}</div>);
-    }
-    return result;
-  } else {
-    return Object.keys(current).map((k, i) => {
-      return renderFields(state, current[k], path ? path + ' > ' + k : k)
-    });
+    result.push(renderFolder(state, folder, (path ? ' > ' : '') + folder.name));
   }
+
+  return result;
+}
+
+export function renderStory(state: StateType, story: StoryType): JSX.Element[] {
+  let result = [];
+  let i = 0;
+  for (let test of story.tests) {
+    if (test.result) {
+      result.push(<div key={i++} className={testLine}><div className="fail" dangerouslySetInnerHTML={{ __html: `[FAIL] ${test.name}: ${test.result}` }}></div></div>);
+    } else if (!state.hidePassing) {
+      result.push(<div key={i++} className={testLine}><div className="pass" >[PASS] {`${test.name}`}</div></div>);
+    }
+  }
+  return result;
 }

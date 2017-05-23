@@ -1,35 +1,40 @@
 import { findStory, findTestPath } from './louis';
-import { Story, StoryType, Test, TestType } from './state/story';
+import { StoryType } from './state/story';
 import { TestConfig } from 'fuse-test-runner';
-import { initState } from "./state/state";
+import { StoryDefinition, initState } from './state/state';
+import { TestType } from './state/fuse_web_test_runner';
 
 let currentStory: StoryType = null;
 
-export interface ITestItem {
+export declare type Task = {
+  method: string;
   title: string;
+  fn: Function;
+  fileName: string;
   className: string;
-  cls: any;
-}
+  cls: StoryDefinition
+};
 
-export interface IReport {
+export interface Report {
   data: {
     success: boolean
-    error: { message: string } ;
-  }
-  item: ITestItem;
+    error?: { message: string };
+  };
+  item: Task;
 }
 
 export class Reporter {
   currentStory: StoryType;
   test: TestType;
-  
-  public initialize(tests: any) { /* */
+  state = initState();
+
+  public initialize(_tests: {}) { /* */
   }
 
-  public startFile(name: string) {
-    // console.log(name);
+  public startFile() {
+    this.state.startedTests();
   }
-  public startClass(name: string, item: ITestItem) {
+  public startClass(_name: string, item: Task) {
     // console.log(item.title)
     const story = findStory(findTestPath(item));
     if (story) {
@@ -37,7 +42,7 @@ export class Reporter {
     }
     currentStory = story;
   }
-  public endClass(name: string, item: ITestItem) {
+  public endClass(_name: string, item: Task) {
     // $printLine();
     // $printSubCategory(item.title)
     const story = findStory(findTestPath(item));
@@ -46,7 +51,7 @@ export class Reporter {
     }
   }
 
-  public testCase(report: IReport) {
+  public testCase(report: Report) {
     TestConfig.snapshotCalls = null;
     const folder = report.item.cls.folder;
     let testPath = null;
@@ -61,33 +66,39 @@ export class Reporter {
     let testName = testPath[testPath.length - 1];
     this.test = story.tests.find(t => t.name === testName);
     if (!this.test) {
-      this.test = Test.create({ name: testName });
-      story.tests.push(this.test);
+      this.test = new TestType(testName);
+      story.addTest(this.test);
     }
 
+    // if (report.error) {
+    //   console.error(report.error);
+    // }
+
     if (report.data.success) {
-      this.test.result = null;
+      this.test.setResult('');
       // console.log(report.item.title || report.item.method)
     } else {
       if (report.data.error.message && report.data.error.message.match(/Snapshot file/)) {
         if (story.snapshots) {
-          this.test.result = report.data.error.message;
+          this.test.setResult(report.data.error.message);
         }
       } else {
-        this.test.result = report.data.error.message;
+        this.test.setResult(report.data.error.message);
       }
       // let message = report.data.error.message ? report.data.error.message : report.data.error;
-      // console.log(report.item.title || report.item.method, message)
     }
   }
 
-  public endTest(stats: any, took: any) {
-    // console.log(stats, took);
+  public endTest(_stats: {}, _took: {}) {
+    this.state.finishedTests();
   }
 }
 
-TestConfig.onProcessSnapshots = (taskName: string, snapshotName: string, current: string, expected: string) => {
+TestConfig.onProcessSnapshots = (_taskName: string, snapshotName: string, current: string, expected: string) => {
   if (currentStory) {
+    if (!currentStory.snapshots) {
+      currentStory.snapshots = [];
+    }
     const index = currentStory.snapshots.findIndex(s => s.name === snapshotName);
     const snapshot = {
       expected,

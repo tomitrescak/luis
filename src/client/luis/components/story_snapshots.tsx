@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { style } from 'typestyle';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 import { StoryType } from '../state/story';
 
 import { MonacoEditor } from './editor';
 import { bottomTabPane, toolBelt } from './story_common';
 import { TestConfig } from 'fuse-test-runner';
-import { initState } from "../state/state";
+import { StateType } from '../state/state';
 
 const requireConfig = {
   url: 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.1/require.min.js',
@@ -20,21 +20,25 @@ const snapshotSelect = style({
 });
 
 export interface SnapshotsProps {
-  title?: any;
+  title?: {};
   story: StoryType;
+  state?: StateType;
 }
 
-export const SnapshotsTitle = observer(({ story }: SnapshotsProps) => {
+export const SnapshotsTitle = inject('state')(observer(({ story, state }: SnapshotsProps) => {
+  if (state.runningTests) {
+    return <span>Snapshots [0/0]</span>;
+  }
   if (!story || !story.snapshots || !story.snapshots.length) {
     return <span>No Snapshots</span>;
   }
   return (
-    <span>Snapshots JSON [
+    <span>Snapshots [
     <span className="pass">{story.snapshots.filter(s => s.matching).length}</span> /
     <span className="fail">{story.snapshots.filter(s => !s.matching).length}</span>]
   </span>
   );
-});
+}));
 
 function updateSnapshot(button: HTMLButtonElement, story: StoryType, snapshotName: string) {
   while (snapshotName[snapshotName.length - 1].match(/[0-9 ]/)) {
@@ -42,35 +46,35 @@ function updateSnapshot(button: HTMLButtonElement, story: StoryType, snapshotNam
   }
   button.textContent = 'Updating ...';
 
-  const name = 
-  fetch(`/tests/snapshots/${story.className}_snapshots.json?update=true&name=${snapshotName}`)
-    .then(function (response) {
-      return response.text();
-    })
-    .then(function (text) {
-      button.textContent = 'Update Snapshots';
-      // remove from memory
-      console.log('Remove: ' + `/tests/snapshots/${story.className}_snapshots.json`)
-      FuseBox.remove(`/tests/snapshots/${story.className}_snapshots.json`);
-      TestConfig.snapshotCalls = null;
-      
-      // rerun tests
-      let state = initState();
-      // let story = state.findStoryByClassName(story.className);
-      story.startTests();
+  const name =
+    fetch(`/tests/snapshots/${story.className}_snapshots.json?update=true&name=${snapshotName}`)
+      .then(function (response) {
+        return response.text();
+      })
+      .then(function (text) {
+        button.textContent = 'Update Snapshots';
+        // remove from memory
+        // console.log('Remove: ' + `/tests/snapshots/${story.className}_snapshots.json`);
+        FuseBox.remove(`/tests/snapshots/${story.className}_snapshots.json`);
+        TestConfig.snapshotCalls = null;
 
-      // story.snapshots = [];
-      // window.location.reload();
-    });
+        // rerun tests
+        // let story = state.findStoryByClassName(story.className);
+        story.startTests();
+
+        // story.snapshots = [];
+        // window.location.reload();
+      });
 }
 
+@inject('state')
 @observer
 export class Snapshots extends React.PureComponent<SnapshotsProps, {}> {
 
   editor: monaco.editor.IStandaloneDiffEditor;
 
-  initEditor = (mountEditor: any) => {
-    this.editor = mountEditor as any;
+  initEditor = (mountEditor: monaco.editor.IStandaloneDiffEditor) => {
+    this.editor = mountEditor;
     this.setModel();
   }
 
@@ -85,6 +89,10 @@ export class Snapshots extends React.PureComponent<SnapshotsProps, {}> {
 
   render() {
     const story = this.props.story;
+
+    if (this.props.state.runningTests) {
+      return <span>Snapshots [0/0]</span>;
+    }
 
     if (!story || !story.snapshots || !story.snapshots.length) {
       return <span>No Snapshots</span>;
@@ -102,7 +110,8 @@ export class Snapshots extends React.PureComponent<SnapshotsProps, {}> {
         </div>
 
 
-        <MonacoEditor key="HistoryView"
+        <MonacoEditor 
+          key="HistoryView"
           editorDidMount={this.initEditor}
           theme="vs-light"
           width="100%"
@@ -114,4 +123,4 @@ export class Snapshots extends React.PureComponent<SnapshotsProps, {}> {
       </div>
     );
   }
-};
+}

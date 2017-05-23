@@ -8,12 +8,19 @@ import { Provider } from 'mobx-react';
 
 // import 'rc-collapse/assets/index.css';
 import {initState } from './state/state';
-import { reaction } from "mobx";
-import createRouter from "./state/router";
+import { reaction } from 'mobx';
+import createRouter from './state/router';
 
 let forceReload = 0;
 export function render(root = 'react-root') {
-  ReactDOM.render(<Provider state={initState()}><StoriesView forceReload={forceReload ++} /><DevTools /></Provider>, getRootNode(root));
+  ReactDOM.render(
+    <Provider state={initState()}>
+      <div>
+        <StoriesView forceReload={forceReload ++} />
+        <DevTools />
+      </div>
+    </Provider>, 
+    getRootNode(root));
 }
 
 
@@ -27,22 +34,24 @@ const state = initState();
 reaction(
   () => state.view.currentUrl,
   (path) => {
-    if (window.location.pathname !== path)
-      window.history.pushState(null, null, path)
+    if (window.location.pathname !== path) {
+      window.history.pushState(null, null, path);
+    }
   }
-)
+);
 
-const router = createRouter({
-  "/:pathName/:pathIds": ({pathName, pathIds}: any) => state.view.openStory(pathName, pathIds),
-  "/":             state.view.openStory
-})
+const router = createRouter(state.view, {
+  '/:pathName/:pathIds': ({pathName, pathIds}: {}) => state.view.openStory(pathName, pathIds),
+  '/':             state.view.openStory
+});
 
 window.onpopstate = function historyChange(ev) {
-  if (ev.type === "popstate")
-    router(window.location.pathname)
-}
+  if (ev.type === 'popstate') {
+    router(window.location.pathname);
+  }
+};
 
-router(window.location.pathname)
+router(window.location.pathname);
 
 
 // import { setStatefulModules } from './hmr';

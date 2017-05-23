@@ -1,8 +1,9 @@
 import * as React from 'react';
 import * as Collapse from 'rc-collapse';
 import { style } from 'typestyle';
-import { StoryType } from "../state/story";
-import { FolderType } from "../state/state";
+import { StoryType } from '../state/story';
+import { StateType, Folder } from '../state/state';
+import { inject } from 'mobx-react';
 
 const Panel = Collapse.Panel;
 
@@ -42,11 +43,12 @@ export const menu = style({
 });
 
 export interface Props {
-  folder: FolderType;
+  folder: Folder;
   path: number[];
+  state?: StateType;
 }
 
-export const StoryGroupView = ({ folder, path }: Props): any => {
+export const StoryGroupView = inject('state')(({ folder, path, state }: Props): JSX.Element => {
   if (path) {
     // remove first element
     path.shift();
@@ -79,11 +81,21 @@ export const StoryGroupView = ({ folder, path }: Props): any => {
             }
             const urlPath = currentPath.join('-');
             return (
-              <li key={s.name + i}><a href={`/${name}/${urlPath}`}>{s.name}</a></li>
+              <li key={s.name + i}>
+                <a 
+                  href={`/${name}/${urlPath}`} 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    state.view.openStory(name, urlPath);
+                    return false;
+                  }}
+                >{s.name}
+                </a>
+              </li>
             );
           })
         }
       </ul>
     </div>
   );
-};
+});

@@ -2,7 +2,16 @@ import 'tslib';
 import { FuseBoxTestRunner, TestConfig } from 'fuse-test-runner';
 import { render as renderLuis } from './luis/index';
 import { initState, ModuleDefinition } from './luis/state/state';
-import { Story, StoryClass, Decorator } from './luis/state/story';
+import { StoryType, StoryClass, Decorator } from './luis/state/story';
+
+import {setStatefulModules} from 'fuse-box/modules/fuse-hmr';
+
+setStatefulModules(name => {
+  // Add the things you think are stateful:
+  return /router/.test(name) || /state/.test(name);
+});
+
+const requests: { name: string, rerun: boolean}[] = [];
 
 TestConfig.snapshotDir = '';
 TestConfig.snapshotExtension = 'json';
@@ -14,18 +23,21 @@ TestConfig.snapshotLoader = (name: string, className: string) => {
   if (index >= 0) {
     name = name.substring(name.indexOf('/tests'));
   } else {
-    name = '/tests/snapshots' + (name[0] == '/' ? '' : '/') + name;
+    name = '/tests/snapshots' + (name[0] === '/' ? '' : '/') + name;
   }
 
   // console.log(name);
 
-  let val = FuseBox.import(name, (modules: any) => {
-    setTimeout(story.startTests());
+  let val = FuseBox.import(name, (modules: {}) => {
+    if (!requests.some(r => r.name === name && r.rerun === true)) {
+      requests.push({ name, rerun: true });
+      story.startTests();
+    }
   });
   return val;
 };
 
-export function startTests(modules: any[]) {
+export function startTests(modules: {}[]) {
   // eliminate previous snapshot calls
   TestConfig.snapshotCalls = null;
   
@@ -44,7 +56,5 @@ export function decorate(classes: (typeof StoryClass)[], folder: string, decorat
   }
 }
 
-export { Story, StoryClass, Decorator } from './luis/state/story';
-
-
+export { StoryType, Decorator } from './luis/state/story';
 
