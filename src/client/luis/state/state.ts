@@ -1,30 +1,28 @@
 // we need to register the proxy functions
 
+import { types, IType, getParent } from 'mobx-state-tree';
+import { IMSTNode } from 'mobx-state-tree/lib/core';
+import { IModelType } from 'mobx-state-tree/lib/types/complex-types/object';
+import { ISnapshottable } from 'mobx-state-tree/lib/types/type';
 import { IObservableArray, computed, observable } from 'mobx';
 import { Reporter } from '../reporter';
 
 import { ViewState } from './view_state';
 import { StoryType } from './story';
 
-
-
-export interface StoryClass {
-  // tslint:disable-next-line:no-any
-  // [key: string]: any;
-  story(): StoryDefinition;
-}
-
 export interface StoryDefinition {
   // tslint:disable-next-line:no-any
+  [key: string]: any;
   name: string;
   story: string;
   info: string;
   folder: string;
-  component: () => JSX.Element;
+  createComponent: Function;
+  component: JSX.Element;
 }
 
 export type ModuleDefinition = {
-  [index: string]: StoryClass;
+  [index: string]: StoryDefinition;
 };
 
 export type FolderType = {
@@ -34,6 +32,7 @@ export type FolderType = {
   stories: IObservableArray<StoryType>,
   allStories: StoryType[]
 };
+export type FolderModel = IModelType<FolderType, FolderType>;
 
 export class Folder {
   name: string;
