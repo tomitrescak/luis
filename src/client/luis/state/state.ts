@@ -1,28 +1,30 @@
 // we need to register the proxy functions
 
-import { types, IType, getParent } from 'mobx-state-tree';
-import { IMSTNode } from 'mobx-state-tree/lib/core';
-import { IModelType } from 'mobx-state-tree/lib/types/complex-types/object';
-import { ISnapshottable } from 'mobx-state-tree/lib/types/type';
 import { IObservableArray, computed, observable } from 'mobx';
 import { Reporter } from '../reporter';
 
 import { ViewState } from './view_state';
 import { StoryType } from './story';
 
+
+
+export interface StoryClass {
+  // tslint:disable-next-line:no-any
+  // [key: string]: any;
+  story(): StoryDefinition;
+}
+
 export interface StoryDefinition {
   // tslint:disable-next-line:no-any
-  [key: string]: any;
   name: string;
   story: string;
   info: string;
   folder: string;
-  createComponent: Function;
-  component: JSX.Element;
+  component: () => JSX.Element;
 }
 
 export type ModuleDefinition = {
-  [index: string]: StoryDefinition;
+  [index: string]: StoryClass;
 };
 
 export type FolderType = {
@@ -32,7 +34,6 @@ export type FolderType = {
   stories: IObservableArray<StoryType>,
   allStories: StoryType[]
 };
-export type FolderModel = IModelType<FolderType, FolderType>;
 
 export class Folder {
   name: string;
@@ -47,6 +48,11 @@ export class Folder {
     this.stories = [];
   }
 }
+
+export type TestModule = {
+  module: ModuleDefinition;
+  hmr: RegExp;
+};
 
 // const storyMap = new Map();
 
@@ -120,11 +126,12 @@ export class StateType {
     return this.stories.find(s => s.className === className);
   }
 
-  addModules(modules: ModuleDefinition[]) {
+  addModules(modules: TestModule[]) {
+
     for (let mod of modules) {
       // tslint:disable-next-line:forin
-      for (let className in mod) {
-        let storyDefinition = mod[className];
+      for (let className in mod.module) {
+        let storyDefinition = mod.module[className];
 
         let storyName = storyDefinition.story;
         if (!storyName) { continue; }
@@ -147,24 +154,30 @@ export class StateType {
             parentFolder = findFolder;
           }
 
-          // create a new story
-          // debugger;
-          let story = new StoryType(storyName, className, { [className]: storyDefinition });
-          story.setComponent(storyDefinition.info, component);
+          // we only restart tests on required files
+          let existingStory = parentFolder.stories.find(s => s.name === storyName);
+          if (!existingStory || existingStory.reload) {
 
-          // add to folder
-          let index = parentFolder.stories.findIndex(s => s.name === story.name);
-          if (index >= 0) {
-            parentFolder.stories[index] = story;
-            this.stories[this.stories.findIndex(s => s.name === story.name)] = story;
-          } else {
-            parentFolder.stories.push(story);
-            this.stories.push(story);
+            // create a new story
+            // debugger;
+            let story = new StoryType(storyName, className, { [className]: storyDefinition });
+            story.setComponent(storyDefinition.info, component);
+            story.hmr = mod.hmr;
+            // add to folder
+            let index = parentFolder.stories.findIndex(s => s.name === story.name);
+            if (index >= 0) {
+              parentFolder.stories[index] = story;
+              this.stories[this.stories.findIndex(s => s.name === story.name)] = story;
+            } else {
+              parentFolder.stories.push(story);
+              this.stories.push(story);
+            }
+
+            // start tests asynchronously
+            // setTimeout(() => story.startTests(), 1);
+            story.reload = false;
+            story.startTests();
           }
-
-          // start tests asynchronously
-          // setTimeout(() => story.startTests(), 1);
-          story.startTests();
         }
       }
     }

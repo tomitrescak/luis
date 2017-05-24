@@ -8,7 +8,7 @@ const $isPromise = (item: Promise<{}>) => {
     typeof item.catch === 'function';
 };
 
-type TestRunnerOptions = {
+export type TestRunnerOptions = {
   reporter: Reporter
 };
 

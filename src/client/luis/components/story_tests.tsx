@@ -12,6 +12,9 @@ export interface StoriesTitleParams {
 }
 
 export const StoryTestsTitle = inject('state')(observer(({ story, state }: StoriesTitleParams) => {
+  if (!story) {
+    return <span>Story Tests</span>;
+  }
   if (state.runningTests) {
     return <span>Story Tests</span>;
   }
@@ -27,6 +30,9 @@ export interface StoriesParams {
 }
 
 export const StoryTests = inject('state')(observer(({ story, state }: StoriesParams) => {
+  if (!story) {
+    return <span>No story selected</span>;
+  }
   if (state.runningTests) {
     return <span>Running tests ...</span>;
   }

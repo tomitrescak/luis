@@ -10,7 +10,7 @@ const resultHTML = style({ display: 'table-cell', width: '50%', padding: '6px' }
 
 export interface PreviewProps {
   story: StoryType;
-  state: StateType;
+  state?: StateType;
 }
 
 export const Previews = inject('state')(observer(({ story, state }: PreviewProps) => {

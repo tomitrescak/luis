@@ -6,7 +6,7 @@ import { IObservableArray, computed, observable } from 'mobx';
 
 import { formatComponent } from './helpers';
 import { TestConfig } from 'fuse-test-runner';
-import { Reporter, TestItem, Task } from '../reporter';
+import { Reporter, Task } from '../reporter';
 
 
 import { ModuleDefinition, StoryDefinition } from './state';
@@ -38,6 +38,7 @@ export class StoryType {
   className = '';
   definition: {};
   info = '';
+  folder = '';
   renderedComponent: () => JSX.Element;
   component: JSX.Element;
   actions: string[];
@@ -46,6 +47,8 @@ export class StoryType {
   decorator: Function;
   @observable activeSnapshot = 0;
   runningTests = false;
+  hmr: RegExp;
+  reload: boolean;
 
   constructor(name: string, className: string, definition: {}) {
     this.name = name;

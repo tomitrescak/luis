@@ -1,7 +1,7 @@
 import { findStory, findTestPath } from './louis';
 import { StoryType } from './state/story';
 import { TestConfig } from 'fuse-test-runner';
-import { StoryDefinition, initState } from './state/state';
+import { StoryDefinition, StateType, initState } from './state/state';
 import { TestType } from './state/fuse_web_test_runner';
 
 let currentStory: StoryType = null;

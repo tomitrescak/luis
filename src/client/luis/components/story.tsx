@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as Collapse from 'rc-collapse';
+import * as RcCollapse from 'rc-collapse';
 import { style } from 'typestyle';
 import { observer, inject } from 'mobx-react';
 import { toJS } from 'mobx';
@@ -7,7 +7,7 @@ import { toJS } from 'mobx';
 import { StoryGroupView, menu } from './story_group';
 import * as SplitPane from 'react-split-pane';
 import * as marked from 'marked';
-import { Story, StoryType } from '../state/story';
+import { StoryType } from '../state/story';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 import { StoryTestsTitle, StoryTests } from './story_tests';
@@ -28,7 +28,8 @@ import { StateType } from '../state/state';
 // });
 
 const resizeEvent = typeof Event === 'undefined' ? null : new Event('resize');
-const Panel = Collapse.Panel;
+const Collapse = RcCollapse.default;
+const Panel = RcCollapse.Panel;
 const container = style({
   width: '100%',
   height: '100%',
@@ -200,7 +201,7 @@ export const StoriesView = inject('state')(observer(({ state }: Props) => {
             <RenderStory />
           </div>
           <div className={tabs}>
-            <Tabs selectedIndex={state.selectedTab} onSelect={(index: number) => state.selectedTab = index}>
+            <Tabs defaultIndex={state.selectedTab} onSelect={(index: number) => state.selectedTab = index}>
               <TabList>
                 <Tab>Info</Tab>
                 <Tab>Actions</Tab>

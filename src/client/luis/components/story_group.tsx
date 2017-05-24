@@ -1,11 +1,12 @@
 import * as React from 'react';
-import * as Collapse from 'rc-collapse';
+import * as RcCollapse from 'rc-collapse';
 import { style } from 'typestyle';
 import { StoryType } from '../state/story';
 import { StateType, Folder } from '../state/state';
 import { inject } from 'mobx-react';
 
-const Panel = Collapse.Panel;
+const Collapse = RcCollapse.default;
+const Panel = RcCollapse.Panel;
 
 let toName = function (str: string) {
   let result = str.replace(/\:/g, '');
