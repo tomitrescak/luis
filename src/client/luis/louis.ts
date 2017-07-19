@@ -1,5 +1,6 @@
 import { StoryType } from './state/story';
 import { initState } from './state/state';
+import { Task } from "./reporter";
 
 
 export function findStory(testPath: string[]): StoryType {
@@ -24,11 +25,12 @@ export function findStory(testPath: string[]): StoryType {
   return story;
 }
 
-export function findTestPath(item: any): string[] {
-  if (!item.cls || !item.cls.folder || !item.cls.story) {
+export function findTestPath(item: Task): string[] {
+  if (!item.cls || !item.cls.story) {
     return null;
   }
-  return [...item.cls.folder.split('/'), item.cls.story, item.title];
+  let story = item.cls;
+  return [...story.folder.split('/'), story.story, item.title];
 }
 
 

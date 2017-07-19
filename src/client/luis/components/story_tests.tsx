@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observer, inject } from 'mobx-react';
 import { StoryType } from '../state/story';
-import { bottomTabPane, hidePassing, renderFields, renderStory } from './story_common';
+import { bottomTabPane, hidePassing, renderStory } from './story_common';
 import { StateType } from '../state/state';
 
 // Story tests

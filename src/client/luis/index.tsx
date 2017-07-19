@@ -41,7 +41,7 @@ reaction(
 );
 
 const router = createRouter(state.view, {
-  '/:pathName/:pathIds': ({pathName, pathIds}: {}) => state.view.openStory(pathName, pathIds),
+  '/:pathName/:pathIds': ({pathName, pathIds}: any) => state.view.openStory(pathName, pathIds),
   '/':             state.view.openStory
 });
 

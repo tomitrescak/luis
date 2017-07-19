@@ -1,8 +1,9 @@
 import { findStory, findTestPath } from './louis';
 import { StoryType } from './state/story';
 import { TestConfig } from 'fuse-test-runner';
-import { StoryDefinition, StateType, initState } from './state/state';
+import { StateType, initState } from './state/state';
 import { TestType } from './state/fuse_web_test_runner';
+import { Story } from './state/story';
 
 let currentStory: StoryType = null;
 
@@ -12,7 +13,7 @@ export declare type Task = {
   fn: Function;
   fileName: string;
   className: string;
-  cls: StoryDefinition
+  cls: Story
 };
 
 export interface Report {
@@ -53,7 +54,8 @@ export class Reporter {
 
   public testCase(report: Report) {
     TestConfig.snapshotCalls = null;
-    const folder = report.item.cls.folder;
+    const storyDefinition = report.item.cls;
+    const folder = storyDefinition.folder;
     let testPath = null;
 
     let story: StoryType = null;

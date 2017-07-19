@@ -54,32 +54,31 @@ export type Indexable = {
   [name: string]: Indexable
 };
 
+let index = 0;
 export function renderFolder(state: StateType, current: Folder, path = ''): JSX.Element | JSX.Element[] {
   if (!current) {
     return <div>No tests ...</div>;
   }
-
   let result: JSX.Element[] = [];
-
   for (let folder of current.folders) {
     if (folder.stories && folder.stories.length) {
       for (let story of folder.stories) {
-        let storyHeader = path + ' > ' + story.name;
+        let storyHeader = path + ' > ' + folder.name + ' > ' + story.name;
         if (!state.hidePassing || story.tests.some(t => t.result != null && t.result !== '')) {
-          result.push(<div className={testHeaderLine} key={storyHeader}>{storyHeader}</div>);
+          result.push(<div className={testHeaderLine} key={storyHeader + index++}>{storyHeader}</div>);
         }
-        result.push(renderStory(state, story));
+        result.push(...renderStory(state, story));
       }
     }
-    result.push(renderFolder(state, folder, (path ? ' > ' : '') + folder.name));
+    result.push(renderFolder(state, folder, (path ? ' > ' : '') + folder.name) as JSX.Element);
   }
 
   return result;
 }
 
+let i = 0;
 export function renderStory(state: StateType, story: StoryType): JSX.Element[] {
   let result = [];
-  let i = 0;
   for (let test of story.tests) {
     if (test.result) {
       result.push(<div key={i++} className={testLine}><div className="fail" dangerouslySetInnerHTML={{ __html: `[FAIL] ${test.name}: ${test.result}` }}></div></div>);

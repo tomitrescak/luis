@@ -9,7 +9,7 @@ import {setStatefulModules} from 'fuse-box/modules/fuse-hmr';
 const state = initState();
 
 setStatefulModules((name: string) => {
-  const stories = state.stories.filter(s => s.hmr && s.hmr.test(name));
+  const stories = state.stories.filter(s => !s.hmr || s.hmr.test(name));
   if (stories.length) {
     stories.forEach(s => s.reload = true);
   }
@@ -67,5 +67,5 @@ export function decorate(classes: StoryType[], folder: string, decorator: Decora
   }
 }
 
-export { StoryType, Decorator } from './luis/state/story';
+export { Story, Decorator } from './luis/state/story';
 

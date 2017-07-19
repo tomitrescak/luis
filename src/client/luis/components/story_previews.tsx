@@ -13,32 +13,31 @@ export interface PreviewProps {
   state?: StateType;
 }
 
+const DefaultDecorator = ({ children }: any) => <div>{children}</div>;
+
 export const Previews = inject('state')(observer(({ story, state }: PreviewProps) => {
   if (state.runningTests) {
-    return <div className={bottomTabPane}>Gathering data</div>;
+    return <div>Gathering data</div>;
+  }
+  if (!story.snapshots || !story.snapshots[story.activeSnapshot]) {
+    return <div>No snapshots</div>;
   }
   const snapshot = story.snapshots[story.activeSnapshot];
+  const Decorator = story.decorator ? story.decorator : DefaultDecorator;
   return (
-    <div className={bottomTabPane}>
-      <div className={toolBelt}>
-        <select onChange={e => { story.activeSnapshot = parseInt(e.currentTarget.value, 10); }}>
-          {story.snapshots.map((s, i) => (
-            <option value={i} key={i}>{s.name}</option>
-          ))}
-        </select>
-      </div>
-
+    <Decorator className={bottomTabPane}>
       { snapshot &&
-        <div>
-          { snapshot.expected !== snapshot.current
+        <div style={{background: story.background}} className={story.cssClassName}>
+          { state.snapshotPanes === 'both' && snapshot.expected !== snapshot.current
             ? <div className={resultsHTML}>
                 <div className={resultHTML} dangerouslySetInnerHTML={{ __html: story.snapshots[story.activeSnapshot].current }} />
                 <div className={resultHTML} dangerouslySetInnerHTML={{ __html: story.snapshots[story.activeSnapshot].expected }} />
               </div>
             : <div dangerouslySetInnerHTML={{ __html: story.snapshots[story.activeSnapshot].html }} />
           }
+          <div style={{clear: 'both'}} />
         </div>
       }
-    </div>
+    </Decorator>
   );
 }));

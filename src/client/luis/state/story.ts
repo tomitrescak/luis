@@ -1,7 +1,3 @@
-import { types, IType } from 'mobx-state-tree';
-import { IMSTNode } from 'mobx-state-tree/lib/core';
-import { IModelType } from 'mobx-state-tree/lib/types/complex-types/object';
-import { ISnapshottable } from 'mobx-state-tree/lib/types/type';
 import { IObservableArray, computed, observable } from 'mobx';
 
 import { formatComponent } from './helpers';
@@ -9,8 +5,17 @@ import { TestConfig } from 'fuse-test-runner';
 import { Reporter, Task } from '../reporter';
 
 
-import { ModuleDefinition, StoryDefinition } from './state';
+import { ModuleDefinition } from './state';
 import { TestType, FuseBoxWebTestRunner } from './fuse_web_test_runner';
+
+export class Story {
+  // tslint:disable-next-line:no-any
+  [key: string]: any;
+  story: string;
+  info: string;
+  folder: string;
+  get component(): JSX.Element { return null; };
+}
 
 export type Decorator = (story: Function) => JSX.Element;
 
@@ -34,27 +39,31 @@ export type Snapshot = {
 
 
 export class StoryType {
-  name = '';
-  className = '';
-  definition: {};
-  info = '';
-  folder = '';
-  renderedComponent: () => JSX.Element;
-  component: JSX.Element;
-  actions: string[];
-  tests: TestType[];
-  snapshots: Snapshot[];
-  decorator: Function;
   @observable activeSnapshot = 0;
-  runningTests = false;
+  actions: string[] = [];
+  background = 'white';
+  className = '';
+  cssClassName = '';
+  component: JSX.Element;
+  decorator: React.StatelessComponent<any>;
+  definition: {};
+  folder = '';
   hmr: RegExp;
+  info = '';
+  name = '';
   reload: boolean;
+  renderedComponent: () => JSX.Element;
+  runningTests = false;
+  snapshots: Snapshot[];
+  tests: TestType[];
 
-  constructor(name: string, className: string, definition: {}) {
+  constructor(name: string, className: string, definition: {}, story: Story) {
     this.name = name;
     this.className = className;
     this.definition = definition;
     this.tests = [];
+    this.background = story.background;
+    this.cssClassName = story.css;
   }
 
   get passingTests(): number {
@@ -79,13 +88,14 @@ export class StoryType {
     this.runningTests = value;
   }
 
-  setComponent(info: string, component: Function) {
-    if (info) {
-      this.info = '### Description\n\n' + info + '\n\n';
+  setComponent(story: Story) {
+    if (story.info) {
+      this.info = '### Description\n\n' + story.info + '\n\n';
     }
 
     this.info += '### Usage';
-    let wrapper = component;
+    this.decorator = story.decorator;
+    let wrapper = story.component;
 
     if (wrapper) {
       this.info += `
@@ -95,10 +105,10 @@ ${formatComponent(wrapper)}
       `;
     }
 
-    this.renderedComponent = this.tryRender(component, this.decorator);
+    this.renderedComponent = this.tryRender(story.component, story.decorator);
   }
 
-  tryRender(component: Function, decorator: Function): () => JSX.Element {
+  tryRender(component: JSX.Element, decorator: Function): () => JSX.Element {
     return () => {
       try {
         return decorator ? decorator(() => component) : component;

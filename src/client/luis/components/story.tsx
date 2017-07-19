@@ -47,8 +47,7 @@ const content = style({
   width: '100%',
   height: '100%',
   overflow: 'auto',
-  background: 'white',
-  padding: '12px'
+  background: 'white'
 });
 
 const tabs = style({
@@ -133,7 +132,7 @@ const split = style({
       borderRight: '5px solid rgba(0, 0, 0, 0.5)'
     },
     '& .SplitPane.horizontal': {
-      position: 'inherit!important' as {}
+      position: 'inherit!important' as any
     }
   }
 });
@@ -198,7 +197,7 @@ export const StoriesView = inject('state')(observer(({ state }: Props) => {
           minSize={100}
         >
           <div className={content}>
-            <RenderStory />
+            <Snapshots story={story} />
           </div>
           <div className={tabs}>
             <Tabs defaultIndex={state.selectedTab} onSelect={(index: number) => state.selectedTab = index}>
@@ -207,8 +206,6 @@ export const StoriesView = inject('state')(observer(({ state }: Props) => {
                 <Tab>Actions</Tab>
                 {state.view.selectedStoryId && <Tab><StoryTestsTitle story={story} /></Tab>}
                 <Tab><AllTestsTitle /></Tab>
-                <Tab><SnapshotsTitle story={story} /></Tab>
-                <Tab>Snapshots HTML</Tab>
               </TabList>
               <TabPanel>
                 <div title="Info" className={bottomTabPane}>
@@ -223,10 +220,6 @@ export const StoriesView = inject('state')(observer(({ state }: Props) => {
               </TabPanel>}
               <TabPanel>
                 <AllTests />
-              </TabPanel>
-              <TabPanel><Snapshots story={story} /></TabPanel>
-              <TabPanel>
-                <Previews story={story} />
               </TabPanel>
             </Tabs>
           </div>

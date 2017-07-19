@@ -1,18 +1,28 @@
-import { StoryDefinition, ModuleDefinition } from './state';
+import { ModuleDefinition } from './state';
 import { Reporter, Task } from '../reporter';
 import { TestConfig } from 'fuse-test-runner';
+import { Story } from './story';
 
 const $isPromise = (item: Promise<{}>) => {
-  return item
-    && typeof item.then === 'function' &&
-    typeof item.catch === 'function';
+  return item && typeof item.then === 'function' && typeof item.catch === 'function';
+};
+
+const $isFunction = (proto: any, name: string) => {
+  var getType = {};
+  const functionToCheck = proto[name];
+
+  return (
+    functionToCheck &&
+    !Object.getOwnPropertyDescriptor(proto, name).get &&
+    getType.toString.call(functionToCheck) === '[object Function]'
+  );
 };
 
 export type TestRunnerOptions = {
-  reporter: Reporter
+  reporter: Reporter;
 };
 
-const systemProps = ['before', 'beforeAll', 'afterAll', 'beforeEach', 'after', 'afterEach'];
+const systemProps = ['before', 'beforeAll', 'afterAll', 'beforeEach', 'after', 'afterEach', 'story'];
 
 export class TestType {
   name = '';
@@ -64,13 +74,14 @@ export class FuseBoxWebTestRunner {
 
     // tslint:disable-next-line:forin
     for (let story in module) {
-      promises = promises.concat(this.startStory(module[story]));
+      let storyInstance = new module[story]();
+      promises = promises.concat(this.startStory(storyInstance));
     }
 
     return promises;
   }
 
-  public startStory(story: StoryDefinition) {
+  public startStory(story: Story) {
     let startTime = new Date().getTime();
     let promises: Promise<{}>[] = [];
     let className = story.name || story.constructor.name;
@@ -89,7 +100,7 @@ export class FuseBoxWebTestRunner {
         className: item.className,
         fileName: item.className,
         cls: story,
-        fn: story.prototype[test],
+        fn: story[test],
         method: test,
         title: test
       };
@@ -125,20 +136,22 @@ export class FuseBoxWebTestRunner {
     TestConfig.currentTask.className = item.className;
 
     try {
-      let data = item.fn();
+      let data = item.fn.call(item.cls);
       if ($isPromise(data)) {
         data
           .then(() => {
             let report = { item, data: { success: true } };
             this.reporter.testCase(report);
             // tslint:disable-next-line:no-console
-            console.log(`%c SUCCESS! '${report.item.title}' after ${new Date().getTime() - startTime}ms`, 'color: green');
+            console.log(
+              `%c SUCCESS! '${report.item.title}' after ${new Date().getTime() - startTime}ms`,
+              'color: green'
+            );
           })
           .catch((err: {}) => {
             throw err;
           });
         return [data];
-
       } else {
         let report = { item, data: { success: true } };
         this.reporter.testCase(report);
@@ -146,7 +159,6 @@ export class FuseBoxWebTestRunner {
         console.log(`%c SUCCESS! '${report.item.title}' after ${new Date().getTime() - startTime}ms`, 'color: green');
       }
     } catch (e) {
-      
       let error;
       if (e.constructor.name === 'Exception') {
         error = e;
@@ -168,17 +180,19 @@ export class FuseBoxWebTestRunner {
 
       // tslint:disable-next-line:no-console
       console.log(
-        `%c ERROR! '${report.item.title}':` + 
-        `%c '${report.data.error.message}' after ${new Date().getTime() - startTime}ms \n    at ${parts[1]}    at ${parts[2]}`, 
-        'color: red; font-weight: bold', 
-        'color: red');
-
+        `%c ERROR! '${report.item.title}':` +
+          `%c '${report.data.error.message}' after ${new Date().getTime() -
+            startTime}ms \n    at ${parts[1]}    at ${parts[2]}`,
+        'color: red; font-weight: bold',
+        'color: red'
+      );
     }
     return [];
   }
 
-  private extractInstructions(obj: StoryDefinition) {
-    let props = Object.getOwnPropertyNames(obj.prototype).filter(n => n !== 'constructor');
+  private extractInstructions(obj: Story) {
+    let proto = obj.constructor.prototype;
+    let props = Object.getOwnPropertyNames(proto).filter(n => $isFunction(proto, n) && n !== 'constructor');
     let instructions = {
       methods: [] as string[],
       system: {} as { [index: string]: Function }
@@ -190,8 +204,8 @@ export class FuseBoxWebTestRunner {
       if (systemProps.indexOf(propertyName) === -1) {
         instructions.methods.push(propertyName);
       } else {
-        if (typeof obj[propertyName] === 'function') {
-          instructions.system[propertyName] = obj[propertyName];
+        if (typeof proto[propertyName] === 'function') {
+          instructions.system[propertyName] = proto[propertyName];
         }
       }
     }

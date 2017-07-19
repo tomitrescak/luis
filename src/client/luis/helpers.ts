@@ -37,7 +37,7 @@ ShallowWrapper.prototype.select = function (this: ShallowWrapper, number: string
 ReactWrapper.prototype.select = function (this: ShallowWrapper, number: string) {
   select(this, number);
 };
-function select(wrapper, value) {
+function select(wrapper: any, value: any) {
   const { Dropdown } = require('semantic-ui-react');
   if (wrapper.find(Dropdown.Item).length > 0) {
     wrapper.simulate('click').find(Dropdown.Item).at(value).simulate('click');

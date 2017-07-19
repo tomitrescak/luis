@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer, inject } from 'mobx-react';
-import { bottomTabPane, hidePassing, renderFields, renderFolder } from './story_common';
+import { bottomTabPane, hidePassing, renderFolder } from './story_common';
 import { StateType } from '../state/state';
 import { Loader } from 'semantic-ui-react';
 

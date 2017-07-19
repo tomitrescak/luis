@@ -1,28 +1,13 @@
 // we need to register the proxy functions
 
-import { types, IType, getParent } from 'mobx-state-tree';
-import { IMSTNode } from 'mobx-state-tree/lib/core';
-import { IModelType } from 'mobx-state-tree/lib/types/complex-types/object';
-import { ISnapshottable } from 'mobx-state-tree/lib/types/type';
 import { IObservableArray, computed, observable } from 'mobx';
 import { Reporter } from '../reporter';
 
 import { ViewState } from './view_state';
-import { StoryType } from './story';
-
-export interface StoryDefinition {
-  // tslint:disable-next-line:no-any
-  [key: string]: any;
-  name: string;
-  story: string;
-  info: string;
-  folder: string;
-  createComponent: Function;
-  component: JSX.Element;
-}
+import { StoryType, Story } from './story';
 
 export type ModuleDefinition = {
-  [index: string]: StoryDefinition;
+  [index: string]: typeof Story;
 };
 
 export type FolderType = {
@@ -32,7 +17,6 @@ export type FolderType = {
   stories: IObservableArray<StoryType>,
   allStories: StoryType[]
 };
-export type FolderModel = IModelType<FolderType, FolderType>;
 
 export class Folder {
   name: string;
@@ -50,7 +34,7 @@ export class Folder {
 
 export type TestModule = {
   module: ModuleDefinition;
-  hmr: RegExp;
+  hmr?: RegExp;
 };
 
 // const storyMap = new Map();
@@ -58,6 +42,8 @@ export type TestModule = {
 export class StateType {
   @observable hidePassing = false;
   @observable runningTests = false;
+  @observable snapshotView = 'html';
+  @observable snapshotPanes = 'both';
 
   view: ViewState;
   root: Folder;
@@ -131,14 +117,22 @@ export class StateType {
       // tslint:disable-next-line:forin
       for (let className in mod.module) {
         let storyDefinition = mod.module[className];
-
-        let storyName = storyDefinition.story;
-        if (!storyName) { continue; }
+        let story = new mod.module[className];
+        let storyName = story.story;
+        if (!storyName) {
+          console.warn(`Class ${className}'s does not define 'story' name`);
+          continue; 
+        }
+        let folder = story.folder;
+        if (!folder) {
+          console.warn(`Class ${className}'s does not define 'folder' name`);
+          continue; 
+        }
 
         // add story
-        if (storyDefinition.folder) {
-          const component = storyDefinition.createComponent ? storyDefinition.createComponent() : storyDefinition.component;
-          const folder = storyDefinition.folder;
+        if (story.folder) {
+          const component = story.component;
+          const folder = story.folder;
 
           // find given folder
           const folderParts = folder.split('/');
@@ -159,23 +153,23 @@ export class StateType {
 
             // create a new story
             // debugger;
-            let story = new StoryType(storyName, className, { [className]: storyDefinition });
-            story.setComponent(storyDefinition.info, component);
-            story.hmr = mod.hmr;
+            let newStory = new StoryType(storyName, className, { [className]: storyDefinition }, story);
+            newStory.setComponent(story);
+            newStory.hmr = mod.hmr;
             // add to folder
-            let index = parentFolder.stories.findIndex(s => s.name === story.name);
+            let index = parentFolder.stories.findIndex(s => s.name === newStory.name);
             if (index >= 0) {
-              parentFolder.stories[index] = story;
-              this.stories[this.stories.findIndex(s => s.name === story.name)] = story;
+              parentFolder.stories[index] = newStory;
+              this.stories[this.stories.findIndex(s => s.name === newStory.name)] = newStory;
             } else {
-              parentFolder.stories.push(story);
-              this.stories.push(story);
+              parentFolder.stories.push(newStory);
+              this.stories.push(newStory);
             }
 
             // start tests asynchronously
             // setTimeout(() => story.startTests(), 1);
-            story.reload = false;
-            story.startTests();
+            newStory.reload = false;
+            newStory.startTests();
           }
         }
       }

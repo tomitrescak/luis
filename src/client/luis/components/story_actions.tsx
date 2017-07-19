@@ -10,7 +10,7 @@ export interface ActionProps {
 export const Actions = observer(({ story }: ActionProps) => {
   return (
     <div className={bottomTabPane}>
-      {story && story.actions.map(a => (
+      {story && story.actions && story.actions.map(a => (
         <div>{a}</div>
       ))}
     </div>
