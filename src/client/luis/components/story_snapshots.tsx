@@ -90,6 +90,8 @@ function updateSnapshot(button: HTMLButtonElement, story: StoryType, snapshotNam
     });
 }
 
+const defaultStory = () => <div>'No story'</div>;
+
 @inject('state')
 @observer
 export class Snapshots extends React.PureComponent<SnapshotsProps, {}> {
@@ -104,13 +106,19 @@ export class Snapshots extends React.PureComponent<SnapshotsProps, {}> {
       return <div>Running tests ...</div>;
     }
 
+    let RenderStory = story && story.renderedComponent ? story.renderedComponent : defaultStory;
+
     return (
       <div>
         <div className={topMenu}>
           <div style={{width: '50px'}}>
             <SnapshotsTitle story={story} />
           </div>
-          <div style={{width: '100px'}}>
+          <div style={{width: '150px'}}>
+            <a href="javascript:;" style={{ fontWeight: state.snapshotView == 'react' ? 'bold' : 'normal' }} onClick={() => (state.snapshotView = 'react')}>
+              React{' '}
+            </a>
+            /{' '}
             <a href="javascript:;" style={{ fontWeight: state.snapshotView == 'html' ? 'bold' : 'normal' }} onClick={() => (state.snapshotView = 'html')}>
               HTML{' '}
             </a>
@@ -150,6 +158,7 @@ export class Snapshots extends React.PureComponent<SnapshotsProps, {}> {
             </button>
           </div>
         </div>
+        {this.props.state.snapshotView === 'react' && <div style={{background: story.background}} className={story.cssClassName}><RenderStory /><div style={{clear: 'both'}} /></div>}
         {this.props.state.snapshotView === 'html' && <Previews story={this.props.story} />}
         {this.props.state.snapshotView === 'json' && <SnapshotJSON story={this.props.story} />}
       </div>

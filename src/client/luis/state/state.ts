@@ -42,8 +42,9 @@ export type TestModule = {
 export class StateType {
   @observable hidePassing = false;
   @observable runningTests = false;
-  @observable snapshotView = 'html';
+  @observable snapshotView = 'react';
   @observable snapshotPanes = 'both';
+  @observable actions: IObservableArray<string>;
 
   view: ViewState;
   root: Folder;
@@ -55,6 +56,7 @@ export class StateType {
     this.view = new ViewState(); // .create();
     this.root = new Folder();
     this.stories = observable([]);
+    this.actions = observable([]);
   }
 
   get passingTests(): number {

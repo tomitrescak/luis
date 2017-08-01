@@ -81,7 +81,7 @@ export function renderStory(state: StateType, story: StoryType): JSX.Element[] {
   let result = [];
   for (let test of story.tests) {
     if (test.result) {
-      result.push(<div key={i++} className={testLine}><div className="fail" dangerouslySetInnerHTML={{ __html: `[FAIL] ${test.name}: ${test.result}` }}></div></div>);
+      result.push(<div key={i++} className={testLine}><div className="fail">[FAIL] {test.name}: {test.result }</div></div>);
     } else if (!state.hidePassing) {
       result.push(<div key={i++} className={testLine}><div className="pass" >[PASS] {`${test.name}`}</div></div>);
     }

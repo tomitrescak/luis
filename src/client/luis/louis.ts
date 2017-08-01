@@ -2,7 +2,6 @@ import { StoryType } from './state/story';
 import { initState } from './state/state';
 import { Task } from "./reporter";
 
-
 export function findStory(testPath: string[]): StoryType {
   if (!testPath) {
     return null;

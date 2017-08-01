@@ -1,6 +1,6 @@
 {
   "name": "luis",
-  "version": "1.1.23",
+  "version": "1.1.26",
   "description": "List-of-uis book and testing of uis",
   "main": "dist/client/client.js",
   "types": "dist/client/client.d.ts",
@@ -22,31 +22,28 @@
   },
   "homepage": "https://github.com/tomitrescak/louis#readme",
   "dependencies": {
-    "@types/expect": "^1.20.0",
+    "@types/expect": "1.x.x",
+    "connect-history-api-fallback": "1.x.x",
     "diff-view": "x.x.x",
-    "fuse-test-runner": "^1.0.13",
-    "marked": "^0.3.6",
+    "express": "4.x.x",
+    "marked": "0.x.x",
     "mobx": "x.x.x",
     "mobx-react": "x.x.x",
-    "mobx-react-devtools": "^4.2.11",
-    "path-match": "^1.2.4",
-    "rc-collapse": "^1.7.5",
-    "react": "^15.5.4",
-    "react-split-pane": "^0.1.63",
-    "react-tabs": "^1.0.0",
-    "semantic-ui-react": "^0.68.3",
-    "tslib": "^1.7.1",
-    "typestyle": "^1.3.2"
+    "mobx-react-devtools": "x.x.x",
+    "path-match": "x.x.x",
+    "rc-collapse": "x.x.x",
+    "react": "15.x.x",
+    "react-split-pane": "0.x.x",
+    "react-tabs": "1.x.x",
+    "semantic-ui-react": "0.x.x",
+    "tslib": "1.x.x",
+    "typestyle": "1.x.x"
   },
   "devDependencies": {
     "@types/react": "^15.0.10",
-    "connect-history-api-fallback": "^1.3.0",
+    "chai-match-snapshot": "^1.0.8",
     "enzyme": "^2.8.2",
     "enzyme-to-json": "^1.4.5",
-    "express": "^4.15.2",
-    "pretty-format": "^20.0.1"
-  },
-  "peerDependencies": {
-    "pretty-format": "^20.0.0"
+    "wafl": "^0.0.9"
   }
 }

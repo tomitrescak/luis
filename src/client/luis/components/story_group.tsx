@@ -3,7 +3,8 @@ import * as RcCollapse from 'rc-collapse';
 import { style } from 'typestyle';
 import { StoryType } from '../state/story';
 import { StateType, Folder } from '../state/state';
-import { inject } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
+import { Icon } from 'semantic-ui-react';
 
 const Collapse = RcCollapse.default;
 const Panel = RcCollapse.Panel;
@@ -49,7 +50,7 @@ export interface Props {
   state?: StateType;
 }
 
-export const StoryGroupView = inject('state')(({ folder, path, state }: Props): JSX.Element => {
+export const StoryGroupView = inject('state')(observer(({ folder, path, state }: Props): JSX.Element => {
   if (path) {
     // remove first element
     path.shift();
@@ -92,6 +93,15 @@ export const StoryGroupView = inject('state')(({ folder, path, state }: Props): 
                   }}
                 >{s.name}
                 </a>
+                { 
+                  s == state.activeStory && s.snapshots && s.snapshots.length > 0 && (
+                    <ul>
+                      { s.snapshots.map((sn, index) => (
+                        <li key={index}><a href="javascript:;" onClick={() => s.activeSnapshot = index}><Icon name="file" />{ sn.name }</a></li>
+                      )) }
+                    </ul>
+                  )
+                }                
               </li>
             );
           })
@@ -99,4 +109,4 @@ export const StoryGroupView = inject('state')(({ folder, path, state }: Props): 
       </ul>
     </div>
   );
-});
+}));

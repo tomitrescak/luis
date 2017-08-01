@@ -1,24 +1,10 @@
-html,
-body {
-	margin:0;
-	padding:0;
-	height:100%;
-  font-family: 'Lato', Verdana;
-}
-#react-root {
-	min-height:100%;
-	position:relative;
-}
-#main {
-	min-height:100%;
-	position:relative;
-}
 .rc-collapse {
   background-color: #f4f4f4;
   border-radius: 3px;
   border: 1px solid #d9d9d9;
 }
 .rc-collapse-anim-active {
+  -webkit-transition: height 0.2s ease-out;
   transition: height 0.2s ease-out;
 }
 .rc-collapse > .rc-collapse-item {
@@ -28,8 +14,8 @@ body {
   border-top: none;
 }
 .rc-collapse > .rc-collapse-item > .rc-collapse-header {
-  height: 28px;
-  line-height: 28px;
+  height: 38px;
+  line-height: 38px;
   text-indent: 16px;
   color: #666;
   cursor: pointer;
@@ -70,67 +56,227 @@ body {
   margin-right: 6px;
 }
 
-.diffadded {
-  font-weight: bold;
-  color: green;
+
+/*
+This is part of jsdifflib v1.0. <http://github.com/cemerick/jsdifflib>
+
+Copyright 2007 - 2011 Chas Emerick <cemerick@snowtide.com>. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are
+permitted provided that the following conditions are met:
+
+   1. Redistributions of source code must retain the above copyright notice, this list of
+      conditions and the following disclaimer.
+
+   2. Redistributions in binary form must reproduce the above copyright notice, this list
+      of conditions and the following disclaimer in the documentation and/or other materials
+      provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY Chas Emerick ``AS IS'' AND ANY EXPRESS OR IMPLIED
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Chas Emerick OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+The views and conclusions contained in the software and documentation are those of the
+authors and should not be interpreted as representing official policies, either expressed
+or implied, of Chas Emerick.
+*/
+table.diff {
+	border-collapse:collapse;
+	border:1px solid darkgray;
+	white-space:pre-wrap
+}
+table.diff tbody { 
+	font-family:Courier, monospace
+}
+table.diff tbody th {
+	font-family:verdana,arial,'Bitstream Vera Sans',helvetica,sans-serif;
+	background:#EED;
+	font-size:11px;
+	font-weight:normal;
+	border:1px solid #BBC;
+	color:#886;
+	padding:.3em .5em .1em 2em;
+	text-align:right;
+	vertical-align:top
+}
+table.diff thead {
+	border-bottom:1px solid #BBC;
+	background:#EFEFEF;
+	font-family:Verdana
+}
+table.diff thead th.texttitle {
+	text-align:left
+}
+table.diff tbody td {
+	padding:0px .4em;
+	padding-top:.4em;
+	vertical-align:top;
+}
+table.diff .empty {
+	background-color:#DDD;
+}
+table.diff .replace {
+	background-color:#FD8
+}
+table.diff .delete {
+	background-color:#E99;
+}
+table.diff .skip {
+	background-color:#EFEFEF;
+	border:1px solid #AAA;
+	border-right:1px solid #BBC;
+}
+table.diff .insert {
+	background-color:#9E9
+}
+table.diff th.author {
+	text-align:right;
+	border-top:1px solid #BBC;
+	background:#EFEFEF
 }
 
-.diffremoved {
-  font-weight: bold;
-  color: red;
+
+/* http://prismjs.com/download.html?themes=prism&languages=markup+clike+javascript+jsx&plugins=highlight-keywords */
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: black;
+	background: none;
+	text-shadow: 0 1px white;
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
 }
 
-/*# sourceMappingURL=bundle.css.map */
-
-.react-tabs__tab-list {
-  border-bottom: 1px solid #aaa;
-  margin: 0 0 10px;
-  padding: 0;
+pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
+	text-shadow: none;
+	background: #b3d4fc;
 }
 
-.react-tabs__tab {
-  display: inline-block;
-  border: 1px solid transparent;
-  border-bottom: none;
-  bottom: -1px;
-  position: relative;
-  list-style: none;
-  padding: 6px 12px;
-  cursor: pointer;
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
+code[class*="language-"]::selection, code[class*="language-"] ::selection {
+	text-shadow: none;
+	background: #b3d4fc;
 }
 
-.react-tabs__tab--selected {
-  background: #fff;
-  border-color: #aaa;
-  color: black;
-  border-radius: 5px 5px 0 0;
+@media print {
+	code[class*="language-"],
+	pre[class*="language-"] {
+		text-shadow: none;
+	}
 }
 
-.react-tabs__tab-panel {
-  display: none;
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
 }
 
-.react-tabs__tab-panel--selected {
-  display: block;
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #f5f2f0;
 }
 
-.react-tabs__tab--disabled {
-  color: GrayText;
-  cursor: default;
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
 }
 
-.react-tabs__tab:focus {
-  box-shadow: 0 0 5px hsl(208, 99%, 50%);
-  border-color: hsl(208, 99%, 50%);
-  outline: none;
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: slategray;
 }
 
-.react-tabs__tab:focus:after {
-  content: "";
-  position: absolute;
-  height: 5px;
-  left: -4px;
-  right: -4px;
-  bottom: -5px;
-  background: #fff;
+.token.punctuation {
+	color: #999;
+}
+
+.namespace {
+	opacity: .7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+	color: #905;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+	color: #690;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+	color: #a67f59;
+	background: hsla(0, 0%, 100%, .5);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+	color: #07a;
+}
+
+.token.function {
+	color: #DD4A68;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+	color: #e90;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
 }

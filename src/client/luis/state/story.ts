@@ -56,6 +56,7 @@ export class StoryType {
   runningTests = false;
   snapshots: Snapshot[];
   tests: TestType[];
+  isSelected: true;
 
   constructor(name: string, className: string, definition: {}, story: Story) {
     this.name = name;

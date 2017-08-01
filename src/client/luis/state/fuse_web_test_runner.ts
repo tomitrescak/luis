@@ -1,7 +1,11 @@
 import { ModuleDefinition } from './state';
 import { Reporter, Task } from '../reporter';
-import { TestConfig } from 'fuse-test-runner';
+import { setupBddBridge } from 'wafl';
 import { Story } from './story';
+import { config } from 'chai-match-snapshot/config';
+
+// setup tss bridge for support of describe, it
+setupBddBridge();
 
 const $isPromise = (item: Promise<{}>) => {
   return item && typeof item.then === 'function' && typeof item.catch === 'function';
@@ -10,11 +14,14 @@ const $isPromise = (item: Promise<{}>) => {
 const $isFunction = (proto: any, name: string) => {
   var getType = {};
   const functionToCheck = proto[name];
-
+  
   return (
     functionToCheck &&
     !Object.getOwnPropertyDescriptor(proto, name).get &&
-    getType.toString.call(functionToCheck) === '[object Function]'
+    (
+      getType.toString.call(functionToCheck) === '[object Function]' ||
+      getType.toString.call(functionToCheck) === '[object AsyncFunction]'
+    )
   );
 };
 
@@ -117,6 +124,9 @@ export class FuseBoxWebTestRunner {
         // tslint:disable-next-line:no-console
         console.log(`Ending in  ${new Date().getTime() - startTime}ms`);
         console.groupEnd();
+      }).catch(() => {
+        console.log(`Ending in  ${new Date().getTime() - startTime}ms`);
+        console.groupEnd();
       });
     } else {
       this.reporter.endClass(className, item);
@@ -131,9 +141,9 @@ export class FuseBoxWebTestRunner {
   public startTest(item: Task) {
     const startTime = new Date().getTime();
 
-    TestConfig.currentTask = item;
-    TestConfig.currentTask.fileName = item.className;
-    TestConfig.currentTask.className = item.className;
+    config.currentTask = item;
+    config.currentTask.fileName = item.className;
+    config.currentTask.className = item.className;
 
     try {
       let data = item.fn.call(item.cls);
@@ -148,7 +158,10 @@ export class FuseBoxWebTestRunner {
               'color: green'
             );
           })
-          .catch((err: {}) => {
+          .catch((err: any) => {
+            let error = {}
+            let report = { item, data: { success: false, error: err } };
+            this.reporter.testCase(report);
             throw err;
           });
         return [data];

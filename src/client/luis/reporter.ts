@@ -3,7 +3,7 @@ import { StoryType } from './state/story';
 import { TestConfig } from 'fuse-test-runner';
 import { StateType, initState } from './state/state';
 import { TestType } from './state/fuse_web_test_runner';
-import { Story } from './state/story';
+import { Story, Snapshot } from './state/story';
 
 let currentStory: StoryType = null;
 
@@ -102,13 +102,17 @@ TestConfig.onProcessSnapshots = (_taskName: string, snapshotName: string, curren
       currentStory.snapshots = [];
     }
     const index = currentStory.snapshots.findIndex(s => s.name === snapshotName);
-    const snapshot = {
+    let name = snapshotName;
+    while (name.length > 0 && name[name.length - 1].match(/[1\s]/)) {
+      name = name.substring(0, name.length - 1);
+    }
+    const snapshot: Snapshot = {
       expected,
       current,
       matching: current === expected,
       storyName: currentStory.name,
       html: current,
-      name: snapshotName,
+      name,
     };
     if (index === -1) {
       currentStory.snapshots.push(snapshot);

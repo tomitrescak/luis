@@ -46,14 +46,43 @@ TestConfig.snapshotLoader = (name: string, className: string) => {
   return val;
 };
 
-export function startTests(modules: TestModule[]) {
-  console.clear();
+export function action(name: string, func?: () => string) {
+  return function() {
+    let args = Array.from(arguments);
+    let state = initState();
+
+    state.actions.push(`[${name}]: {${args.map(function(a) {
+      if (a == Object(a)) {
+        return a.constructor.name;
+      }
+      try {
+        return JSON.stringify(a).substring(0, 20);
+      } catch (ex) {
+        return 'Circular';
+      }}).join(', ')}}`);
+    if (func) {
+      state.actions.push(func());
+    }
+  }
+}
+
+export type ModuleImport = TestModule | any;
+
+export function startTests(modules: ModuleImport[]) {
+  // console.clear();
   
   // eliminate previous snapshot calls
   TestConfig.snapshotCalls = null;
-  
+  let converted: TestModule[] = modules.map(m => {
+    if (m.module) {
+      return { module: m.module, hmr: m.hmr };
+    }
+    return { module: m, hmr: null }
+  });
+
+
   // process all modules and prepare them for testing
-  initState().addModules(modules);
+  initState().addModules(converted);
 }
 
 export function render() {

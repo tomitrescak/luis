@@ -16,7 +16,8 @@ import { Actions } from './story_actions';
 import { Previews } from './story_previews';
 import { bottomTabPane } from './story_common';
 import { SnapshotsTitle, Snapshots } from './story_snapshots';
-import { StateType } from '../state/state';
+import { StateType, initState } from '../state/state';
+import { Icon } from 'semantic-ui-react';
 
 // require('./highlighter');
 
@@ -138,8 +139,6 @@ const split = style({
 });
 
 
-const defaultStory = () => <div>'No story'</div>;
-
 export interface Props {
   state?: StateType;
   forceReload: number;
@@ -162,7 +161,9 @@ export const StoriesView = inject('state')(observer(({ state }: Props) => {
   if (storyPath && storyPath.length && !story) {
     return <div>Invalid path.Please <a href="/">Go Back</a></div >;
   }
-  let RenderStory = story && story.renderedComponent ? story.renderedComponent : defaultStory;
+  
+  // clear current actions
+  state.actions.clear();
 
   // sort by name
   // rootGroup.storyGroups.sort((a, b) => a.name < b.name ? -1 : 1);
@@ -203,7 +204,7 @@ export const StoriesView = inject('state')(observer(({ state }: Props) => {
             <Tabs defaultIndex={state.selectedTab} onSelect={(index: number) => state.selectedTab = index}>
               <TabList>
                 <Tab>Info</Tab>
-                <Tab>Actions</Tab>
+                <Tab>Actions <a href="javascript:;" onClick={() => state.actions.clear()}><Icon name="trash" /></a></Tab>
                 {state.view.selectedStoryId && <Tab><StoryTestsTitle story={story} /></Tab>}
                 <Tab><AllTestsTitle /></Tab>
               </TabList>
