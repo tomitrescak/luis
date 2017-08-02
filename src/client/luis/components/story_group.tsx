@@ -97,7 +97,11 @@ export const StoryGroupView = inject('state')(observer(({ folder, path, state }:
                   s == state.activeStory && s.snapshots && s.snapshots.length > 0 && (
                     <ul>
                       { s.snapshots.map((sn, index) => (
-                        <li key={index}><a href="javascript:;" onClick={() => s.activeSnapshot = index}><Icon name="file" />{ sn.name }</a></li>
+                        <li key={index} style={state.view.selectedSnapshot === index ? { fontWeight: 'bold' } : {}}><a href={`/${name}/${urlPath}/${index}`} onClick={(e) => {
+                          e.preventDefault();
+                          state.view.openStory(name, urlPath, index);
+                          return false;
+                        }}><Icon name="file" />{ sn.name }</a></li>
                       )) }
                     </ul>
                   )

@@ -42,6 +42,7 @@ reaction(
 
 const router = createRouter(state.view, {
   '/:pathName/:pathIds': ({pathName, pathIds}: any) => state.view.openStory(pathName, pathIds),
+  '/:pathName/:pathIds/:snapshot': ({pathName, pathIds, snapshot}: any) => state.view.openStory(pathName, pathIds, snapshot),
   '/':             state.view.openStory
 });
 

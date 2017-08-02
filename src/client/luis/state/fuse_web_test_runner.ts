@@ -2,7 +2,7 @@ import { ModuleDefinition } from './state';
 import { Reporter, Task } from '../reporter';
 import { setupBddBridge } from 'wafl';
 import { Story } from './story';
-import { config } from 'chai-match-snapshot/config';
+import { config } from 'chai-match-snapshot';
 
 // setup tss bridge for support of describe, it
 setupBddBridge();
@@ -72,6 +72,8 @@ export class FuseBoxWebTestRunner {
     } else {
       this.reporter.endTest({}, new Date().getTime() - start);
     }
+
+    return promises;
   }
 
   public startFile(module: ModuleDefinition) {

@@ -1,3 +1,19 @@
+.m12 {
+	margin: 12px!important;
+}
+
+.m6 {
+	margin: 6px!important;
+}
+
+.pad12 {
+	padding: 12px!important;
+}
+
+.pad6 {
+	padding: 6px!important;
+}
+
 .rc-collapse {
   background-color: #f4f4f4;
   border-radius: 3px;

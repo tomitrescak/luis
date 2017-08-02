@@ -5,12 +5,12 @@ import { StoryType } from '../state/story';
 
 import { MonacoEditor } from './editor';
 import { bottomTabPane, toolBelt } from './story_common';
-import { TestConfig } from 'fuse-test-runner';
 import { StateType } from '../state/state';
 import { observable } from 'mobx/lib/mobx';
 
 import { Previews } from './story_previews';
-
+import { config } from 'chai-match-snapshot';
+ 
 const requireConfig = {
   url: 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.1/require.min.js',
   paths: {
@@ -79,7 +79,7 @@ function updateSnapshot(button: HTMLButtonElement, story: StoryType, snapshotNam
       // remove from memory
       // console.log('Remove: ' + `/tests/snapshots/${story.className}_snapshots.json`);
       FuseBox.remove(`/tests/snapshots/${story.className}_snapshots.json`);
-      TestConfig.snapshotCalls = null;
+      config.snapshotCalls = null;
 
       // rerun tests
       // let story = state.findStoryByClassName(story.className);
@@ -141,7 +141,7 @@ export class Snapshots extends React.PureComponent<SnapshotsProps, {}> {
           <div>
             <select
               onChange={e => {
-                story.activeSnapshot = parseInt(e.currentTarget.value, 10);
+                state.view.selectedSnapshot = parseInt(e.currentTarget.value, 10);
               }}
             >
               {story.snapshots && story.snapshots.map((s, i) =>
@@ -152,7 +152,7 @@ export class Snapshots extends React.PureComponent<SnapshotsProps, {}> {
             </select>
             <button
               className={snapshotSelect}
-              onClick={e => updateSnapshot(e.currentTarget, story, story.snapshots[story.activeSnapshot].name)}
+              onClick={e => updateSnapshot(e.currentTarget, story, story.snapshots[state.view.selectedSnapshot].name)}
             >
               Update Snapshot
             </button>
@@ -178,11 +178,11 @@ export class SnapshotJSON extends React.PureComponent<SnapshotsProps, {}> {
 
   setModel = () => {
     let original = monaco.editor.createModel(
-      this.props.story.snapshots[this.props.story.activeSnapshot].current,
+      this.props.story.snapshots[this.props.state.view.selectedSnapshot].current,
       'text/plain'
     );
     let modified = monaco.editor.createModel(
-      this.props.story.snapshots[this.props.story.activeSnapshot].expected,
+      this.props.story.snapshots[this.props.state.view.selectedSnapshot].expected,
       'text/plain'
     );
     monaco.editor.setModelLanguage(original, 'json');
@@ -210,8 +210,8 @@ export class SnapshotJSON extends React.PureComponent<SnapshotsProps, {}> {
           theme="vs-light"
           width="100%"
           height="100%"
-          clientValue={this.props.story.snapshots[this.props.story.activeSnapshot].current}
-          serverValue={this.props.story.snapshots[this.props.story.activeSnapshot].expected}
+          clientValue={this.props.story.snapshots[this.props.state.view.selectedSnapshot].current}
+          serverValue={this.props.story.snapshots[this.props.state.view.selectedSnapshot].expected}
           requireConfig={requireConfig}
         />
       </div>

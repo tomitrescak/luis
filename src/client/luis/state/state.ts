@@ -49,14 +49,16 @@ export class StateType {
   view: ViewState;
   root: Folder;
   stories: StoryType[];
-  timeout: number;
+  timeout: any;
   selectedTab: number;
 
   constructor() {
-    this.view = new ViewState(); // .create();
+    this.view = new ViewState(this); // .create();
     this.root = new Folder();
     this.stories = observable([]);
     this.actions = observable([]);
+
+    this.snapshotView = this.view.selectedSnapshot >= 0 ? 'html' : 'react';
   }
 
   get passingTests(): number {

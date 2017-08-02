@@ -1,9 +1,10 @@
 import { findStory, findTestPath } from './louis';
 import { StoryType } from './state/story';
-import { TestConfig } from 'fuse-test-runner';
 import { StateType, initState } from './state/state';
 import { TestType } from './state/fuse_web_test_runner';
 import { Story, Snapshot } from './state/story';
+import { config } from 'chai-match-snapshot';
+import { observable } from 'mobx';
 
 let currentStory: StoryType = null;
 
@@ -53,7 +54,7 @@ export class Reporter {
   }
 
   public testCase(report: Report) {
-    TestConfig.snapshotCalls = null;
+    config.snapshotCalls = null;
     const storyDefinition = report.item.cls;
     const folder = storyDefinition.folder;
     let testPath = null;
@@ -81,9 +82,9 @@ export class Reporter {
       // console.log(report.item.title || report.item.method)
     } else {
       if (report.data.error.message && report.data.error.message.match(/Snapshot file/)) {
-        if (story.snapshots) {
+        // if (story.snapshots) {
           this.test.setResult(report.data.error.message);
-        }
+        // }
       } else {
         this.test.setResult(report.data.error.message);
       }
@@ -96,11 +97,11 @@ export class Reporter {
   }
 }
 
-TestConfig.onProcessSnapshots = (_taskName: string, snapshotName: string, current: string, expected: string) => {
+config.onProcessSnapshots = (_taskName: string, snapshotName: string, current: string, expected: string) => {
   if (currentStory) {
-    if (!currentStory.snapshots) {
-      currentStory.snapshots = [];
-    }
+    // if (!currentStory.snapshots) {
+    //   currentStory.snapshots = observable([]);
+    // }
     const index = currentStory.snapshots.findIndex(s => s.name === snapshotName);
     let name = snapshotName;
     while (name.length > 0 && name[name.length - 1].match(/[1\s]/)) {

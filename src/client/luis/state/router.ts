@@ -1,6 +1,6 @@
 import * as route from 'path-match';
 
-export default function createRouter(view: any, routes: {}) {
+export default function createRouter(view: any, routes: any) {
   const matchers = Object.keys(routes).map(path => ([route()(path), routes[path]]));
   return function(path: string) {
     return matchers.some(([matcher, f]) => {

@@ -1,7 +1,7 @@
 import { IObservableArray, computed, observable } from 'mobx';
 
 import { formatComponent } from './helpers';
-import { TestConfig } from 'fuse-test-runner';
+import { config } from 'chai-match-snapshot';
 import { Reporter, Task } from '../reporter';
 
 
@@ -39,7 +39,8 @@ export type Snapshot = {
 
 
 export class StoryType {
-  @observable activeSnapshot = 0;
+  // @observable activeSnapshot = 0;
+  @observable snapshots = [] as IObservableArray<Snapshot>;
   actions: string[] = [];
   background = 'white';
   className = '';
@@ -54,7 +55,6 @@ export class StoryType {
   reload: boolean;
   renderedComponent: () => JSX.Element;
   runningTests = false;
-  snapshots: Snapshot[];
   tests: TestType[];
   isSelected: true;
 

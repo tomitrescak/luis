@@ -1,5 +1,5 @@
 import 'tslib';
-import { FuseBoxTestRunner, TestConfig } from 'fuse-test-runner';
+import { config } from 'chai-match-snapshot';
 import { render as renderLuis } from './luis/index';
 import { initState, ModuleDefinition, TestModule } from './luis/state/state';
 import { StoryType, Decorator } from './luis/state/story';
@@ -19,10 +19,10 @@ setStatefulModules((name: string) => {
 
 const requests: { name: string, rerun: boolean}[] = [];
 
-TestConfig.snapshotDir = '';
-TestConfig.snapshotExtension = 'json';
-TestConfig.snapshotCalls = null;
-TestConfig.snapshotLoader = (name: string, className: string) => {
+config.snapshotDir = '';
+config.snapshotExtension = 'json';
+config.snapshotCalls = null;
+config.snapshotLoader = (name: string, className: string) => {
   var story = initState().findStoryByClassName(className);
 
   var index = name.indexOf('/tests');
@@ -72,7 +72,7 @@ export function startTests(modules: ModuleImport[]) {
   // console.clear();
   
   // eliminate previous snapshot calls
-  TestConfig.snapshotCalls = null;
+  config.snapshotCalls = null;
   let converted: TestModule[] = modules.map(m => {
     if (m.module) {
       return { module: m.module, hmr: m.hmr };
