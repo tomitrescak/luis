@@ -22,7 +22,7 @@ export function start(luisPath = `dist/luis/`) {
         app.use((req: any, res: any) => res.sendFile(`${path.resolve(luisPath)}/luis.html`));
         
         app.listen(9001, function () {
-            console.log('Example app listening to you on port 9001!');
+            console.log('LUIS is listening to you on port 9001!');
         });
     } catch (ex) {
         console.error("ERROR!: You need to have 'luis.html' in your static directory")

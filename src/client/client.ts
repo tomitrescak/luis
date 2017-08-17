@@ -1,7 +1,7 @@
 import 'tslib';
 import { config } from 'chai-match-snapshot';
 import { render as renderLuis } from './luis/index';
-import { initState, ModuleDefinition, TestModule } from './luis/state/state';
+import { initState, ModuleDefinition, TestModule, TestQueue } from './luis/state/state';
 import { StoryType, Decorator } from './luis/state/story';
 
 import {setStatefulModules} from 'fuse-box/modules/fuse-hmr';
@@ -37,7 +37,7 @@ config.snapshotLoader = (name: string, className: string) => {
   let val = FuseBox.import(name, (modules: {}) => {
     if (!requests.some(r => r.name === name && r.rerun === true)) {
       requests.push({ name, rerun: true });
-      story.startTests();
+      TestQueue.add(story);
     }
   });
   // if (!val) {
@@ -65,6 +65,8 @@ export function action(name: string, func?: () => string) {
     }
   }
 }
+
+export const monitor = action;
 
 export type ModuleImport = TestModule | any;
 

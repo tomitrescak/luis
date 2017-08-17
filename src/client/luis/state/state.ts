@@ -11,11 +11,11 @@ export type ModuleDefinition = {
 };
 
 export type FolderType = {
-  name: string,
+  name: string;
   parent: FolderType;
-  folders: IObservableArray<FolderType>,
-  stories: IObservableArray<StoryType>,
-  allStories: StoryType[]
+  folders: IObservableArray<FolderType>;
+  stories: IObservableArray<StoryType>;
+  allStories: StoryType[];
 };
 
 export class Folder {
@@ -51,6 +51,7 @@ export class StateType {
   stories: StoryType[];
   timeout: any;
   selectedTab: number;
+  _testConfig: string[][];
 
   constructor() {
     this.view = new ViewState(this); // .create();
@@ -84,7 +85,7 @@ export class StateType {
         folder = folder.folders[storyPath[i]];
 
         if (!folder) {
-          location.href = '/';
+          // location.href = '/';
           return null;
         }
       }
@@ -92,12 +93,39 @@ export class StateType {
       // now find the story
       story = folder.stories[storyPath[storyPath.length - 1]];
       if (!story) {
-        location.href = '/';
+        // location.href = '/';
         return null;
       }
     }
 
     return story;
+  }
+
+  get testConfig() {
+    if (this._testConfig == null) {
+      let testConfig = localStorage.getItem('louisTestConfig');
+      if (testConfig == null) {
+        testConfig = '';
+        localStorage.setItem('louisTestConfig', testConfig);
+      }
+      this._testConfig = testConfig.split('|').map(s => s.split('#'));
+    }
+    return this._testConfig;
+  }
+
+  toggleAllTests(disabled: boolean) {
+    this.stories.forEach(s => s.isDisabled = disabled);
+    this.saveStoryConfig();
+  }
+
+  toggleStoryTests(story: StoryType, disabled: boolean) {
+    story.isDisabled = disabled;
+    this.saveStoryConfig();
+  }
+
+  saveStoryConfig() {
+    this._testConfig = this.stories.map(s => [s.name, s.isDisabled ? '1' : '0' ]);
+    localStorage.setItem('louisTestConfig', this._testConfig.map(t => t.join('#')).join('|'));
   }
 
   startedTests() {
@@ -108,7 +136,7 @@ export class StateType {
     if (this.timeout) {
       clearTimeout(this.timeout);
     }
-    this.timeout = setTimeout(() => this.runningTests = false, 300);
+    this.timeout = setTimeout(() => (this.runningTests = false), 300);
   }
 
   findStoryByClassName(className: string) {
@@ -116,21 +144,20 @@ export class StateType {
   }
 
   addModules(modules: TestModule[]) {
-
     for (let mod of modules) {
       // tslint:disable-next-line:forin
       for (let className in mod.module) {
         let storyDefinition = mod.module[className];
-        let story = new mod.module[className];
+        let story = new mod.module[className]();
         let storyName = story.story;
         if (!storyName) {
           console.warn(`Class ${className}'s does not define 'story' name`);
-          continue; 
+          continue;
         }
         let folder = story.folder;
         if (!folder) {
           console.warn(`Class ${className}'s does not define 'folder' name`);
-          continue; 
+          continue;
         }
 
         // add story
@@ -147,17 +174,27 @@ export class StateType {
             if (!findFolder) {
               findFolder = new Folder(folderName, parentFolder);
               parentFolder.folders.push(findFolder);
+
+              // sort immediately
+              parentFolder.folders.sort((a, b) => (a.name > b.name ? 1 : -1));
             }
             parentFolder = findFolder;
           }
 
           // we only restart tests on required files
           let existingStory = parentFolder.stories.find(s => s.name === storyName);
+          let isStoryDisabled = this.testConfig.some(t => t[0] == storyName && t[1] == '1');
           if (!existingStory || existingStory.reload) {
-
             // create a new story
             // debugger;
-            let newStory = new StoryType(storyName, className, { [className]: storyDefinition }, story);
+            let newStory = new StoryType(
+              storyName,
+              folder,
+              className,
+              { [className]: storyDefinition },
+              story,
+              isStoryDisabled
+            );
             newStory.setComponent(story);
             newStory.hmr = mod.hmr;
             // add to folder
@@ -167,13 +204,15 @@ export class StateType {
               this.stories[this.stories.findIndex(s => s.name === newStory.name)] = newStory;
             } else {
               parentFolder.stories.push(newStory);
+              parentFolder.stories.sort((a, b) => (a.name > b.name ? 1 : -1));
               this.stories.push(newStory);
+              this.stories.sort((a, b) => (a.name > b.name ? 1 : -1));
             }
 
             // start tests asynchronously
             // setTimeout(() => story.startTests(), 1);
             newStory.reload = false;
-            newStory.startTests();
+            TestQueue.add(newStory);
           }
         }
       }
@@ -181,6 +220,33 @@ export class StateType {
   }
 }
 
+export const TestQueue = {
+  queue: [] as StoryType[],
+  running: false,
+  add(story: StoryType) {
+    // if we do not want to run tests we skip it
+    if (story.isDisabled) {
+      return;
+    }
+    TestQueue.queue.push(story);
+    if (!TestQueue.running) {
+      TestQueue.processQueue();
+    }
+  },
+  async processQueue() {
+    if (TestQueue.queue.length > 0) {
+      TestQueue.running = true;
+      let story = TestQueue.queue.shift();
+      try {
+        await story.startTests();
+      } finally {
+        TestQueue.processQueue();
+      }
+    } else {
+      TestQueue.running = false;
+    }
+  }
+};
 
 let state: StateType;
 
@@ -190,4 +256,3 @@ export function initState() {
   }
   return state;
 }
-

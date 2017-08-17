@@ -20,8 +20,11 @@ export function handler(request: any, response: any, next: any) {
     const execSync = require('child_process').execSync;
     // const jestPath = path.resolve('./fuse');
     // console.log(`UPDATE_SNAPSHOTS=true SNAPSHOT="${snapshotName}" node fuse test`);
-    const code = execSync(`UPDATE_SNAPSHOTS=true SNAPSHOT="${snapshotName}" node fuse test`);
-    // console.log(code);
+    // const code = execSync(`UPDATE_SNAPSHOTS=true SNAPSHOT="${snapshotName}" node fuse test`);
+    console.log(`Updating: ${snapshotName}`)
+    const code = execSync(`UPDATE_SNAPSHOTS=true ./node_modules/.bin/mocha --require ./mocha.js --ui snapshots --fgrep "${snapshotName}" --report lcovonly src/**/*.test.tsx --compilers ts:ts-node/register`);
+    
+    console.log(code.toString());
   }
   
   // console.log(snapPath);

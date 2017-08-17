@@ -43,6 +43,7 @@ export class Reporter {
       story.isRunning(true);
     }
     currentStory = story;
+    return story;
   }
   public endClass(_name: string, item: Task) {
     // $printLine();

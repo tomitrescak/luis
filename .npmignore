@@ -4,3 +4,4 @@ node_modules
 .npmignore
 .gitignore
 yarn.lock
+tsconfig.json

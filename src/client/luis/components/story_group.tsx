@@ -61,7 +61,7 @@ export const StoryGroupView = inject('state')(observer(({ folder, path, state }:
         folder.folders.length > 0 ? (
           <Collapse accordion={true} defaultActiveKey={path && path.length ? path[0].toString() : undefined}>
             {
-              folder.folders.map((g, i) => (
+              folder.folders.sort((a, b) => a.name > b.name ? 1 : -1).map((g, i) => (
                 <Panel key={i} header={g.name} className={menu}>
                   <StoryGroupView folder={g} path={path && path.length && i === path[0] ? path : undefined} />
                 </Panel>
@@ -72,7 +72,7 @@ export const StoryGroupView = inject('state')(observer(({ folder, path, state }:
       }
       <ul>
         {
-          folder.stories.map((s: StoryType, i: number) => {
+          folder.stories.sort((a, b) => a.name > b.name ? 1 : -1).map((s: StoryType, i: number) => {
             let currentPath = [folder.parent.folders.indexOf(folder), i];
             let parent = folder.parent;
             let name = toName(folder.name) + '-' + toName(s.name);
@@ -97,7 +97,7 @@ export const StoryGroupView = inject('state')(observer(({ folder, path, state }:
                   s == state.activeStory && s.snapshots && s.snapshots.length > 0 && (
                     <ul>
                       { s.snapshots.map((sn, index) => (
-                        <li key={index} style={state.view.selectedSnapshot === index ? { fontWeight: 'bold' } : {}}><a href={`/${name}/${urlPath}/${index}`} onClick={(e) => {
+                        <li key={index} style={state.view.selectedSnapshot.toString() === index.toString() ? { fontWeight: 'bold' } : {}}><a href={`/${name}/${urlPath}/${index}`} onClick={(e) => {
                           e.preventDefault();
                           state.view.openStory(name, urlPath, index);
                           return false;

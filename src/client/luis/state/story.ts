@@ -1,6 +1,6 @@
 import { IObservableArray, computed, observable } from 'mobx';
 
-import { formatComponent } from './helpers';
+// import { formatComponent } from './helpers';
 import { config } from 'chai-match-snapshot';
 import { Reporter, Task } from '../reporter';
 
@@ -41,6 +41,7 @@ export type Snapshot = {
 export class StoryType {
   // @observable activeSnapshot = 0;
   @observable snapshots = [] as IObservableArray<Snapshot>;
+  @observable disabled = false;
   actions: string[] = [];
   background = 'white';
   className = '';
@@ -58,13 +59,23 @@ export class StoryType {
   tests: TestType[];
   isSelected: true;
 
-  constructor(name: string, className: string, definition: {}, story: Story) {
+  constructor(name: string, folder: string, className: string, definition: {}, story: Story, disabled: boolean) {
     this.name = name;
+    this.folder = folder;
     this.className = className;
     this.definition = definition;
     this.tests = [];
     this.background = story.background;
     this.cssClassName = story.css;
+    this.isDisabled = disabled;
+  }
+
+  @computed get isDisabled(): boolean {
+    return this.disabled;
+  }
+
+  set isDisabled(value: boolean) {
+    this.disabled = value;
   }
 
   get passingTests(): number {
@@ -79,10 +90,10 @@ export class StoryType {
     this.tests.push(test);
   }
 
-  startTests() {
+  async startTests() {
     const runner = new FuseBoxWebTestRunner({ reporter: new Reporter() });
     this.runningTests = true;
-    setTimeout(() => runner.startTests([this.definition]), 1);
+    await runner.startTests([this.definition]);
   }
 
   isRunning(value: boolean) {
@@ -94,17 +105,17 @@ export class StoryType {
       this.info = '### Description\n\n' + story.info + '\n\n';
     }
 
-    this.info += '### Usage';
-    this.decorator = story.decorator;
-    let wrapper = story.component;
+//     this.info += '### Usage';
+//     this.decorator = story.decorator;
+//     let wrapper = story.component;
 
-    if (wrapper) {
-      this.info += `
-\`\`\`javascript
-${formatComponent(wrapper)}
-\`\`\`
-      `;
-    }
+//     if (wrapper) {
+//       this.info += `
+// \`\`\`javascript
+// ${formatComponent(wrapper)}
+// \`\`\`
+//       `;
+//     }
 
     this.renderedComponent = this.tryRender(story.component, story.decorator);
   }

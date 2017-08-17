@@ -4,6 +4,36 @@ import { setupBddBridge } from 'wafl';
 import { Story } from './story';
 import { config } from 'chai-match-snapshot';
 
+export function logError(message: string, ...props: string[]) {
+  if (localStorage.getItem("luisLog") == null) {
+    localStorage.setItem("luisLog", "1");
+  }
+  if (localStorage.getItem("luisLog") == "1" || localStorage.getItem("luisLog") == "2") {
+    console.log(message, ...props);
+  }
+}
+
+export function logInfo(message: string, ...props: string[]) {
+  if (localStorage.getItem("luisLog") == null) {
+    localStorage.setItem("luisLog", "1");
+  }
+  if (localStorage.getItem("luisLog") == "1") {
+    console.log(message, ...props);
+  }
+}
+
+function consoleGroup(name: string) {
+  if (localStorage.getItem("luisLog") == "1") {
+    console.group(name);
+  }
+}
+
+function consoleGroupEnd() {
+  if (localStorage.getItem("luisLog") == "1") {
+    console.groupEnd();
+  }
+}
+
 // setup tss bridge for support of describe, it
 setupBddBridge();
 
@@ -54,52 +84,38 @@ export class FuseBoxWebTestRunner {
     this.startTime = new Date().getTime();
   }
 
-  public startTests(tests: ModuleDefinition[]) {
+  public async startTests(tests: ModuleDefinition[]) {
     this.reporter.initialize(tests);
 
     var start = new Date().getTime();
 
-    let promises: Promise<{}>[] = [];
     for (let module of tests) {
-      promises = promises.concat(this.startFile(module));
+      await this.startFile(module);
     }
 
     // report result
-    if (promises.length) {
-      Promise.all(promises).then(() => {
-        this.reporter.endTest({}, new Date().getTime() - start);
-      });
-    } else {
-      this.reporter.endTest({}, new Date().getTime() - start);
-    }
-
-    return promises;
+    this.reporter.endTest({}, new Date().getTime() - start);
   }
 
-  public startFile(module: ModuleDefinition) {
-    let promises: Promise<{}>[] = [];
-
+  public async startFile(module: ModuleDefinition) {
     this.reporter.startFile();
 
     // tslint:disable-next-line:forin
     for (let story in module) {
       let storyInstance = new module[story]();
-      promises = promises.concat(this.startStory(storyInstance));
+      await this.startStory(storyInstance);
     }
-
-    return promises;
   }
 
-  public startStory(story: Story) {
+  public async startStory(story: Story) {
     let startTime = new Date().getTime();
-    let promises: Promise<{}>[] = [];
     let className = story.name || story.constructor.name;
     let item: Task = { className, cls: story, title: null, method: null, fn: null, fileName: null };
-    this.reporter.startClass(className, item);
+    const storyType = this.reporter.startClass(className, item);
 
     const instructions = this.extractInstructions(story);
 
-    console.group(className);
+    consoleGroup(className);
     for (let test of instructions.methods) {
       if (instructions.system.beforeEach) {
         instructions.system.beforeEach();
@@ -114,33 +130,21 @@ export class FuseBoxWebTestRunner {
         title: test
       };
 
-      promises = promises.concat(this.startTest(task));
+      try {
+        await this.startTest(task);
+      } finally {
+        this.reporter.endClass(className, item);
+        // tslint:disable-next-line:no-console
+        // logInfo(`Ending in  ${new Date().getTime() - startTime}ms`);
+        consoleGroupEnd();
+      }
       if (instructions.system.afterEach) {
         instructions.system.afterEach();
       }
     }
-
-    if (promises.length) {
-      Promise.all(promises).then(() => {
-        this.reporter.endClass(className, item);
-        // tslint:disable-next-line:no-console
-        console.log(`Ending in  ${new Date().getTime() - startTime}ms`);
-        console.groupEnd();
-      }).catch(() => {
-        console.log(`Ending in  ${new Date().getTime() - startTime}ms`);
-        console.groupEnd();
-      });
-    } else {
-      this.reporter.endClass(className, item);
-      // tslint:disable-next-line:no-console
-      console.log(`Ending in  ${new Date().getTime() - startTime}ms`);
-      console.groupEnd();
-    }
-
-    return promises;
   }
 
-  public startTest(item: Task) {
+  public async startTest(item: Task) {
     const startTime = new Date().getTime();
 
     config.currentTask = item;
@@ -148,31 +152,12 @@ export class FuseBoxWebTestRunner {
     config.currentTask.className = item.className;
 
     try {
-      let data = item.fn.call(item.cls);
-      if ($isPromise(data)) {
-        data
-          .then(() => {
-            let report = { item, data: { success: true } };
-            this.reporter.testCase(report);
-            // tslint:disable-next-line:no-console
-            console.log(
-              `%c SUCCESS! '${report.item.title}' after ${new Date().getTime() - startTime}ms`,
-              'color: green'
-            );
-          })
-          .catch((err: any) => {
-            let error = {}
-            let report = { item, data: { success: false, error: err } };
-            this.reporter.testCase(report);
-            throw err;
-          });
-        return [data];
-      } else {
-        let report = { item, data: { success: true } };
-        this.reporter.testCase(report);
-        // tslint:disable-next-line:no-console
-        console.log(`%c SUCCESS! '${report.item.title}' after ${new Date().getTime() - startTime}ms`, 'color: green');
-      }
+      await item.fn.call(item.cls);
+      
+      let report = { item, data: { success: true } };
+      this.reporter.testCase(report);
+      // tslint:disable-next-line:no-console
+      logInfo(`%c SUCCESS! '${report.item.title}' after ${new Date().getTime() - startTime}ms`, 'color: green');
     } catch (e) {
       let error;
       if (e.constructor.name === 'Exception') {
@@ -194,7 +179,7 @@ export class FuseBoxWebTestRunner {
       let parts = report.data.error.stack.split('    at ');
 
       // tslint:disable-next-line:no-console
-      console.log(
+      logError(
         `%c ERROR! '${report.item.title}':` +
           `%c '${report.data.error.message}' after ${new Date().getTime() -
             startTime}ms \n    at ${parts[1]}    at ${parts[2]}`,
@@ -202,7 +187,6 @@ export class FuseBoxWebTestRunner {
         'color: red'
       );
     }
-    return [];
   }
 
   private extractInstructions(obj: Story) {

@@ -10,6 +10,7 @@ import { observable } from 'mobx/lib/mobx';
 
 import { Previews } from './story_previews';
 import { config } from 'chai-match-snapshot';
+import { Button } from 'semantic-ui-react';
  
 const requireConfig = {
   url: 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.1/require.min.js',
@@ -30,6 +31,7 @@ const fail = style({
 const topMenu = style({
   display: 'table',
   background: '#dedede',
+  color: 'black',
   width: '100%',
   padding: '3px',
   $nest: {
@@ -139,23 +141,24 @@ export class Snapshots extends React.PureComponent<SnapshotsProps, {}> {
           </div>
 
           <div>
-            <select
+            {/*<select
               onChange={e => {
                 state.view.selectedSnapshot = parseInt(e.currentTarget.value, 10);
               }}
+              defaultValue={state.view.selectedSnapshot.toString()}
             >
               {story.snapshots && story.snapshots.map((s, i) =>
-                <option value={i} key={i}>
+                <option value={i.toString()} key={i}>
                   {s.name}
                 </option>
               )}
-            </select>
-            <button
-              className={snapshotSelect}
+            </select>*/}
+            <Button 
+              compact
+              size="small"
+              content="Update Snapshot"
               onClick={e => updateSnapshot(e.currentTarget, story, story.snapshots[state.view.selectedSnapshot].name)}
-            >
-              Update Snapshot
-            </button>
+             />
           </div>
         </div>
         {this.props.state.snapshotView === 'react' && <div style={{background: story.background}} className={story.cssClassName}><RenderStory /><div style={{clear: 'both'}} /></div>}
