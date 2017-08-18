@@ -151,7 +151,7 @@ export const StoryConfig = inject<ModalProps>('state')(
   observer(({ state }: ModalProps) =>
     <Modal
       trigger={
-        <Button icon="settings" fluid style={{ borderRadius: '0px' }} content="Disable Tests" />
+        <Button fluid style={{ borderRadius: '0px' }} content="Settings" />
       }
     >
       <Modal.Header>Select Which Tests Will Run</Modal.Header>

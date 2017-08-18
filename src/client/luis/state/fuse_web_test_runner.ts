@@ -133,15 +133,16 @@ export class FuseBoxWebTestRunner {
       try {
         await this.startTest(task);
       } finally {
-        this.reporter.endClass(className, item);
         // tslint:disable-next-line:no-console
         // logInfo(`Ending in  ${new Date().getTime() - startTime}ms`);
-        consoleGroupEnd();
-      }
-      if (instructions.system.afterEach) {
-        instructions.system.afterEach();
+        if (instructions.system.afterEach) {
+          instructions.system.afterEach();
+        }
       }
     }
+
+    this.reporter.endClass(className, item);
+    consoleGroupEnd();
   }
 
   public async startTest(item: Task) {
@@ -159,6 +160,11 @@ export class FuseBoxWebTestRunner {
       // tslint:disable-next-line:no-console
       logInfo(`%c SUCCESS! '${report.item.title}' after ${new Date().getTime() - startTime}ms`, 'color: green');
     } catch (e) {
+      // we ignore when error relates to waiting for a snapshot
+      if (e.message === 'Snapshot request pending') {
+        return;
+      }
+
       let error;
       if (e.constructor.name === 'Exception') {
         error = e;
@@ -191,7 +197,7 @@ export class FuseBoxWebTestRunner {
 
   private extractInstructions(obj: Story) {
     let proto = obj.constructor.prototype;
-    let props = Object.getOwnPropertyNames(proto).filter(n => $isFunction(proto, n) && n !== 'constructor');
+    let props = Object.getOwnPropertyNames(proto).filter(n => $isFunction(proto, n) && n !== 'constructor' && !n.match(/componentWith/));
     let instructions = {
       methods: [] as string[],
       system: {} as { [index: string]: Function }

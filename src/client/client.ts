@@ -17,7 +17,7 @@ setStatefulModules((name: string) => {
   return /router/.test(name) || /state/.test(name);
 });
 
-const requests: { name: string, rerun: boolean}[] = [];
+const requests: { name: string, requestReturned?: boolean}[] = [];
 
 config.snapshotDir = '';
 config.snapshotExtension = 'json';
@@ -32,14 +32,23 @@ config.snapshotLoader = (name: string, className: string) => {
     name = '/tests/snapshots' + (name[0] === '/' ? '' : '/') + name;
   }
 
-  // console.log(name);
+  let request = requests.find(r => r.name === name);
+  if (!request) {
+    request = { name, requestReturned: false };
+    requests.push(request);
+  }
 
+  // console.log(name);
   let val = FuseBox.import(name, (modules: {}) => {
-    if (!requests.some(r => r.name === name && r.rerun === true)) {
-      requests.push({ name, rerun: true });
+    if (!request.requestReturned) {
+      request.requestReturned = true;
       TestQueue.add(story);
     }
   });
+
+  if (!request.requestReturned) {
+    throw new Error('Snapshot request pending');
+  }
   // if (!val) {
   //   console.clear();
   // }

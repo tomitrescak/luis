@@ -103,11 +103,12 @@ config.onProcessSnapshots = (_taskName: string, snapshotName: string, current: s
     // if (!currentStory.snapshots) {
     //   currentStory.snapshots = observable([]);
     // }
-    const index = currentStory.snapshots.findIndex(s => s.name === snapshotName);
     let name = snapshotName;
     while (name.length > 0 && name[name.length - 1].match(/[1\s]/)) {
       name = name.substring(0, name.length - 1);
     }
+    const index = currentStory.snapshots.findIndex(s => s.name === name);
+    
     const snapshot: Snapshot = {
       expected,
       current,
