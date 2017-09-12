@@ -25,10 +25,10 @@ export function findStory(testPath: string[]): StoryType {
 }
 
 export function findTestPath(item: Task): string[] {
-  if (!item.cls || !item.cls.story) {
+  if (!item.cls || (!item.cls.story && !item.cls.storyConfig)) {
     return null;
   }
-  let story = item.cls;
+  let story = item.cls.storyConfig || item.cls;
   return [...story.folder.split('/'), story.story, item.title];
 }
 

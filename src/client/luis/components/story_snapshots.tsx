@@ -10,8 +10,8 @@ import { observable } from 'mobx/lib/mobx';
 
 import { Previews } from './story_previews';
 import { config } from 'chai-match-snapshot';
-import { Button } from 'semantic-ui-react';
- 
+import { Button, Loader } from 'semantic-ui-react';
+
 const requireConfig = {
   url: 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.1/require.min.js',
   paths: {
@@ -92,7 +92,84 @@ function updateSnapshot(button: HTMLButtonElement, story: StoryType, snapshotNam
     });
 }
 
+type Props = {
+  story: StoryType;
+  state: StateType
+}
+
 const defaultStory = () => <div>'No story'</div>;
+
+export const SnapshotHeader = observer<Props>(({ story, state }) => (
+  <div className={topMenu}>
+    <div style={{ width: '50px' }}>
+      { state.runningTests ? <span>[...]</span> : <SnapshotsTitle story={story} /> }
+    </div>
+    <div style={{ width: '150px' }}>
+      <a
+        href="javascript:;"
+        style={{ fontWeight: state.snapshotView == 'react' ? 'bold' : 'normal' }}
+        onClick={() => (state.snapshotView = 'react')}
+      >
+        React{' '}
+      </a>
+      /{' '}
+      <a
+        href="javascript:;"
+        style={{ fontWeight: state.snapshotView == 'html' ? 'bold' : 'normal' }}
+        onClick={() => (state.snapshotView = 'html')}
+      >
+        HTML{' '}
+      </a>
+      /{' '}
+      <a
+        href="javascript:;"
+        style={{ fontWeight: state.snapshotView == 'json' ? 'bold' : 'normal' }}
+        onClick={() => (state.snapshotView = 'json')}
+      >
+        JSON
+      </a>
+    </div>
+
+    <div style={{ width: '150px' }}>
+      <a
+        href="javascript:;"
+        style={{ fontWeight: state.snapshotPanes == 'current' ? 'bold' : 'normal' }}
+        onClick={() => (state.snapshotPanes = 'current')}
+      >
+        Current{' '}
+      </a>
+      /{' '}
+      <a
+        href="javascript:;"
+        style={{ fontWeight: state.snapshotPanes == 'both' ? 'bold' : 'normal' }}
+        onClick={() => (state.snapshotPanes = 'both')}
+      >
+        Both
+      </a>
+    </div>
+
+    <div>
+      {/*<select
+      onChange={e => {
+        state.view.selectedSnapshot = parseInt(e.currentTarget.value, 10);
+      }}
+      defaultValue={state.view.selectedSnapshot.toString()}
+    >
+      {story.snapshots && story.snapshots.map((s, i) =>
+        <option value={i.toString()} key={i}>
+          {s.name}
+        </option>
+      )}
+    </select>*/}
+      <Button
+        compact
+        size="small"
+        content="Update Snapshot"
+        onClick={e => updateSnapshot(e.currentTarget, story, story.snapshots[state.view.selectedSnapshot].name)}
+      />
+    </div>
+  </div>
+));
 
 @inject('state')
 @observer
@@ -104,64 +181,17 @@ export class Snapshots extends React.PureComponent<SnapshotsProps, {}> {
       return <div>No story selected ...</div>;
     }
 
-    if (this.props.state.runningTests) {
-      return <div>Running tests ...</div>;
-    }
-
     let RenderStory = story && story.renderedComponent ? story.renderedComponent : defaultStory;
 
     return (
       <div>
-        <div className={topMenu}>
-          <div style={{width: '50px'}}>
-            <SnapshotsTitle story={story} />
+        <SnapshotHeader story={story} state={state} />
+        { this.props.state.snapshotView === 'react' && (
+          <div style={{ background: story.background }} className={story.cssClassName}>
+            <RenderStory />
+            <div style={{ clear: 'both' }} />
           </div>
-          <div style={{width: '150px'}}>
-            <a href="javascript:;" style={{ fontWeight: state.snapshotView == 'react' ? 'bold' : 'normal' }} onClick={() => (state.snapshotView = 'react')}>
-              React{' '}
-            </a>
-            /{' '}
-            <a href="javascript:;" style={{ fontWeight: state.snapshotView == 'html' ? 'bold' : 'normal' }} onClick={() => (state.snapshotView = 'html')}>
-              HTML{' '}
-            </a>
-            /{' '}
-            <a href="javascript:;" style={{ fontWeight: state.snapshotView == 'json' ? 'bold' : 'normal' }} onClick={() => (state.snapshotView = 'json')}>
-              JSON
-            </a>
-          </div>
-
-          <div style={{width: '150px'}}>
-            <a href="javascript:;" style={{ fontWeight: state.snapshotPanes == 'current' ? 'bold' : 'normal' }} onClick={() => (state.snapshotPanes = 'current')}>
-              Current{' '}
-            </a>
-            /{' '}
-            <a href="javascript:;" style={{ fontWeight: state.snapshotPanes == 'both' ? 'bold' : 'normal' }} onClick={() => (state.snapshotPanes = 'both')}>
-              Both
-            </a>
-          </div>
-
-          <div>
-            {/*<select
-              onChange={e => {
-                state.view.selectedSnapshot = parseInt(e.currentTarget.value, 10);
-              }}
-              defaultValue={state.view.selectedSnapshot.toString()}
-            >
-              {story.snapshots && story.snapshots.map((s, i) =>
-                <option value={i.toString()} key={i}>
-                  {s.name}
-                </option>
-              )}
-            </select>*/}
-            <Button 
-              compact
-              size="small"
-              content="Update Snapshot"
-              onClick={e => updateSnapshot(e.currentTarget, story, story.snapshots[state.view.selectedSnapshot].name)}
-             />
-          </div>
-        </div>
-        {this.props.state.snapshotView === 'react' && <div style={{background: story.background}} className={story.cssClassName}><RenderStory /><div style={{clear: 'both'}} /></div>}
+        )}
         {this.props.state.snapshotView === 'html' && <Previews story={this.props.story} />}
         {this.props.state.snapshotView === 'json' && <SnapshotJSON story={this.props.story} />}
       </div>

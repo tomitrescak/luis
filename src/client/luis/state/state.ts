@@ -124,7 +124,7 @@ export class StateType {
   }
 
   saveStoryConfig() {
-    this._testConfig = this.stories.map(s => [s.name, s.isDisabled ? '1' : '0' ]);
+    this._testConfig = this.stories.map(s => [s.folder + s.name, s.isDisabled ? '1' : '0' ]);
     localStorage.setItem('louisTestConfig', this._testConfig.map(t => t.join('#')).join('|'));
   }
 
@@ -148,7 +148,8 @@ export class StateType {
       // tslint:disable-next-line:forin
       for (let className in mod.module) {
         let storyDefinition = mod.module[className];
-        let story = new mod.module[className]();
+        let test = new mod.module[className]();
+        let story = test.storyConfig || test;
         let storyName = story.story;
         if (!storyName) {
           console.warn(`Class ${className}'s does not define 'story' name`);
@@ -183,7 +184,7 @@ export class StateType {
 
           // we only restart tests on required files
           let existingStory = parentFolder.stories.find(s => s.name === storyName);
-          let isStoryDisabled = this.testConfig.some(t => t[0] == storyName && t[1] == '1');
+          let isStoryDisabled = this.testConfig.some(t => t[0] == (folder + storyName) && t[1] == '1');
           if (!existingStory || existingStory.reload) {
             // create a new story
             // debugger;

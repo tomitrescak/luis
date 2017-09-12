@@ -16,9 +16,6 @@ export interface PreviewProps {
 const DefaultDecorator = ({ children }: any) => <div>{children}</div>;
 
 export const Previews = inject('state')(observer(({ story, state }: PreviewProps) => {
-  if (state.runningTests) {
-    return <div>Gathering data</div>;
-  }
   if (!story.snapshots || !story.snapshots[state.view.selectedSnapshot]) {
     return <div>No snapshots</div>;
   }

@@ -1,6 +1,6 @@
 {
   "name": "luis",
-  "version": "1.2.47",
+  "version": "1.2.53",
   "description": "List-of-uis book and testing of uis",
   "main": "dist/client/client.js",
   "types": "dist/client/client.d.ts",
@@ -35,7 +35,6 @@
     "react": "15.x.x",
     "react-split-pane": "0.x.x",
     "react-tabs": "1.x.x",
-    "semantic-ui-react": "0.x.x",
     "tslib": "1.x.x",
     "typestyle": "1.x.x"
   },
@@ -44,6 +43,7 @@
     "chai-match-snapshot": "^1.0.8",
     "enzyme": "^2.8.2",
     "enzyme-to-json": "^1.4.5",
-    "wafl": "^0.0.9"
+    "wafl": "^0.0.9",
+    "semantic-ui-react": "^0.71.4"
   }
 }
