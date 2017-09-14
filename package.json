@@ -1,6 +1,6 @@
 {
   "name": "luis",
-  "version": "1.2.54",
+  "version": "1.2.56",
   "description": "List-of-uis book and testing of uis",
   "main": "dist/client/client.js",
   "types": "dist/client/client.d.ts",
