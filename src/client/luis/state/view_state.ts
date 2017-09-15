@@ -33,6 +33,8 @@ export class ViewState {
     if (activeSnapshot >= 0) {
       // also select snapshot  
       this.state.snapshotView = 'html'; 
+    } else {
+      this.state.snapshotView = 'react';
     }
   }
 }

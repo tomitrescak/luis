@@ -56,7 +56,7 @@ export class Reporter {
 
   public testCase(report: Report) {
     config.snapshotCalls = null;
-    const storyDefinition = report.item.cls;
+    const storyDefinition = report.item.cls.storyConfig || report.item.cls;
     const folder = storyDefinition.folder;
     let testPath = null;
 

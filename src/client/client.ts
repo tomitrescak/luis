@@ -55,22 +55,23 @@ config.snapshotLoader = (name: string, className: string) => {
   return val;
 };
 
-export function action(name: string, func?: () => string) {
-  return function() {
-    let args = Array.from(arguments);
-    let state = initState();
-
-    state.actions.push(`[${name}]: {${args.map(function(a) {
-      if (a == Object(a)) {
-        return a.constructor.name;
-      }
-      try {
-        return JSON.stringify(a).substring(0, 20);
-      } catch (ex) {
-        return 'Circular';
-      }}).join(', ')}}`);
+export function action(name: string, func?: (...args: any[]) => string) {
+  return function(...args: any[]) {
     if (func) {
-      state.actions.push(func());
+      state.actions.push(`[${name}]: ${func.apply(null, args)}`);
+    } else {
+      let args = Array.from(arguments);
+      let state = initState();
+  
+      state.actions.push(`[${name}]: {${args.map(function(a) {
+        if (a == Object(a)) {
+          return a.constructor.name;
+        }
+        try {
+          return JSON.stringify(a).substring(0, 20);
+        } catch (ex) {
+          return 'Circular';
+        }}).join(', ')}}`);
     }
   }
 }
