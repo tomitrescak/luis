@@ -77,6 +77,10 @@ export class TestRunner {
     group.endTime = new Date().getTime();
     group.duration = group.endTime - group.startTime;
 
+    // calculate passing and failing
+    group.passingTests = group.countTests(true);
+    group.failingTests = group.countTests(false);
+
     consoleGroupEnd();
 
     return result;
@@ -104,8 +108,6 @@ export class TestRunner {
       // tslint:disable-next-line:no-console
       logInfo(`%c SUCCESS! '${test.name}' after ${new Date().getTime() - test.startTime}ms`, 'color: green');
 
-      this.state.passingTests ++;
-
       return true;
     } catch (e) {
       // we ignore when error relates to waiting for a snapshot
@@ -124,8 +126,6 @@ export class TestRunner {
         'color: red; font-weight: bold',
         'color: red'
       );
-
-      this.state.failingTests ++;
 
       return false;
     } finally {
@@ -188,12 +188,13 @@ if (!process.env.WALLABY_PRODUCTION) {
       }
       const index = currentTest.snapshots.findIndex(s => s.name === name);
 
-      const snapshot: Snapshot = {
+      const snapshot: Snapshot = new Snapshot({
+        test: currentTest,
         expected,
         current,
         matching: current === expected,
         name
-      };
+      });
       if (index === -1) {
         currentTest.snapshots.push(snapshot);
       } else {

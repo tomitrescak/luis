@@ -46,22 +46,11 @@ export const test: BridgeInterface = {
 export function setupTestBridge(state: App.State, bridgeInterface: BridgeInterface = test, startImmediately = true) {
   const glob = global;
 
-  function createGroup(name: string) {
-   
 
-    // find the child group in current group
+  glob[bridgeInterface.describe] = function(name: string, impl: Impl) {
     const group = state.currentGroup.getGroup(name, state);
     const parent = group.parent;
     state.currentGroup = group;
-
-    return {
-      group,
-      parent
-    };
-  }
-
-  glob[bridgeInterface.describe] = function(name: string, impl: Impl) {
-    const { parent } = createGroup(name);
 
     try {
       impl();
@@ -73,7 +62,10 @@ export function setupTestBridge(state: App.State, bridgeInterface: BridgeInterfa
   };
 
   glob[bridgeInterface.storyOf] = function(name: string, props: StoryConfig, impl: (props: any) => void) {
-    const { parent } = createGroup(name);
+    const group = state.currentGroup.getStory(name, props, state);
+    const parent = group.parent;
+    state.currentGroup = group;
+
     try {
       impl(props);
     } finally {

@@ -5,7 +5,7 @@ describe('Component', () => {
     'Bar View',
     {
       get component() {
-        return <div>Component</div>;
+        return <div>Bar Component</div>;
       },
       info: 'Foo Info 567'
     },
@@ -14,7 +14,15 @@ describe('Component', () => {
         wrapper.should.matchSnapshot('rendered');
       })
 
-      it('Passes', function() {
+      itMountsAnd('renders 2 correctly', () => data.component, (wrapper) => {
+        wrapper.should.matchSnapshot('rendered 6');
+      })
+
+      it('Passes', function() { 
+        // throw new Error('Failed');
+      });
+
+      it('Passes 9', function() { 
         // throw new Error('Failed');
       });
     }

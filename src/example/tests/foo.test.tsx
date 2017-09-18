@@ -5,7 +5,7 @@ describe('Component', () => {
     'Foo',
     {
       get component() {
-        return <div>Component</div>;
+        return <div>Foo1 Component</div>;
       },
       info: 'Foo Info 66'
     },

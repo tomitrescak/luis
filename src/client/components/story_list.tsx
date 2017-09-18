@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
-import { Accordion, Icon, List, Message, Menu } from 'semantic-ui-react';
+import { Accordion, Icon, List, Message, Menu, Divider, Segment } from 'semantic-ui-react';
 import { style } from 'typestyle';
 
 import { ITheme } from '../config/themes';
-import { TestGroup, Test } from '../config/test_data';
+import { TestGroup, Test, Story } from '../config/test_data';
 import { observable } from 'mobx';
 
 const pane = (theme: ITheme) =>
@@ -24,7 +24,7 @@ const content = style({
 const snapshotContent = style({
   paddingLeft: '24px!important',
   paddingTop: '6px!important',
-  paddingBottom: '6px!important',
+  paddingBottom: '0px!important',
   $nest: {
     '& .icon': {
       paddingRight: '0px!important'
@@ -48,17 +48,24 @@ const timing = (color: string) =>
   });
 
 const errorMessage = style({
-  marginBottom: '6px!important'
+  marginBottom: '6px!important',
+  padding: '3px 6px!important'
 });
 
 const snapshotMenu = style({
   marginTop: '0px!important',
-  fontSize: '11px!important'
+  fontSize: '12px!important'
 });
 
 const hidden = style({
   color: 'white!important'
-})
+});
+
+const testPane = style({
+  padding: '0px 6px 0px 0px!important',
+  marginBottom: '3px!important',
+  marginTop: '0px!important'
+});
 
 export type Props = {
   state?: App.State;
@@ -73,14 +80,24 @@ export class TestGroupView extends React.PureComponent<Props> {
       <div>
         <Accordion.Title
           key={group.name}
-          active={state.isExpanded(group.fileName).get()}
-          onClick={() => state.toggleExpanded(group.fileName)}
+          active={state.isExpanded(group).get()}
+          onClick={(e) => state.toggleExpanded(e, group)}
         >
           <Icon name="dropdown" />
-          {group.name}
+          {group.constructor.name == 'Story' ? (
+            <span>
+              <Icon name="puzzle" />
+              <a href={`/${group.url}`} onClick={(e) => state.viewState.openStoryFromList(e, group.url)}>
+                {group.name}
+              </a>
+            </span>
+          ) : (
+            <span>{group.name}</span>
+          )}
+
           <div className={timing(group.color)}>{group.duration.toString()}ms</div>
         </Accordion.Title>
-        <Accordion.Content active={state.isExpanded(group.fileName).get()} className={content}>
+        <Accordion.Content active={state.isExpanded(group).get()} className={content}>
           {group.groups.map((g, i) => <TestGroupView state={state} group={g} key={g.fileName} />)}
           {group.tests.map((t, i) => <TestView state={state} test={t} key={t.name} />)}
         </Accordion.Content>
@@ -101,28 +118,35 @@ export class TestView extends React.PureComponent<TestProps> {
   }
   render(): any {
     const { test, state } = this.props;
-    const path = test.name + test.group.fileName;
+    const path = test.fileName;
+    const expanded = state.isExpanded(path).get();
     return (
-      <div>
-        <Accordion.Title key={path} active={state.isExpanded(path).get()} onClick={() => this.canExpand() && state.toggleExpanded(path)}>
+      <Segment basic={!expanded} secondary={expanded} className={testPane}>
+        <Accordion.Title
+          key={path}
+          active={expanded}
+          onClick={(e) => this.canExpand() && state.toggleExpanded(e, path)}
+        >
           <Icon name="dropdown" className={this.canExpand() ? 'normal' : hidden} />
           <Icon {...test.icon} />
           {test.name}
           <div className={timing('#AAA')}>{test.duration.toString()}ms</div>
         </Accordion.Title>
         <Accordion.Content active={state.isExpanded(path).get()} className={snapshotContent}>
+          {test.snapshots.length > 0 && (
+            <List className={snapshotMenu}>
+              {test.snapshots.map((s, i) => <List.Item as="a" icon="image" key={s.name} content={s.name} />)}
+            </List>
+          )}
           {test.error && (
+            <div>
             <Message negative size="tiny" className={errorMessage}>
               {test.error.message}
             </Message>
-          )}
-          {test.snapshots.length > 0 && (
-            <Menu vertical fluid className={snapshotMenu} compact inverted color="blue">
-              {test.snapshots.map((s, i) => <Menu.Item as="a" icon="image" key={s.name} content={s.name} />)}
-            </Menu>
+            </div>
           )}
         </Accordion.Content>
-      </div>
+      </Segment>
     );
   }
 }

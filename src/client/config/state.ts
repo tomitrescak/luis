@@ -2,11 +2,13 @@ import { observable, action, computed, IObservableValue } from 'mobx';
 
 import { lightTheme, darkTheme, ITheme } from '../config/themes';
 
-import { TestGroup } from './test_data';
+import { TestGroup, Snapshot } from './test_data';
 import { TestQueue } from './test_queue';
 import { TestRunner } from './test_runner';
 
 import { setStatefulModules } from 'fuse-box/modules/fuse-hmr';
+import { ViewState } from './state_view';
+import { setupRouter } from './router';
 
 setStatefulModules((name: string) => {
   return /router/.test(name) || /state/.test(name);
@@ -37,6 +39,7 @@ export class StateModel {
   @observable liveRoot: TestGroup;
   updateRoot: TestGroup;
   currentGroup: TestGroup;
+  viewState: ViewState;
 
   timer: any;
   reconciled: boolean;
@@ -52,6 +55,10 @@ export class StateModel {
     this.currentGroup = this.updateRoot;
     this.testQueue = new TestQueue(this.testRunner);
     this.testRunner = testRunner;
+    this.viewState = new ViewState(this);
+
+    // create new router
+    setupRouter(this);
   }
 
   find(find: TestGroup, root: TestGroup) {
@@ -83,6 +90,38 @@ export class StateModel {
     return null;
   }
 
+  findStoryByUrl(url: string) {
+    const queue = [this.liveRoot];
+    while (queue.length > 0) {
+      let current = queue.shift();
+      if (current.url === url) {
+        return current;
+      }
+      for (let group of current.groups) {
+        queue.push(group);
+      }
+    }
+    return null;
+  }
+
+  findSnapshotByUrl(url: string): Snapshot {
+    const queue = [this.liveRoot];
+    while (queue.length > 0) {
+      let current = queue.shift();
+      for (let group of current.groups) {
+        queue.push(group);
+      }
+      for (let test of current.tests) {
+        for (let snapshot of test.snapshots) {
+          if (snapshot.url === url) {
+            return snapshot;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
   @action performReconciliation() {
     this.liveRoot.groups = [...this.updateRoot.groups];
 
@@ -106,6 +145,7 @@ export class StateModel {
     }
 
     this.liveRoot.version++;
+    this.viewState.openAfterTest();
   }
 
   @action performDeepReconciliation() {
@@ -211,15 +251,22 @@ export class StateModel {
     });
   } 
 
-  @action isExpanded(path: string) {
+  @action isExpanded(group: TestGroup, path: string) {
+    console.log('Checking explanded');
+    
     if (this.expanded[path] == null) {
       this.expanded[path] = observable(false);
     }
     return this.expanded[path];
   }
 
-  @action toggleExpanded(path: string) {
-    this.expanded[path].set(!this.expanded[path].get());
+  @action toggleExpanded(e: any, path: string) {
+    if (e.target && e.target.nodeName.toLowerCase() === 'a') {
+      // anchors only allow expands
+      this.expanded[path].set(true);
+    } else {
+      this.expanded[path].set(!this.expanded[path].get());
+    }
   }
 }
 

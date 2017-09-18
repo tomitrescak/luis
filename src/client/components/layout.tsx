@@ -12,6 +12,7 @@ import { SideBar } from './side_bar';
 
 import DevTools from 'mobx-react-devtools';
 import { TopPanel } from './top_panel';
+import { StoryComponent } from './story_component';
 
 const split = (theme: ITheme) =>
   style({
@@ -92,7 +93,7 @@ export const Layout = inject<Props>('state')(observer(({ state }: Props) => (
         <div>
           <TopPanel />
           <div className={pane}>
-            <Header as="h3">Application Content</Header>
+            <StoryComponent state={state} />
           </div>
         </div>
       </SplitPane>

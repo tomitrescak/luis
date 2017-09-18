@@ -49,6 +49,13 @@ export class TestGroup {
     return (this.parent == null || this.parent.parent == null ? '' : (this.parent.path + ' > ')) + this.name;
   }
 
+  get url(): string {
+    if (this.parent == null) {
+      return '';
+    }
+    return (this.parent == null || this.parent.parent == null ? '' : (this.parent.path + '-')) + this.name.replace(/\s/g, '-');
+  }
+
   get isRoot() {
     return this.parent == null;
   }
@@ -85,19 +92,24 @@ export class TestGroup {
     return possibleRoot ? possibleRoot : new TestGroup(state.currentGroup, name);
   }
 
+  getStory(name: string, props: StoryConfig, state: App.State): Story {
+    let possibleRoot = state.currentGroup.groups.find(g => g.name === name) as Story;
+    return possibleRoot ? possibleRoot : new Story(state.currentGroup, name, props);
+  }
+
   countTests(passing: boolean) {
     let count = 0;
     const queue: TestGroup[] = [this];
     while (queue.length > 0) {
       let current = queue.shift();
-      for (let group of current.groups) {
-        for (let test of group.tests) {
-          if (passing && test.error == null) {
-            count ++;
-          } else if (!passing && test.error != null) {
-            count ++;
-          }
+      for (let test of current.tests) {
+        if (passing && test.error == null) {
+          count ++;
+        } else if (!passing && test.error != null) {
+          count ++;
         }
+      }
+      for (let group of current.groups) {
         queue.push(group);
       }
     }
@@ -112,6 +124,14 @@ export class TestGroup {
 
 export class Story extends TestGroup {
   component: JSX.Element;
+  info: string;
+
+  constructor(parent: TestGroup, name: string, props: StoryConfig) { 
+    super(parent, name);
+
+    this.component = props.component;
+    this.info = props.info;
+  }
 }
 
 export class Test {
@@ -138,6 +158,18 @@ export class Test {
       color: this.error ? 'red' : 'green'
     }
   }
+
+  get url() {
+    return this.group.url + '-' + this.name.replace(/\s/g, '-');
+  }
+}
+
+export interface ISnapshot {
+  name: string;
+  expected: string;
+  current: string;
+  matching?: boolean;
+  test: Test
 }
 
 export class Snapshot {
@@ -145,4 +177,17 @@ export class Snapshot {
   expected: string;
   current: string;
   matching?: boolean;
+  test: Test
+
+  constructor(snapshot: ISnapshot) {
+    this.name = snapshot.name;
+    this.expected = snapshot.expected;
+    this.current = snapshot.current;
+    this.matching = snapshot.matching;
+    this.test = snapshot.test;
+  }
+
+  get url() {
+    return this.test.url + '-' + this.name.replace(/\s/g, '-');
+  }
 }
