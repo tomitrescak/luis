@@ -9,7 +9,6 @@ import { observable } from 'mobx';
 let currentStory: StoryType = null;
 
 export declare type Task = {
-  method: string;
   title: string;
   fn: Function;
   fileName: string;

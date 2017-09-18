@@ -1,10 +1,10 @@
 import 'tslib';
 import { config } from 'chai-match-snapshot';
-import { render as renderLuis } from './luis/index';
 import { initState, ModuleDefinition, TestModule, TestQueue } from './luis/state/state';
 import { StoryType, Decorator } from './luis/state/story';
 
 import {setStatefulModules} from 'fuse-box/modules/fuse-hmr';
+import { renderLuis } from './components/index';
 
 const state = initState();
 

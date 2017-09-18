@@ -14,7 +14,7 @@ app.use(historyAPIFallback());
 //     res.sendFile(__dirname + '/louis.html');
 // });
 
-export function start(luisPath = `dist/luis/`) {
+export function start(luisPath = `public/`) {
     try {
         fs.statSync(path.join(path.resolve(luisPath), 'luis.html'));
 
