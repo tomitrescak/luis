@@ -50,7 +50,7 @@ export class TestRunner {
   }
 
   public async testGroup(group: TestGroup) {
-    if (this.state.isDisabled(group)) {
+    if (this.state.config.isDisabled(group)) {
       return true;
     }
 

@@ -38,12 +38,14 @@ export class SideBar extends React.PureComponent<Props> {
         <Menu.Item name="home">
           <Loader size="tiny" active={state.testQueue.running} />
         </Menu.Item>
-        <Menu.Item toggle active={state.showPassing} onClick={() => state.showPassing = !state.showPassing}>
+        <Menu.Item active={state.showPassing} onClick={() => state.showPassing = !state.showPassing}>
           <Icon name="check" color="green" /><div className="lbl">{ state.liveRoot.passingTests }</div>
         </Menu.Item>
-      
-        <Menu.Item toggle active={state.showFailing} onClick={() => state.showFailing = !state.showFailing}>
+        <Menu.Item active={state.showFailing} onClick={() => state.showFailing = !state.showFailing}>
           <Icon name="remove" color="red" /><div className="lbl">{ state.liveRoot.failingTests }</div>
+        </Menu.Item>
+        <Menu.Item onClick={() => state.config.toggleStoryView()}>
+          <Icon name={state.config.storyView === 'list' ? 'content' : 'indent'} />
         </Menu.Item>
         <StoryConfig />
 

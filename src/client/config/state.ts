@@ -10,6 +10,7 @@ import { ViewState } from './state_view';
 import { setupRouter } from './router';
 import { Story } from '../client';
 import { setupHmr } from './setup';
+import { AppConfig } from './app_config';
 
 setupHmr();
 
@@ -48,7 +49,8 @@ export class StateModel {
   beforeHmr = true;
   testQueue: TestQueue;
   testRunner: TestRunner;
-  _testConfig: string[][];
+
+  config: AppConfig;
 
   constructor(testRunner: TestRunner = null) {
     this.testRunner = testRunner || new TestRunner(this);
@@ -58,38 +60,13 @@ export class StateModel {
     this.testQueue = new TestQueue(this.testRunner);
     this.testRunner = testRunner;
     this.viewState = new ViewState(this);
+    this.config = new AppConfig(this);
 
     // create new router
     setupRouter(this);
   }
 
-  get testConfig() {
-    if (!this._testConfig) {
-      this._testConfig = [];
-
-      let storedConfig = localStorage.getItem('louisTestConfig');
-      if (storedConfig == null) {
-        storedConfig = '';
-        localStorage.setItem('louisTestConfig', storedConfig);
-      }
-      const parts = storedConfig.split('|').map(s => s.split('#'));
-
-      // add non existing items
-      const queue = [this.liveRoot];
-      while (queue.length > 0) {
-        let current = queue.shift();
-        if (current.tests.length > 0) {
-          const value = parts.find(c => c[0] === current.path);
-          this._testConfig.push([current.path, value ? value[1] : '1']);
-        }
-        for (let group of current.groups) {
-          queue.push(group);
-        }
-      }
-    }
-
-    return this._testConfig;
-  }
+  
 
   findGroup(test: (group: TestGroup) => boolean, root = this.liveRoot): TestGroup {
     const queue = [root];
@@ -113,31 +90,8 @@ export class StateModel {
     return this.findGroup(g => g.id === id);
   }
 
-  toggleAllTests(disabled: boolean) {
-    this.testConfig.forEach(s => (s[1] = disabled ? '0' : '1'));
-    this.saveStoryConfig();
-  }
-
-  toggleStoryTests(id: string, disabled: boolean) {
-    let config = this.testConfig.find(t => t[0] === id);
-    if (config) {
-      config[1] = disabled ? '0' : '1';
-    }
-    this.saveStoryConfig();
-  }
-
-  isDisabled(group: TestGroup) {
-    let config = this.testConfig.find(t => t[0] === group.id);
-    return config && config[1] == '0';
-  }
-
-  saveStoryConfig() {
-    localStorage.setItem('louisTestConfig', this.testConfig.map(t => t.join('#')).join('|'));
-  }
-
   @action
   performReconciliation() {
-    this._testConfig = null;
     this.liveRoot.groups = [...this.updateRoot.groups];
 
     // remap root and run tests
@@ -161,6 +115,7 @@ export class StateModel {
 
     this.liveRoot.version++;
     this.viewState.openAfterTest();
+    this.config.loadTests();
   }
 
   // @action performDeepReconciliation() {

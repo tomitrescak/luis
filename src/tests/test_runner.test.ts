@@ -8,7 +8,7 @@ describe('Test', function() {
   let testRunner: TestRunner;
 
   beforeEach(() => {
-    testRunner = new TestRunner();
+    testRunner = new TestRunner(null);
   });
 
   it('detects failing tests', async function() {

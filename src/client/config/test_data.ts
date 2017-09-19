@@ -18,8 +18,8 @@ export class TestItem {
   parent: TestItem;
   urlName: string;
 
-  @observable startTime: number;
-  @observable endTime: number;
+  @observable startTime: number = 0;
+  @observable endTime: number = 0;
 
   constructor(name: string, parent: TestItem) {
     this.name = name;
@@ -56,8 +56,8 @@ export class TestGroup extends TestItem {
   after: Impl;
   afterEach: Impl;
 
-  startTime: number;
-  endTime: number;
+  startTime: number = 0;
+  endTime: number = 0;
 
   @observable version: number = 0;
   @observable passingTests = 0;
