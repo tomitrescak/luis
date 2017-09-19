@@ -41,7 +41,7 @@ let currentTest: Test;
 
 export class TestRunner {
   private startTime: number;
-  
+
   state: App.State;
 
   constructor(state: App.State) {
@@ -50,6 +50,10 @@ export class TestRunner {
   }
 
   public async testGroup(group: TestGroup) {
+    if (this.state.isDisabled(group)) {
+      return true;
+    }
+
     group.startTime = new Date().getTime();
     let className = group.fileName;
 
@@ -122,7 +126,8 @@ export class TestRunner {
       // tslint:disable-next-line:no-console
       logError(
         `%c ERROR! '${test.name}':` +
-          `%c '${e.message.substring(0, 300)}'... after ${new Date().getTime() - test.startTime}ms \n    at ${parts[1]}    at ${parts[2]}`,
+          `%c '${e.message.substring(0, 300)}'... after ${new Date().getTime() -
+            test.startTime}ms \n    at ${parts[1]}    at ${parts[2]}`,
         'color: red; font-weight: bold',
         'color: red'
       );
@@ -140,40 +145,27 @@ export class TestRunner {
 
 // process snapshot requires global variable
 
-if (!process.env.WALLABY_PRODUCTION) {
-  const requests: { name: string; requestReturned?: boolean }[] = [];
+if (global.FuseBox) {
+  const snapshotsRaw = FuseBox.import('~/tests/snapshots/*.json');
+  const snapshots: { [index: string]: object } = {};
+  for (let key of Object.getOwnPropertyNames(snapshotsRaw)) {
+    let parts = key.split('/');
+    // take the filename
+    let name = parts[parts.length - 1].toLowerCase();
+    // remove the _snapshot.json suffix
+    name = name.replace('_snapshots.json', '');
+    snapshots[name] = snapshotsRaw[key];
+  }
+  console.log(snapshots);
   config.snapshotLoader = (name: string, className: string) => {
     const state = initState();
     var testFolder = state.findStoryByFileName(className);
 
-    var index = name.indexOf('/tests');
-    if (index >= 0) {
-      name = name.substring(name.indexOf('/tests'));
-    } else {
-      name = '/tests/snapshots' + (name[0] === '/' ? '' : '/') + name;
-    }
-
-    let request = requests.find(r => r.name === name);
-    if (!request) {
-      request = { name, requestReturned: false };
-      requests.push(request);
-    }
-
-    // console.log(name);
-    let val = FuseBox.import(name, (modules: {}) => {
-      if (!request.requestReturned) {
-        request.requestReturned = true;
-        state.testQueue.add(testFolder);
-      }
-    });
-
-    if (!request.requestReturned) {
-      throw new Error('Snapshot request pending');
-    }
     // if (!val) {
     //   console.clear();
     // }
-    return val;
+    console.log('Finding: ' + className);
+    return snapshots[className];
   };
 
   config.onProcessSnapshots = (_taskName: string, snapshotName: string, current: string, expected: string) => {

@@ -4,6 +4,7 @@ import { Sidebar, Menu, Icon, Loader, Button } from 'semantic-ui-react';
 
 import { style } from 'typestyle';
 import { StoryComponent } from './story_component';
+import { StoryConfig } from './story_config';
 
 const menuButton = style({
   margin: '0px!important',
@@ -16,6 +17,10 @@ const menuButton = style({
   }
 });
 
+const noMargin = style({
+  marginBottom: '0px!important'
+})
+
 export type Props = {
   state?: App.State;
 };
@@ -27,29 +32,22 @@ export class SideBar extends React.PureComponent<Props> {
     const state = this.props.state;
 
     return (
-      <Sidebar
-        as={Menu}
-        color={state.theme.sideBarColor}
-        icon
-        animation="uncover"
-        width="very thin"
-        visible={true}
-        vertical
-        inverted
+      <Menu
+        pointing secondary inverted color="blue" className={noMargin}
       >
         <Menu.Item name="home">
           <Loader size="tiny" active={state.testQueue.running} />
         </Menu.Item>
-        <Menu.Item as={Button} toggle active={true} className={menuButton}>
+        <Menu.Item toggle active={state.showPassing} onClick={() => state.showPassing = !state.showPassing}>
           <Icon name="check" color="green" /><div className="lbl">{ state.liveRoot.passingTests }</div>
         </Menu.Item>
-        <Menu.Item as={Button} toggle active={true} className={menuButton}>
+      
+        <Menu.Item toggle active={state.showFailing} onClick={() => state.showFailing = !state.showFailing}>
           <Icon name="remove" color="red" /><div className="lbl">{ state.liveRoot.failingTests }</div>
         </Menu.Item>
-        <Menu.Item name="camera">
-          <Icon name="options" />
-        </Menu.Item>
-      </Sidebar>
+        <StoryConfig />
+
+      </Menu>
     );
   }
 }

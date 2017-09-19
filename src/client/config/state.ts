@@ -6,13 +6,12 @@ import { TestGroup, Snapshot, TestItem } from './test_data';
 import { TestQueue } from './test_queue';
 import { TestRunner } from './test_runner';
 
-import { setStatefulModules } from 'fuse-box/modules/fuse-hmr';
 import { ViewState } from './state_view';
 import { setupRouter } from './router';
+import { Story } from '../client';
+import { setupHmr } from './setup';
 
-setStatefulModules((name: string) => {
-  return /router/.test(name) || /state/.test(name);
-});
+setupHmr();
 
 // // var Client = require('fusebox-websocket').SocketClient
 // // var client = new Client({
@@ -32,8 +31,12 @@ declare global {
 }
 
 export class StateModel {
-  expanded: { [index: string]: IObservableValue<boolean> } = {};
   @observable theme: ITheme = lightTheme;
+  @observable showPassing = true;
+  @observable showFailing = true;
+
+  expanded: { [index: string]: IObservableValue<boolean> } = {};
+
   liveRoot: TestGroup;
   updateRoot: TestGroup;
   currentGroup: TestGroup;
@@ -45,6 +48,7 @@ export class StateModel {
   beforeHmr = true;
   testQueue: TestQueue;
   testRunner: TestRunner;
+  _testConfig: string[][];
 
   constructor(testRunner: TestRunner = null) {
     this.testRunner = testRunner || new TestRunner(this);
@@ -57,6 +61,34 @@ export class StateModel {
 
     // create new router
     setupRouter(this);
+  }
+
+  get testConfig() {
+    if (!this._testConfig) {
+      this._testConfig = [];
+
+      let storedConfig = localStorage.getItem('louisTestConfig');
+      if (storedConfig == null) {
+        storedConfig = '';
+        localStorage.setItem('louisTestConfig', storedConfig);
+      }
+      const parts = storedConfig.split('|').map(s => s.split('#'));
+
+      // add non existing items
+      const queue = [this.liveRoot];
+      while (queue.length > 0) {
+        let current = queue.shift();
+        if (current.tests.length > 0) {
+          const value = parts.find(c => c[0] === current.path);
+          this._testConfig.push([current.path, value ? value[1] : '1']);
+        }
+        for (let group of current.groups) {
+          queue.push(group);
+        }
+      }
+    }
+
+    return this._testConfig;
   }
 
   findGroup(test: (group: TestGroup) => boolean, root = this.liveRoot): TestGroup {
@@ -81,8 +113,31 @@ export class StateModel {
     return this.findGroup(g => g.id === id);
   }
 
+  toggleAllTests(disabled: boolean) {
+    this.testConfig.forEach(s => (s[1] = disabled ? '0' : '1'));
+    this.saveStoryConfig();
+  }
+
+  toggleStoryTests(id: string, disabled: boolean) {
+    let config = this.testConfig.find(t => t[0] === id);
+    if (config) {
+      config[1] = disabled ? '0' : '1';
+    }
+    this.saveStoryConfig();
+  }
+
+  isDisabled(group: TestGroup) {
+    let config = this.testConfig.find(t => t[0] === group.id);
+    return config && config[1] == '0';
+  }
+
+  saveStoryConfig() {
+    localStorage.setItem('louisTestConfig', this.testConfig.map(t => t.join('#')).join('|'));
+  }
+
   @action
   performReconciliation() {
+    this._testConfig = null;
     this.liveRoot.groups = [...this.updateRoot.groups];
 
     // remap root and run tests

@@ -42,6 +42,7 @@ export class TestItem {
 export class TestGroup extends TestItem {
   name: string;
   urlName: string;
+  pathName: string;
   parent: TestGroup;
 
   groups: TestGroup[];
@@ -68,13 +69,14 @@ export class TestGroup extends TestItem {
     this.tests = [];
     this.groups = [];
     this.urlName = toUrlName(name);
+    this.pathName = this.urlName.replace(/-/g, '');
     if (parent) {
       parent.groups.push(this);
     }
   }
 
   get fileName(): string {
-    return (this.parent == null || this.parent.parent == null ? '' : (this.parent.fileName + '_')) + this.urlName;
+    return (this.parent == null || this.parent.parent == null ? '' : (this.parent.fileName + '_')) + this.pathName;
   }
 
   get path(): string {

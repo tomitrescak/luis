@@ -67,13 +67,17 @@ const full = style({
 
 const pane = style({
   padding: '6px',
-  width: '100%',
-  height: '100%'
+  position: 'absolute',
+  overflow: 'auto',
+  top: 42,
+  bottom: 0,
+  left: 0,
+  right: 0
 });
 
 const content = style({
   position: 'absolute',
-  left: 60,
+  left: 0,
   right: 0,
   top: 0,
   bottom: 0,
@@ -87,7 +91,6 @@ type Props = {
 export const Layout = inject<Props>('state')(
   observer(({ state }: Props) => (
     <div>
-      <SideBar />
       <div className={content}>
         <SplitPane
           className={split(state.theme)}
@@ -96,8 +99,11 @@ export const Layout = inject<Props>('state')(
           defaultSize={parseInt(localStorage.getItem('luis-v-splitPos'), 10)}
           onChange={(size: string) => localStorage.setItem('luis-v-splitPos', size)}
         >
-          <div className={pane}>
-            <StoryList />
+          <div>
+            <SideBar />
+            <div className={pane}>
+              <StoryList />
+            </div>
           </div>
           <div className={full}>
             <TopPanel />

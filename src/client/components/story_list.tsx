@@ -76,6 +76,15 @@ export type Props = {
 export class TestGroupView extends React.PureComponent<Props> {
   render(): any {
     const { group, state } = this.props;
+
+    if (
+      (!state.showFailing && !state.showPassing) ||
+      (state.showFailing == false && group.failingTests > 0 && group.passingTests == 0) ||
+      (state.showPassing == false && group.passingTests > 0 && group.failingTests == 0)
+    ) {
+      return false;
+    }
+
     return (
       <div>
         <Accordion.Title
@@ -120,11 +129,16 @@ export class TestView extends React.PureComponent<TestProps> {
     e.preventDefault();
     let parts = e.currentTarget.getAttribute('data-path').split('/');
     this.props.state.viewState.openStory(parts[0], parts[1], parts[2]);
-  }
+  };
 
   render(): any {
     const { test, state } = this.props;
     const expanded = state.isExpanded(test).get();
+
+    if ((!state.showFailing && test.error) || (!state.showPassing && !test.error)) {
+      return false;
+    }
+
     return (
       <Segment basic={!expanded} secondary={expanded} className={testPane}>
         <Accordion.Title

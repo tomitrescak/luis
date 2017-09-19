@@ -7,7 +7,7 @@ const historyAPIFallback = require('connect-history-api-fallback');
 
 import { handler } from './api/snapshot_handler';
 
-app.use('/tests', handler);
+// app.use('/tests', handler);
 app.use(historyAPIFallback());
 
 // app.get('/', function (req, res) {
