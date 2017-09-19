@@ -3,13 +3,6 @@ import { IObservableArray, observable, computed, action } from 'mobx';
 import { Story, Snapshot, TestItem, Test } from './test_data';
 
 const missingStory = new Story(null, 'Missing', { component: <div>Story not found. Maybe you renamed it?</div>, info: 'Missing' });
-const missingSnapshot = new Snapshot({ 
-  current: '<div>Snapshot not found. Maybe you renamed it?</div>',
-  expected: '',
-  matching: false,
-  name: 'Missing',
-  test: null
-});
 
 export class ViewState {
   @observable storyPath = '';
@@ -18,7 +11,6 @@ export class ViewState {
 
   @observable snapshotView = 'react';
   @observable selectedStory: Story = null;
-  @observable selectedSnapshot: Snapshot = null;
   @observable selectedTest: Test = null;
   
   state: App.State;
@@ -35,6 +27,13 @@ export class ViewState {
       );
     }
     return '/' + this.storyPath;
+  }
+
+  get selectedSnapshot() {
+    if (this.selectedStory && this.selectedTest && this.snapshotName) {
+      return this.selectedTest.findSnapshotByUrlName(this.snapshotName);
+    }
+    return null;
   }
 
   openStoryFromList(e: React.SyntheticEvent<HTMLAnchorElement>, storyPath: string = '', testName: string = '', snapshotName = '') {
@@ -70,21 +69,15 @@ export class ViewState {
     this.selectedStory = this.state.findStoryById(groupPath) as Story;
     if (this.selectedStory && snapshotName) {
       this.selectedTest = this.selectedStory.findTestByUrlName(testName);
-      if (this.selectedTest) {
-        this.selectedSnapshot = this.selectedTest.findSnapshotByUrlName(snapshotName);
-      }
     }
 
     // detect errors and render them
     if (groupPath && !this.selectedStory) {
       this.selectedStory = missingStory;
     }
-    if (snapshotName && !this.selectedSnapshot == null) {
-      this.selectedSnapshot = missingSnapshot;
-    }
 
     if (this.snapshotName) {
-      this.snapshotView = 'html';
+      this.snapshotView = this.snapshotView == 'react' ? 'html' : this.snapshotView;
     } else {
       this.snapshotView = 'react';
     }

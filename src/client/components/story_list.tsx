@@ -119,7 +119,6 @@ export class TestView extends React.PureComponent<TestProps> {
   openSnapshot = (e: React.SyntheticEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     let parts = e.currentTarget.getAttribute('data-path').split('/');
-    debugger;
     this.props.state.viewState.openStory(parts[0], parts[1], parts[2]);
   }
 

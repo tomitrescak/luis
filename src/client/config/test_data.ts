@@ -18,6 +18,9 @@ export class TestItem {
   parent: TestItem;
   urlName: string;
 
+  @observable startTime: number;
+  @observable endTime: number;
+
   constructor(name: string, parent: TestItem) {
     this.name = name;
     this.urlName = toUrlName(name);
@@ -29,6 +32,10 @@ export class TestItem {
       return '';
     }
     return (this.parent == null || this.parent.parent == null ? '' : (this.parent.id + '-')) + this.urlName;
+  }
+
+  get duration() {
+    return (this.endTime - this.startTime < 0) ? 0 : (this.endTime - this.startTime);
   }
 }
 
@@ -50,7 +57,7 @@ export class TestGroup extends TestItem {
 
   startTime: number;
   endTime: number;
-  @observable duration: number = 0;
+
   @observable version: number = 0;
   @observable passingTests = 0;
   @observable failingTests = 0;
@@ -149,6 +156,8 @@ export class TestGroup extends TestItem {
 
 export class Story extends TestGroup {
   component: JSX.Element;
+  decorator?: React.SFC;
+  cssClassName: string;
   info: string;
 
   constructor(parent: TestGroup, name: string, props: StoryConfig) { 
@@ -156,6 +165,8 @@ export class Story extends TestGroup {
 
     this.component = props.component;
     this.info = props.info;
+    this.decorator = props.decorator;
+    this.cssClassName = props.cssClassName;
   }
 }
 
@@ -167,11 +178,7 @@ export class Test extends TestItem  {
   snapshots: Snapshot[];
   error: Error;
 
-  startTime: number;
-  endTime: number;
   url: string;
-
-  @observable duration: number = 0;
 
   constructor(name: string, group: TestGroup, impl: () => void) {
     super(name, group);

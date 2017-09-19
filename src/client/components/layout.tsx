@@ -6,13 +6,15 @@ import { Sidebar, Segment, Menu, Icon, Header } from 'semantic-ui-react';
 import { style } from 'typestyle';
 import { StateModel } from '../config/state';
 import { ITheme } from '../config/themes';
-import { inject, observer } from "mobx-react";
-import { StoryList } from "./story_list";
+import { inject, observer } from 'mobx-react';
+import { StoryList } from './story_list';
 import { SideBar } from './side_bar';
 
 import DevTools from 'mobx-react-devtools';
 import { TopPanel } from './top_panel';
 import { StoryComponent } from './story_component';
+import { SnapshotHtml } from './snapshot_html';
+import { SnapshotJson } from './snapshot_json';
 
 const split = (theme: ITheme) =>
   style({
@@ -58,8 +60,15 @@ const split = (theme: ITheme) =>
     }
   });
 
+const full = style({
+  width: '100%',
+  height: '100%'
+});
+
 const pane = style({
-  padding: '6px'
+  padding: '6px',
+  width: '100%',
+  height: '100%'
 });
 
 const content = style({
@@ -69,34 +78,48 @@ const content = style({
   top: 0,
   bottom: 0,
   fontFamily: 'Lato'
-})
+});
 
 type Props = {
   state?: App.State;
-}
+};
 
-export const Layout = inject<Props>('state')(observer(({ state }: Props) => (
-  <div>
-    <SideBar />
-    <div className={content}>
-      <SplitPane
-        className={split(state.theme)}
-        split="vertical"
-        minSize={100}
-        defaultSize={parseInt(localStorage.getItem('luis-v-splitPos'), 10)}
-        onChange={(size: string) => localStorage.setItem('luis-v-splitPos', size)}
-      >
-        <div className={pane}>
-          <StoryList />
-        </div>
-        <div>
-          <TopPanel />
+export const Layout = inject<Props>('state')(
+  observer(({ state }: Props) => (
+    <div>
+      <SideBar />
+      <div className={content}>
+        <SplitPane
+          className={split(state.theme)}
+          split="vertical"
+          minSize={100}
+          defaultSize={parseInt(localStorage.getItem('luis-v-splitPos'), 10)}
+          onChange={(size: string) => localStorage.setItem('luis-v-splitPos', size)}
+        >
           <div className={pane}>
-            <StoryComponent state={state} />
+            <StoryList />
           </div>
-        </div>
-      </SplitPane>
+          <div className={full}>
+            <TopPanel />
+            {state.viewState.snapshotView === 'react' && (
+              <div className={pane}>
+                <StoryComponent state={state} />
+              </div>
+            )}
+            {state.viewState.snapshotView === 'html' && (
+              <div className={pane}>
+                <SnapshotHtml state={state} />
+              </div>
+            )}
+            {state.viewState.snapshotView === 'json' && (
+              <div className={full}>
+                <SnapshotJson state={state} />
+              </div>
+            )}
+          </div>
+        </SplitPane>
+      </div>
+      <DevTools position={{ right: 200, top: 0 }} />
     </div>
-    <DevTools position={{right: 200, top: 0}} />
-  </div>
-)));
+  ))
+);

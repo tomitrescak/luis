@@ -30,10 +30,9 @@ declare global {
   interface StoryConfig {
     [index: string]: any;
     component: JSX.Element;
-    story?: string;
-    folder?: string;
-    fileName?: string;
     info: string;
+    decorator?: React.SFC;
+    cssClassName?: string;
   }
 
   type FunctionInitialiser<P> = () => ReactElement<P>;

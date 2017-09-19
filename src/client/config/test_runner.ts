@@ -53,7 +53,7 @@ export class TestRunner {
     group.startTime = new Date().getTime();
     let className = group.fileName;
 
-    consoleGroup(className);
+    consoleGroup(group.path);
     let result = true;
 
     if (group.before) {
@@ -67,7 +67,7 @@ export class TestRunner {
 
     // run all sub groups
     for (let subGroup of group.groups) {
-      this.testGroup(subGroup);
+      await this.testGroup(subGroup);
     }
 
     if (group.after) {
@@ -75,7 +75,6 @@ export class TestRunner {
     }
 
     group.endTime = new Date().getTime();
-    group.duration = group.endTime - group.startTime;
 
     // calculate passing and failing
     group.passingTests = group.countTests(true);
@@ -89,6 +88,7 @@ export class TestRunner {
   public async startTest(test: Test) {
     const group = test.parent as TestGroup;
     test.startTime = new Date().getTime();
+    test.endTime = 0;
     currentTest = test;
 
     try {
@@ -134,7 +134,6 @@ export class TestRunner {
       }
 
       test.endTime = new Date().getTime();
-      test.duration = test.endTime - test.startTime;
     }
   }
 }
