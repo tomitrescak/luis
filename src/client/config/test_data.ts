@@ -3,12 +3,43 @@ import { SemanticCOLORS } from 'semantic-ui-react';
 
 export type Impl = () => void;
 
-export class TestGroup {
+function toUrlName (str: string) {
+  let result = str.replace(/\:/g, '');
+  result = result.replace(/ - /g, '-');
+  result = result.replace(/\W/g, '-');
+  do {
+    result = result.replace(/--/g, '-');
+  } while (result.indexOf('--') >= 0);
+  return result.toLowerCase();
+};
+
+export class TestItem {
   name: string;
-  groups: TestGroup[];
-  tests: Test[];
+  parent: TestItem;
+  urlName: string;
+
+  constructor(name: string, parent: TestItem) {
+    this.name = name;
+    this.urlName = toUrlName(name);
+    this.parent = parent;
+  }
+
+  get id(): string {
+    if (this.parent == null) {
+      return '';
+    }
+    return (this.parent == null || this.parent.parent == null ? '' : (this.parent.id + '-')) + this.urlName;
+  }
+}
+
+export class TestGroup extends TestItem {
+  name: string;
+  urlName: string;
   parent: TestGroup;
 
+  groups: TestGroup[];
+  tests: Test[];
+  
   beforeAll: Impl;
   before: Impl;
   beforeEach: Impl;
@@ -24,22 +55,19 @@ export class TestGroup {
   @observable passingTests = 0;
   @observable failingTests = 0;
 
-  noSpaceName: string;
 
   constructor(parent: TestGroup, name: string) {
-    this.parent = parent;
-    this.name = name;
-    this.tests = observable([]);
-    this.groups = observable([]);
-    this.noSpaceName = name.replace(/\s/g, '');
-
+    super(name, parent);
+    this.tests = [];
+    this.groups = [];
+    this.urlName = toUrlName(name);
     if (parent) {
       parent.groups.push(this);
     }
   }
 
   get fileName(): string {
-    return (this.parent == null || this.parent.parent == null ? '' : (this.parent.fileName + '_')) + this.noSpaceName;
+    return (this.parent == null || this.parent.parent == null ? '' : (this.parent.fileName + '_')) + this.urlName;
   }
 
   get path(): string {
@@ -47,13 +75,6 @@ export class TestGroup {
       return '';
     }
     return (this.parent == null || this.parent.parent == null ? '' : (this.parent.path + ' > ')) + this.name;
-  }
-
-  get url(): string {
-    if (this.parent == null) {
-      return '';
-    }
-    return (this.parent == null || this.parent.parent == null ? '' : (this.parent.path + '-')) + this.name.replace(/\s/g, '-');
   }
 
   get isRoot() {
@@ -116,6 +137,10 @@ export class TestGroup {
     return count;
   }
 
+  findTestByUrlName(urlName: string) {
+    return this.tests.find(t => t.urlName == urlName);
+  }
+
   @action updateCounts() {
     this.passingTests = this.countTests(true);
     this.failingTests = this.countTests(false);
@@ -134,22 +159,26 @@ export class Story extends TestGroup {
   }
 }
 
-export class Test {
+export class Test extends TestItem  {
+  parent: TestGroup;
   name: string;
+
   impl: () => void;
   snapshots: Snapshot[];
-  group: TestGroup;
   error: Error;
 
   startTime: number;
   endTime: number;
+  url: string;
+
   @observable duration: number = 0;
 
   constructor(name: string, group: TestGroup, impl: () => void) {
-    this.name = name;
+    super(name, group);
+
     this.impl = impl;
     this.snapshots = [];
-    this.group = group;
+    this.url = toUrlName(name);
   }
 
   get icon(): { name: string, color: SemanticCOLORS } {
@@ -159,8 +188,8 @@ export class Test {
     }
   }
 
-  get url() {
-    return this.group.url + '-' + this.name.replace(/\s/g, '-');
+  findSnapshotByUrlName(urlName: string) {
+    return this.snapshots.find(s => s.url === urlName);
   }
 }
 
@@ -174,20 +203,19 @@ export interface ISnapshot {
 
 export class Snapshot {
   name: string;
+  url: string;
+  parent: Test;
+
   expected: string;
   current: string;
   matching?: boolean;
-  test: Test
 
   constructor(snapshot: ISnapshot) {
     this.name = snapshot.name;
+    this.parent = snapshot.test;
+    this.url = toUrlName(snapshot.name);
     this.expected = snapshot.expected;
     this.current = snapshot.current;
     this.matching = snapshot.matching;
-    this.test = snapshot.test;
-  }
-
-  get url() {
-    return this.test.url + '-' + this.name.replace(/\s/g, '-');
   }
 }

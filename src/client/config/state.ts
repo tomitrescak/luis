@@ -2,7 +2,7 @@ import { observable, action, computed, IObservableValue } from 'mobx';
 
 import { lightTheme, darkTheme, ITheme } from '../config/themes';
 
-import { TestGroup, Snapshot } from './test_data';
+import { TestGroup, Snapshot, TestItem } from './test_data';
 import { TestQueue } from './test_queue';
 import { TestRunner } from './test_runner';
 
@@ -24,19 +24,17 @@ setStatefulModules((name: string) => {
 // client.on('source-changed', function (data) {
 //   // console.log(data);
 //   console.log('445');
-  
+
 // });
 
 declare global {
-  namespace App {
-    export type State = StateModel;
-  }
+  namespace App { export type State = StateModel; }
 }
 
 export class StateModel {
-  expanded: {[index: string]: IObservableValue<boolean> } = {};
+  expanded: { [index: string]: IObservableValue<boolean> } = {};
   @observable theme: ITheme = lightTheme;
-  @observable liveRoot: TestGroup;
+  liveRoot: TestGroup;
   updateRoot: TestGroup;
   currentGroup: TestGroup;
   viewState: ViewState;
@@ -49,7 +47,7 @@ export class StateModel {
   testRunner: TestRunner;
 
   constructor(testRunner: TestRunner = null) {
-    this.testRunner = testRunner || new TestRunner(this)
+    this.testRunner = testRunner || new TestRunner(this);
     this.liveRoot = new TestGroup(null, 'root');
     this.updateRoot = new TestGroup(null, 'update');
     this.currentGroup = this.updateRoot;
@@ -61,11 +59,11 @@ export class StateModel {
     setupRouter(this);
   }
 
-  find(find: TestGroup, root: TestGroup) {
+  findGroup(test: (group: TestGroup) => boolean, root = this.liveRoot): TestGroup {
     const queue = [root];
     while (queue.length > 0) {
       let current = queue.shift();
-      if (current.path === find.path) {
+      if (test(current)) {
         return current;
       }
       for (let group of current.groups) {
@@ -75,54 +73,16 @@ export class StateModel {
     return null;
   }
 
-  findByPath(fileName: string) {
-    const queue = [this.liveRoot];
-    while (queue.length > 0) {
-      let current = queue.shift();
-      if (current.fileName === fileName) {
-        return current;
-      }
-      for (let group of current.groups) {
-        queue.push(group);
-      }
-    }
-    
-    return null;
+  findStoryByFileName(fileName: string) {
+    return this.findGroup(g => g.fileName === fileName);
   }
 
-  findStoryByUrl(url: string) {
-    const queue = [this.liveRoot];
-    while (queue.length > 0) {
-      let current = queue.shift();
-      if (current.url === url) {
-        return current;
-      }
-      for (let group of current.groups) {
-        queue.push(group);
-      }
-    }
-    return null;
+  findStoryById(id: string) {
+    return this.findGroup(g => g.id === id);
   }
 
-  findSnapshotByUrl(url: string): Snapshot {
-    const queue = [this.liveRoot];
-    while (queue.length > 0) {
-      let current = queue.shift();
-      for (let group of current.groups) {
-        queue.push(group);
-      }
-      for (let test of current.tests) {
-        for (let snapshot of test.snapshots) {
-          if (snapshot.url === url) {
-            return snapshot;
-          }
-        }
-      }
-    }
-    return null;
-  }
-
-  @action performReconciliation() {
+  @action
+  performReconciliation() {
     this.liveRoot.groups = [...this.updateRoot.groups];
 
     // remap root and run tests
@@ -140,7 +100,7 @@ export class StateModel {
     this.reconciled = true;
 
     // notify
-    if (this.resolveReconcile) {  
+    if (this.resolveReconcile) {
       this.resolveReconcile(true);
     }
 
@@ -148,91 +108,90 @@ export class StateModel {
     this.viewState.openAfterTest();
   }
 
-  @action performDeepReconciliation() {
-    ////////////////////////////////////////
-    // copy new values from update to live
-    const updateQueue = [this.updateRoot];
-    
-    while (updateQueue.length > 0) {
-      const currentUpdate = updateQueue.shift();
+  // @action performDeepReconciliation() {
+  //   ////////////////////////////////////////
+  //   // copy new values from update to live
+  //   const updateQueue = [this.updateRoot];
 
-      // find the parent node in live nodes
-      // root is always found
-      // the rest is copied if necessary
+  //   while (updateQueue.length > 0) {
+  //     const currentUpdate = updateQueue.shift();
 
-      const live = this.find(currentUpdate, this.liveRoot); 
-      for (let updatedGroup of currentUpdate.groups) {
-        const foundLive = live.groups.find(g => g.name === updatedGroup.name);
+  //     // find the parent node in live nodes
+  //     // root is always found
+  //     // the rest is copied if necessary
 
-        // if we found this node we will search added nodes in children
-        if (foundLive) {
-          updateQueue.push(updatedGroup);
+  //     const live = this.find(currentUpdate, this.liveRoot);
+  //     for (let updatedGroup of currentUpdate.groups) {
+  //       const foundLive = live.groups.find(g => g.name === updatedGroup.name);
 
-          // reconcile tests
-          for (let updatedTest of updatedGroup.tests) {
-            if (foundLive.tests.every(t => t.name !== updatedTest.name)) {
-              foundLive.tests.push(updatedTest);
-            }
-          }
-        } else {
-          updatedGroup.parent = live;
-          live.groups.push(updatedGroup);
+  //       // if we found this node we will search added nodes in children
+  //       if (foundLive) {
+  //         updateQueue.push(updatedGroup);
 
-          // in initial load we queue all tests
-          if (this.beforeHmr) {
-            this.testQueue.add(updatedGroup);
-          }
-        }  
-      }
-    }
+  //         // reconcile tests
+  //         for (let updatedTest of updatedGroup.tests) {
+  //           if (foundLive.tests.every(t => t.name !== updatedTest.name)) {
+  //             foundLive.tests.push(updatedTest);
+  //           }
+  //         }
+  //       } else {
+  //         updatedGroup.parent = live;
+  //         live.groups.push(updatedGroup);
 
-    ////////////////////////////////////////
-    // delete extra values
-    const liveQueue = [this.liveRoot];
-    
-    while (liveQueue.length > 0) {
-      const live = liveQueue.shift();
+  //         // in initial load we queue all tests
+  //         if (this.beforeHmr) {
+  //           this.testQueue.add(updatedGroup);
+  //         }
+  //       }
+  //     }
+  //   }
 
-      // find the parent node in live nodes
-      // root is always found
-      // the rest is copied if necessary
+  //   ////////////////////////////////////////
+  //   // delete extra values
+  //   const liveQueue = [this.liveRoot];
 
-      const updated = this.find(live, this.updateRoot); 
-      for (let i=live.groups.length - 1; i >=0; i--) {
-        const liveGroup = live.groups[i];
-        const foundUpdated = updated.groups.find(g => g.name === liveGroup.name);
+  //   while (liveQueue.length > 0) {
+  //     const live = liveQueue.shift();
 
-        // if we found this node we will search added nodes in children
-        if (foundUpdated) {
-          liveQueue.push(liveGroup);
+  //     // find the parent node in live nodes
+  //     // root is always found
+  //     // the rest is copied if necessary
 
-          // reconcile tests
-          for (let j=liveGroup.tests.length-1; j>=0; j--) {
-            const liveTest = liveGroup.tests[j];
-            if (foundUpdated.tests.every(t => t.name !== liveTest.name)) {
-              liveGroup.tests.splice(liveGroup.tests.indexOf(liveTest), 1);
-            }
-          }
-        } else {
-          live.groups.splice(live.groups.indexOf(liveGroup), 1);
-        }  
-      }
-    }
+  //     const updated = this.find(live, this.updateRoot);
+  //     for (let i=live.groups.length - 1; i >=0; i--) {
+  //       const liveGroup = live.groups[i];
+  //       const foundUpdated = updated.groups.find(g => g.name === liveGroup.name);
 
+  //       // if we found this node we will search added nodes in children
+  //       if (foundUpdated) {
+  //         liveQueue.push(liveGroup);
 
-    // remove updated
-    this.updateRoot.groups = [];
-    this.updateRoot.tests = [];
+  //         // reconcile tests
+  //         for (let j=liveGroup.tests.length-1; j>=0; j--) {
+  //           const liveTest = liveGroup.tests[j];
+  //           if (foundUpdated.tests.every(t => t.name !== liveTest.name)) {
+  //             liveGroup.tests.splice(liveGroup.tests.indexOf(liveTest), 1);
+  //           }
+  //         }
+  //       } else {
+  //         live.groups.splice(live.groups.indexOf(liveGroup), 1);
+  //       }
+  //     }
+  //   }
 
-    // delete old values from live
+  //   // remove updated
+  //   this.updateRoot.groups = [];
+  //   this.updateRoot.tests = [];
 
-    this.reconciled = true;
+  //   // delete old values from live
 
-    // notify
-    if (this.resolveReconcile) {  
-      this.resolveReconcile(true);
-    }
-  }
+  //   this.reconciled = true;
+
+  //   // notify
+  //   if (this.resolveReconcile) {
+  //     this.resolveReconcile(true);
+  //   }
+  // }
 
   reconciliate() {
     this.reconciled = false;
@@ -246,21 +205,23 @@ export class StateModel {
     if (this.reconciled) {
       return true;
     }
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.resolveReconcile = resolve;
     });
-  } 
+  }
 
-  @action isExpanded(group: TestGroup, path: string) {
-    console.log('Checking explanded');
-    
+  @action
+  isExpanded(group: TestItem) {
+    const path = group.id;
     if (this.expanded[path] == null) {
       this.expanded[path] = observable(false);
     }
     return this.expanded[path];
   }
 
-  @action toggleExpanded(e: any, path: string) {
+  @action
+  toggleExpanded(e: any, item: TestItem) {
+    const path = item.id;
     if (e.target && e.target.nodeName.toLowerCase() === 'a') {
       // anchors only allow expands
       this.expanded[path].set(true);

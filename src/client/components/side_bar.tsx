@@ -3,6 +3,7 @@ import { inject, observer } from 'mobx-react';
 import { Sidebar, Menu, Icon, Loader, Button } from 'semantic-ui-react';
 
 import { style } from 'typestyle';
+import { StoryComponent } from './story_component';
 
 const menuButton = style({
   margin: '0px!important',

@@ -87,7 +87,7 @@ export class TestRunner {
   }
 
   public async startTest(test: Test) {
-    const group = test.group;
+    const group = test.parent as TestGroup;
     test.startTime = new Date().getTime();
     currentTest = test;
 
@@ -129,7 +129,7 @@ export class TestRunner {
 
       return false;
     } finally {
-      if (test.group.afterEach) {
+      if (test.parent.afterEach) {
         group.afterEach();
       }
 
@@ -145,7 +145,7 @@ if (!process.env.WALLABY_PRODUCTION) {
   const requests: { name: string; requestReturned?: boolean }[] = [];
   config.snapshotLoader = (name: string, className: string) => {
     const state = initState();
-    var testFolder = state.findByPath(className);
+    var testFolder = state.findStoryByFileName(className);
 
     var index = name.indexOf('/tests');
     if (index >= 0) {

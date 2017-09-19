@@ -6,7 +6,7 @@ import { TestRunner } from './test_runner';
 export class TestQueue {
   queue: TestGroup[] = [];
   testRunner: TestRunner;
-  @observable running = false;
+  running = false;
 
   constructor(testRunner: TestRunner) {
     this.testRunner = testRunner;

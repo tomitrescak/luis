@@ -1,31 +1,42 @@
 import * as React from 'react';
 
 describe('Component', () => {
-  storyOf(
-    'Bar View',
-    {
-      get component() {
-        return <div>Bar Component</div>;
+  describe('Doo', function() {
+    storyOf(
+      'Bar View',
+      {
+        get component() {
+          return <div>Bar Component</div>;
+        },
+        info: 'Foo Info 567'
       },
-      info: 'Foo Info 567'
-    },
-    data => {
-      itMountsAnd('renders correctly', () => data.component, (wrapper) => {
-        wrapper.should.matchSnapshot('rendered');
-      })
+      data => {
+        itMountsAnd(
+          'renders correctly',
+          () => data.component,
+          wrapper => {
+            wrapper.should.matchSnapshot('rendered');
+          }
+        );
 
-      itMountsAnd('renders 2 correctly', () => data.component, (wrapper) => {
-        wrapper.should.matchSnapshot('rendered 6');
-      })
+        itMountsAnd(
+          'renders 2 correctly',
+          () => data.component,
+          wrapper => {
+            wrapper.should.matchSnapshot('rendered 6');
+          }
+        );
 
-      it('Passes', function() { 
-        // throw new Error('Failed');
-      });
+        it('Passes', function() {
+          // throw new Error('Failed');
+        });
 
-      it('Passes 9', function() { 
-        // throw new Error('Failed');
-      });
-    }
-  );
-  console.log('Loaded BAR');
+        it('Passes 9', function() {
+          // throw new Error('Failed');
+        });
+      }
+    );
+    console.log('Loaded BAR');
+  });
 });
+

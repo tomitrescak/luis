@@ -4,7 +4,7 @@ import { Accordion, Icon, List, Message, Menu, Divider, Segment } from 'semantic
 import { style } from 'typestyle';
 
 import { ITheme } from '../config/themes';
-import { TestGroup, Test, Story } from '../config/test_data';
+import { TestGroup, Test, Story, Snapshot } from '../config/test_data';
 import { observable } from 'mobx';
 
 const pane = (theme: ITheme) =>
@@ -81,13 +81,12 @@ export class TestGroupView extends React.PureComponent<Props> {
         <Accordion.Title
           key={group.name}
           active={state.isExpanded(group).get()}
-          onClick={(e) => state.toggleExpanded(e, group)}
+          onClick={e => state.toggleExpanded(e, group)}
         >
           <Icon name="dropdown" />
           {group.constructor.name == 'Story' ? (
             <span>
-              <Icon name="puzzle" />
-              <a href={`/${group.url}`} onClick={(e) => state.viewState.openStoryFromList(e, group.url)}>
+              <a href={`/${group.id}`} onClick={e => state.viewState.openStoryFromList(e, group.id)}>
                 {group.name}
               </a>
             </span>
@@ -116,33 +115,50 @@ export class TestView extends React.PureComponent<TestProps> {
   canExpand() {
     return this.props.test.snapshots.length > 0 || this.props.test.error != null;
   }
+
+  openSnapshot = (e: React.SyntheticEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    let parts = e.currentTarget.getAttribute('data-path').split('/');
+    debugger;
+    this.props.state.viewState.openStory(parts[0], parts[1], parts[2]);
+  }
+
   render(): any {
     const { test, state } = this.props;
-    const path = test.fileName;
-    const expanded = state.isExpanded(path).get();
+    const expanded = state.isExpanded(test).get();
     return (
       <Segment basic={!expanded} secondary={expanded} className={testPane}>
         <Accordion.Title
-          key={path}
+          key={test.urlName}
           active={expanded}
-          onClick={(e) => this.canExpand() && state.toggleExpanded(e, path)}
+          onClick={e => this.canExpand() && state.toggleExpanded(e, test)}
         >
           <Icon name="dropdown" className={this.canExpand() ? 'normal' : hidden} />
           <Icon {...test.icon} />
           {test.name}
           <div className={timing('#AAA')}>{test.duration.toString()}ms</div>
         </Accordion.Title>
-        <Accordion.Content active={state.isExpanded(path).get()} className={snapshotContent}>
+        <Accordion.Content active={state.isExpanded(test).get()} className={snapshotContent}>
           {test.snapshots.length > 0 && (
             <List className={snapshotMenu}>
-              {test.snapshots.map((s, i) => <List.Item as="a" icon="image" key={s.name} content={s.name} />)}
+              {test.snapshots.map((s, i) => (
+                <List.Item
+                  as="a"
+                  data-path={`${test.parent.id}/${test.urlName}/${s.url}`}
+                  href={`/${test.parent.id}/${test.urlName}/${s.url}`}
+                  onClick={this.openSnapshot}
+                  icon="image"
+                  key={s.name}
+                  content={s.name}
+                />
+              ))}
             </List>
           )}
           {test.error && (
             <div>
-            <Message negative size="tiny" className={errorMessage}>
-              {test.error.message}
-            </Message>
+              <Message negative size="tiny" className={errorMessage}>
+                {test.error.message}
+              </Message>
             </div>
           )}
         </Accordion.Content>

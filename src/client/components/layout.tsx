@@ -88,7 +88,6 @@ export const Layout = inject<Props>('state')(observer(({ state }: Props) => (
       >
         <div className={pane}>
           <StoryList />
-          <DevTools position={{right: 200, top: 0}} />
         </div>
         <div>
           <TopPanel />
@@ -98,5 +97,6 @@ export const Layout = inject<Props>('state')(observer(({ state }: Props) => (
         </div>
       </SplitPane>
     </div>
+    <DevTools position={{right: 200, top: 0}} />
   </div>
 )));
