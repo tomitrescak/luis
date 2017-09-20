@@ -15,6 +15,7 @@ describe('Component', () => {
           'renders correctly',
           () => data.component,
           wrapper => {
+            'tomas'.should.equal('Momo');
             wrapper.should.matchSnapshot('rendered');
           }
         );

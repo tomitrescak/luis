@@ -85,6 +85,13 @@ export class TestGroupView extends React.PureComponent<Props> {
       return false;
     }
 
+    const isList = state.config.storyView === 'list';
+    const name = isList ? group.path : group.name;
+
+    if (isList && group.tests.length == 0) {
+      return <div>{group.groups.map((g, i) => <TestGroupView state={state} group={g} key={g.fileName} />)}</div>;
+    }
+
     return (
       <div>
         <Accordion.Title
@@ -96,11 +103,11 @@ export class TestGroupView extends React.PureComponent<Props> {
           {group.constructor.name == 'Story' ? (
             <span>
               <a href={`/${group.id}`} onClick={e => state.viewState.openStoryFromList(e, group.id)}>
-                {group.name}
+                {name}
               </a>
             </span>
           ) : (
-            <span>{group.name}</span>
+            <span>{name}</span>
           )}
 
           <div className={timing(group.color)}>{group.duration.toString()}ms</div>
@@ -109,6 +116,8 @@ export class TestGroupView extends React.PureComponent<Props> {
           {group.groups.map((g, i) => <TestGroupView state={state} group={g} key={g.fileName} />)}
           {group.tests.map((t, i) => <TestView state={state} test={t} key={t.name} />)}
         </Accordion.Content>
+
+
       </div>
     );
   }
@@ -138,7 +147,6 @@ export class TestView extends React.PureComponent<TestProps> {
     if ((!state.showFailing && test.error) || (!state.showPassing && !test.error)) {
       return false;
     }
-
     return (
       <Segment basic={!expanded} secondary={expanded} className={testPane}>
         <Accordion.Title

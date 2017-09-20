@@ -7,7 +7,10 @@ describe('Boo', () => {
     'Bar View',
     {
       get component() {
-        return <div>Boo Component</div>;
+        return <div>
+          Boo Component 34578
+          <div>Moo</div>
+        </div>;
       },
       info: 'Foo Info 567'
     },

@@ -72,6 +72,7 @@ export class TestGroup extends TestItem {
     this.pathName = this.urlName.replace(/-/g, '');
     if (parent) {
       parent.groups.push(this);
+      parent.groups.sort((a, b) => a.name < b.name ? -1 : 1);
     }
   }
 
