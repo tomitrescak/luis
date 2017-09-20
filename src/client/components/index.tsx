@@ -6,7 +6,7 @@ import { setupLuis } from 'wafl';
 import { Layout } from './layout';
 import { initState } from '../config/state';
 import { setupTestBridge, bdd } from '../config/bridge';
-import { loadSnapshots } from '../config/test_runner';
+import { loadSnapshots } from '../config/snapshot_loader';
 
 const state = initState();
 

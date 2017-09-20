@@ -50,6 +50,8 @@ const content = style({
 
 @observer
 export class TestView extends React.PureComponent<TestProps> {
+  errorView: HTMLDivElement;
+
   canExpand() {
     return this.props.test.snapshots.length > 0 || this.props.test.error != null;
   }
@@ -68,13 +70,15 @@ export class TestView extends React.PureComponent<TestProps> {
       return false;
     }
 
+    console.log('Rendering: ' + test.name + '[' + test.uid + ']');
+
     return (
       <div>
         <Accordion.Title
           key={test.urlName}
           active={expanded}
           onClick={e => this.canExpand() && state.toggleExpanded(e, test)}
-          { ... expanded ? { as: Segment, attached: 'top' } : {} }
+          {...(expanded ? { as: Segment, attached: 'top' } : {})}
         >
           <Icon name="dropdown" className={this.canExpand() ? 'normal' : hidden} />
           <Icon {...test.icon} />
@@ -83,7 +87,7 @@ export class TestView extends React.PureComponent<TestProps> {
         </Accordion.Title>
         <Accordion.Content active={expanded} className={content}>
           {test.snapshots.length > 0 && (
-            <Segment attached={test.error ? true : "bottom"} secondary>
+            <Segment attached={test.error ? true : 'bottom'} secondary>
               <List className={snapshotMenu}>
                 {test.snapshots.map((s, i) => (
                   <List.Item
@@ -112,8 +116,15 @@ export class TestView extends React.PureComponent<TestProps> {
             <Segment attached="bottom" className={noPadding}>
               <div
                 className={diff}
-                dangerouslySetInnerHTML={{
-                  __html: DiffView.compare(test.error.actual, test.error.expected, 'Current', 'Expected', 1).outerHTML
+                ref={input => {
+                  if (input) {
+                    if (input.childNodes.length) {
+                      input.removeChild(input.childNodes[0]);
+                    }
+                    input.appendChild(
+                      DiffView.compare(test.error.actual, test.error.expected, 'Current', 'Expected', 1) as any
+                    );
+                  } 
                 }}
               />
             </Segment>

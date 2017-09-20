@@ -83,6 +83,8 @@ export class TestRunner {
   }
 
   public async startTest(test: Test) {
+    console.log('Executing: ' + test.name + '[' + test.uid + ']');
+
     const group = test.parent as TestGroup;
     test.startTime = new Date().getTime();
     test.endTime = 0;
@@ -138,46 +140,32 @@ export class TestRunner {
 
 // process snapshot requires global variable
 
-export function loadSnapshots() {
-  if (global.FuseBox) {
-    const snapshotsRaw = FuseBox.import('~/tests/snapshots/*.json');
-    const snapshots: { [index: string]: object } = {};
-    for (let key of Object.getOwnPropertyNames(snapshotsRaw)) {
-      let parts = key.split('/');
-      // take the filename
-      let name = parts[parts.length - 1].toLowerCase();
-      // remove the _snapshot.json suffix
-      name = name.replace('_snapshots.json', '');
-      snapshots[name] = snapshotsRaw[key];
+config.onProcessSnapshots = (_taskName: string, snapshotName: string, current: string, expected: string) => {
+  if (currentTest) {
+    // if (!currentStory.snapshots) {
+    //   currentStory.snapshots = observable([]);
+    // }
+    let name = snapshotName;
+    while (name.length > 0 && name[name.length - 1].match(/[1\s]/)) {
+      name = name.substring(0, name.length - 1);
     }
-    config.snapshotLoader = (name: string, className: string) => {
-      return snapshots[className];
-    };
+    const index = currentTest.snapshots.findIndex(s => s.name === name);
 
-    config.onProcessSnapshots = (_taskName: string, snapshotName: string, current: string, expected: string) => {
-      if (currentTest) {
-        // if (!currentStory.snapshots) {
-        //   currentStory.snapshots = observable([]);
-        // }
-        let name = snapshotName;
-        while (name.length > 0 && name[name.length - 1].match(/[1\s]/)) {
-          name = name.substring(0, name.length - 1);
-        }
-        const index = currentTest.snapshots.findIndex(s => s.name === name);
+    const snapshot: Snapshot = new Snapshot({
+      test: currentTest,
+      expected,
+      current,
+      matching: current === expected,
+      name
+    });
+    if (index === -1) {
+      currentTest.snapshots.push(snapshot);
+    } else {
+      currentTest.snapshots[index] = snapshot;
+    }
 
-        const snapshot: Snapshot = new Snapshot({
-          test: currentTest,
-          expected,
-          current,
-          matching: current === expected,
-          name
-        });
-        if (index === -1) {
-          currentTest.snapshots.push(snapshot);
-        } else {
-          currentTest.snapshots[index] = snapshot;
-        }
-      }
-    };
+    console.log('Adding snapshot: ' + currentTest.name + '[' + currentTest.uid + ']');
+  } else {
+    console.log('No current test ...');
   }
-}
+};

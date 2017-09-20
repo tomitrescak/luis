@@ -173,6 +173,7 @@ export class Story extends TestGroup {
   }
 }
 
+let uid = 0;
 export class Test extends TestItem  {
   parent: TestGroup;
   name: string;
@@ -182,6 +183,7 @@ export class Test extends TestItem  {
   error: Error & { actual: string, expected: string } ;
 
   url: string;
+  uid: number;;
 
   constructor(name: string, group: TestGroup, impl: () => void) {
     super(name, group);
@@ -189,6 +191,9 @@ export class Test extends TestItem  {
     this.impl = impl;
     this.snapshots = observable([]);
     this.url = toUrlName(name);
+    this.uid = uid++;
+
+    console.log('Constructed: ' + name + '[' + this.uid  + ']');
   }
 
   get icon(): { name: string, color: SemanticCOLORS } {

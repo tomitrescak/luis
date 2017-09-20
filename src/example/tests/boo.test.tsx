@@ -10,11 +10,16 @@ describe('Boo', () => {
           <div>Moo</div>
           <div>Moo</div>
           <div>Moo</div>
-          <div>Moo27</div>
+          <div>Moo29</div>
           <div>Moo</div>
           <div>Moo</div>
           <div>Moo</div>
           <div>Moo</div>
+          <div>Moo</div>
+        </div>;
+      },
+      get component2() {
+        return <div>
           <div>Moo</div>
         </div>;
       },
@@ -23,6 +28,10 @@ describe('Boo', () => {
     data => {
       itMountsAnd('renders correctly', () => data.component, (wrapper) => {
         wrapper.should.matchSnapshot('rendered');
+      });
+
+      itMountsAnd('renders two correctly', () => data.component2, (wrapper) => {
+        wrapper.should.matchSnapshot('rendered two');
       })
     }
   );
