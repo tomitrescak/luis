@@ -7,6 +7,9 @@ import { ITheme } from '../config/themes';
 import { TestGroup, Test, Story, Snapshot } from '../config/test_data';
 import { observable } from 'mobx';
 
+import { DiffView } from 'diff-view';
+import { diff } from './component_styles';
+
 const pane = (theme: ITheme) =>
   style({
     $nest: {
@@ -147,6 +150,7 @@ export class TestView extends React.PureComponent<TestProps> {
     if ((!state.showFailing && test.error) || (!state.showPassing && !test.error)) {
       return false;
     }
+
     return (
       <Segment basic={!expanded} secondary={expanded} className={testPane}>
         <Accordion.Title
@@ -175,12 +179,15 @@ export class TestView extends React.PureComponent<TestProps> {
               ))}
             </List>
           )}
-          {test.error && (
+          {test.error && !test.error.actual && (
             <div>
               <Message negative size="tiny" className={errorMessage}>
                 {test.error.message}
               </Message>
             </div>
+          )}
+          {test.error && test.error.actual && (
+            <div className={diff} dangerouslySetInnerHTML={{__html: DiffView.compare(test.error.actual, test.error.expected, 'Current', 'Expected', 1 ).outerHTML}} />
           )}
         </Accordion.Content>
       </Segment>

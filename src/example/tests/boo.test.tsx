@@ -8,7 +8,15 @@ describe('Boo', () => {
     {
       get component() {
         return <div>
-          Boo Component 34578
+          <div>Moo</div>
+          <div>Moo</div>
+          <div>Moo</div>
+          <div>Moo</div>
+          <div>Moo1</div>
+          <div>Moo</div>
+          <div>Moo</div>
+          <div>Moo</div>
+          <div>Moo</div>
           <div>Moo</div>
         </div>;
       },

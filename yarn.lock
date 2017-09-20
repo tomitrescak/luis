@@ -433,6 +433,10 @@ chokidar@^1.6.1:
   optionalDependencies:
     fsevents "^1.0.0"
 
+circular-json-es6@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/circular-json-es6/-/circular-json-es6-2.0.1.tgz#c9f4e37df74a655ced7245d31020bf5b5cd34ef6"
+
 circular-json@^0.3.3:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/circular-json/-/circular-json-0.3.3.tgz#815c99ea84f6809529d2f45791bdf82711352d66"
@@ -661,8 +665,10 @@ destroy@~1.0.4:
   resolved "https://registry.yarnpkg.com/destroy/-/destroy-1.0.4.tgz#978857442c44749e4206613e37946205826abd80"
 
 diff-view@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/diff-view/-/diff-view-1.0.7.tgz#8560db51fe834a90ce3045f8ac490343a7f03c0f"
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/diff-view/-/diff-view-1.0.9.tgz#8fb7a9c5e1f7e2cbcc1a5dec9ae9a1350b1601b6"
+  dependencies:
+    circular-json "^0.3.3"
 
 diff@3.2.0:
   version "3.2.0"

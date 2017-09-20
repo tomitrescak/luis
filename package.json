@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/tomitrescak/louis#readme",
   "dependencies": {
+    "circular-json-es6": "^2.0.1",
     "connect-history-api-fallback": "^1.3.0",
     "diff-view": "^1.0.7",
     "express": "^4.15.4",

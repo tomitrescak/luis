@@ -15,7 +15,17 @@ describe('Component', () => {
           'renders correctly',
           () => data.component,
           wrapper => {
-            'tomas'.should.equal('Momo');
+            const t = {
+              tomi: '1',
+              bobo: '3',
+              dodo: '5'
+            };
+            t.should.deep.equal({
+              tomi: '1',
+              bobo: '2',
+              dodo: '5',
+              lolo: 'rer'
+            })
             wrapper.should.matchSnapshot('rendered');
           }
         );

@@ -179,7 +179,7 @@ export class Test extends TestItem  {
 
   impl: () => void;
   snapshots: Snapshot[];
-  error: Error;
+  error: Error & { actual: string, expected: string } ;
 
   url: string;
 
