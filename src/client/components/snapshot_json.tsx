@@ -1,12 +1,7 @@
 import * as React from 'react';
-import { style } from 'typestyle';
 import { observer, inject } from 'mobx-react';
-
 import { MonacoEditor } from './editor';
-import { observable } from 'mobx';
 
-import { config } from 'chai-match-snapshot';
-import { Button, Loader } from 'semantic-ui-react';
 
 export interface SnapshotsProps {
   state?: App.State;

@@ -4,9 +4,8 @@ import { Provider } from 'mobx-react';
 import { setupLuis } from 'wafl';
 
 import { Layout } from './layout';
-import { StateModel, initState } from '../config/state';
-import { setupTestBridge, bdd, test } from '../config/bridge';
-import { TestRunner } from '../config/test_runner';
+import { initState } from '../config/state';
+import { setupTestBridge, bdd } from '../config/bridge';
 
 const state = initState();
 

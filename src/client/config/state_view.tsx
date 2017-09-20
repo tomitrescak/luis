@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IObservableArray, observable, computed, action } from 'mobx';
+import { observable, computed, action } from 'mobx';
 import { Story, Snapshot, TestItem, Test } from './test_data';
 
 const missingStory = new Story(null, 'Missing', { component: <div>Story not found. Maybe you renamed it?</div>, info: 'Missing' });

@@ -1,21 +1,10 @@
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
-import { Sidebar, Menu, Icon, Loader, Button } from 'semantic-ui-react';
+import { Menu, Icon, Loader } from 'semantic-ui-react';
 
 import { style } from 'typestyle';
-import { StoryComponent } from './story_component';
 import { StoryConfig } from './story_config';
 
-const menuButton = style({
-  margin: '0px!important',
-  padding: '12px 0px!important',
-  width: '100%',
-  $nest: {
-    '& .lbl': {
-      marginTop: '6px'
-    }
-  }
-});
 
 const noMargin = style({
   marginBottom: '0px!important'

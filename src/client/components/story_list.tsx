@@ -1,14 +1,12 @@
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
-import { Accordion, Icon, List, Message, Menu, Divider, Segment } from 'semantic-ui-react';
+import { Accordion, Icon } from 'semantic-ui-react';
 import { style } from 'typestyle';
 
 import { ITheme } from '../config/themes';
-import { TestGroup, Test, Story, Snapshot } from '../config/test_data';
-import { observable } from 'mobx';
-
-import { DiffView } from 'diff-view';
-import { diff } from './component_styles';
+import { TestGroup } from '../config/test_data';
+import { TestView } from './test_view';
+import { timing } from './component_styles';
 
 const pane = (theme: ITheme) =>
   style({
@@ -22,52 +20,6 @@ const pane = (theme: ITheme) =>
 const content = style({
   paddingLeft: '12px!important',
   paddingTop: '0px!important'
-});
-
-const snapshotContent = style({
-  paddingLeft: '24px!important',
-  paddingTop: '6px!important',
-  paddingBottom: '0px!important',
-  $nest: {
-    '& .icon': {
-      paddingRight: '0px!important'
-    }
-  }
-});
-
-const errorDisplay = style({
-  background: '#efefef',
-  color: 'red!important',
-  fontSize: '8px',
-  overflow: 'auto',
-  maxHeight: '100px'
-});
-
-const timing = (color: string) =>
-  style({
-    float: 'right',
-    fontSize: '10px',
-    color
-  });
-
-const errorMessage = style({
-  marginBottom: '6px!important',
-  padding: '3px 6px!important'
-});
-
-const snapshotMenu = style({
-  marginTop: '0px!important',
-  fontSize: '12px!important'
-});
-
-const hidden = style({
-  color: 'white!important'
-});
-
-const testPane = style({
-  padding: '0px 6px 0px 0px!important',
-  marginBottom: '3px!important',
-  marginTop: '0px!important'
 });
 
 export type Props = {
@@ -126,74 +78,7 @@ export class TestGroupView extends React.PureComponent<Props> {
   }
 }
 
-export type TestProps = {
-  state: App.State;
-  test: Test;
-};
 
-@observer
-export class TestView extends React.PureComponent<TestProps> {
-  canExpand() {
-    return this.props.test.snapshots.length > 0 || this.props.test.error != null;
-  }
-
-  openSnapshot = (e: React.SyntheticEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    let parts = e.currentTarget.getAttribute('data-path').split('/');
-    this.props.state.viewState.openStory(parts[0], parts[1], parts[2]);
-  };
-
-  render(): any {
-    const { test, state } = this.props;
-    const expanded = state.isExpanded(test).get();
-
-    if ((!state.showFailing && test.error) || (!state.showPassing && !test.error)) {
-      return false;
-    }
-
-    return (
-      <Segment basic={!expanded} secondary={expanded} className={testPane}>
-        <Accordion.Title
-          key={test.urlName}
-          active={expanded}
-          onClick={e => this.canExpand() && state.toggleExpanded(e, test)}
-        >
-          <Icon name="dropdown" className={this.canExpand() ? 'normal' : hidden} />
-          <Icon {...test.icon} />
-          {test.name}
-          <div className={timing('#AAA')}>{test.duration.toString()}ms</div>
-        </Accordion.Title>
-        <Accordion.Content active={state.isExpanded(test).get()} className={snapshotContent}>
-          {test.snapshots.length > 0 && (
-            <List className={snapshotMenu}>
-              {test.snapshots.map((s, i) => (
-                <List.Item
-                  as="a"
-                  data-path={`${test.parent.id}/${test.urlName}/${s.url}`}
-                  href={`/${test.parent.id}/${test.urlName}/${s.url}`}
-                  onClick={this.openSnapshot}
-                  icon="image"
-                  key={s.name}
-                  content={s.name}
-                />
-              ))}
-            </List>
-          )}
-          {test.error && !test.error.actual && (
-            <div>
-              <Message negative size="tiny" className={errorMessage}>
-                {test.error.message}
-              </Message>
-            </div>
-          )}
-          {test.error && test.error.actual && (
-            <div className={diff} dangerouslySetInnerHTML={{__html: DiffView.compare(test.error.actual, test.error.expected, 'Current', 'Expected', 1 ).outerHTML}} />
-          )}
-        </Accordion.Content>
-      </Segment>
-    );
-  }
-}
 
 // {this.props.state.liveRoot.groups.map((g, i) => <TestGroupView key={i} group={g} />)}
 

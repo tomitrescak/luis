@@ -1,6 +1,4 @@
-import { Test, TestGroup } from './test_data';
-import { StateModel } from './state';
-import { observable } from "mobx";
+import { TestGroup } from './test_data';
 import { TestRunner } from './test_runner';
 
 export class TestQueue {

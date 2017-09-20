@@ -1,7 +1,5 @@
-import { setupBddBridge } from 'wafl';
 import { config } from 'chai-match-snapshot';
 import { TestGroup, Test, Snapshot } from './test_data';
-import { initState } from './state';
 
 export function logError(message: string, ...props: string[]) {
   if (localStorage.getItem('luisLog') == null) {
@@ -33,10 +31,6 @@ function consoleGroupEnd() {
   }
 }
 
-const $isPromise = (item: Promise<{}>) => {
-  return item && typeof item.then === 'function' && typeof item.catch === 'function';
-};
-
 let currentTest: Test;
 
 export class TestRunner {
@@ -55,7 +49,6 @@ export class TestRunner {
     }
 
     group.startTime = new Date().getTime();
-    let className = group.fileName;
 
     consoleGroup(group.path);
     let result = true;
@@ -158,13 +151,6 @@ if (global.FuseBox) {
   }
   console.log(snapshots);
   config.snapshotLoader = (name: string, className: string) => {
-    const state = initState();
-    var testFolder = state.findStoryByFileName(className);
-
-    // if (!val) {
-    //   console.clear();
-    // }
-    console.log('Finding: ' + className);
     return snapshots[className];
   };
 

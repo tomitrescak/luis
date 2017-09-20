@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Menu, Icon } from 'semantic-ui-react';
 import { inject, observer } from 'mobx-react';
-import { TestGroup } from '../config/test_data';
 import { style } from 'typestyle';
 
 export type Props = {

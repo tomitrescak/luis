@@ -1,7 +1,4 @@
 import { TestGroup, Test } from '../client/config/test_data';
-import { StateModel } from '../client/config/state';
-import * as sinon from 'Sinon';
-import { setupTestBridge } from '../client/config/bridge';
 import { TestRunner } from '../client/config/test_runner';
 
 describe('Test', function() {

@@ -2876,8 +2876,8 @@ verror@1.10.0:
     extsprintf "^1.2.0"
 
 wafl@^0.2.23:
-  version "0.2.26"
-  resolved "https://registry.yarnpkg.com/wafl/-/wafl-0.2.26.tgz#0aaa9ff60146adce7611bcf4b3df6f2bdba7298c"
+  version "0.2.27"
+  resolved "https://registry.yarnpkg.com/wafl/-/wafl-0.2.27.tgz#b0d7ad5d8ab97de2d426914840b5a079a5bf24ab"
   dependencies:
     "@types/chai" "^4.0.4"
     "@types/chai-as-promised" "^7.1.0"

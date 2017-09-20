@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-let index = 1;
-
 describe('Boo', () => {
   storyOf(
     'Bar View',

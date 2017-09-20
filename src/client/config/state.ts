@@ -1,14 +1,13 @@
-import { observable, action, computed, IObservableValue } from 'mobx';
+import { observable, action, IObservableValue } from 'mobx';
 
-import { lightTheme, darkTheme, ITheme } from '../config/themes';
+import { lightTheme, ITheme } from '../config/themes';
 
-import { TestGroup, Snapshot, TestItem } from './test_data';
+import { TestGroup, TestItem } from './test_data';
 import { TestQueue } from './test_queue';
 import { TestRunner } from './test_runner';
 
 import { ViewState } from './state_view';
 import { setupRouter } from './router';
-import { Story } from '../client';
 import { setupHmr } from './setup';
 import { AppConfig } from './app_config';
 

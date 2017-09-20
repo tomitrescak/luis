@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as SplitPane from 'react-split-pane';
 
-import { Sidebar, Segment, Menu, Icon, Header } from 'semantic-ui-react';
 
 import { style } from 'typestyle';
 import { StateModel } from '../config/state';

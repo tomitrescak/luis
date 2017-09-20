@@ -1,6 +1,5 @@
 import { reaction } from 'mobx';
 import * as route from 'path-match';
-import { initState } from './state';
 
 export default function createRouter(view: any, routes: any) {
   const matchers = Object.keys(routes).map(path => ([route()(path), routes[path]]));

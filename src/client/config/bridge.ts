@@ -1,5 +1,4 @@
-import { parseStoryName } from 'chai-match-snapshot/config';
-import { TestGroup, Test, Impl } from './test_data';
+import { Test, Impl } from './test_data';
 
 export interface BridgeInterface {
   describe: string;

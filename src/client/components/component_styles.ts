@@ -3,11 +3,12 @@ import { style } from 'typestyle';
 export const diff = style({
   $nest: {
     '& table': {
-      width: '100%'
+      width: '100%',
+      background: 'white',
+      color: 'black'
     },
     '& .diff': {
       borderCollapse: 'collapse',
-      border: '1px solid darkgray',
       whiteSpace: 'pre-wrap'
     },
     '& .diff tbody': {
@@ -27,10 +28,11 @@ export const diff = style({
     },
     '& .diff thead': {
       borderBottom: '1px solid #BBC',
-      background: '#EFEFEF',
+      background: '#EFEFEF'
     },
     '& .diff thead th.texttitle': {
-      textAlign: 'left'
+      textAlign: 'left',
+      fontSize: '11px'
     },
     '& .diff tbody td': {
       paddingLeft: '.4em',
@@ -60,3 +62,10 @@ export const diff = style({
     }
   }
 });
+
+export const timing = (color: string) =>
+  style({
+    float: 'right',
+    fontSize: '10px',
+    color
+  });

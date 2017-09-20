@@ -39,7 +39,7 @@ describe('Component', () => {
         );
 
         it('Passes', function() {
-          // throw new Error('Failed');
+          throw new Error('Failed');
         });
 
         it('Passes 9', function() {
