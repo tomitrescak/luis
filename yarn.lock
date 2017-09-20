@@ -346,9 +346,9 @@ chai-enzyme@^0.8.0:
     html "^1.0.0"
     react-element-to-jsx-string "^5.0.0"
 
-chai-match-snapshot@^1.0.21:
-  version "1.0.21"
-  resolved "https://registry.yarnpkg.com/chai-match-snapshot/-/chai-match-snapshot-1.0.21.tgz#6c7223bcbb88a5137b1188867bd3fc381a832031"
+chai-match-snapshot@^1.0.22:
+  version "1.0.22"
+  resolved "https://registry.yarnpkg.com/chai-match-snapshot/-/chai-match-snapshot-1.0.22.tgz#0f1ede7452feaf0a80e30a9f9731147b56848b9e"
   dependencies:
     "@types/node" "^8.0.17"
 
@@ -2876,8 +2876,8 @@ verror@1.10.0:
     extsprintf "^1.2.0"
 
 wafl@^0.2.23:
-  version "0.2.27"
-  resolved "https://registry.yarnpkg.com/wafl/-/wafl-0.2.27.tgz#b0d7ad5d8ab97de2d426914840b5a079a5bf24ab"
+  version "0.2.29"
+  resolved "https://registry.yarnpkg.com/wafl/-/wafl-0.2.29.tgz#e511b73f76aed908c51f0d306e1aa68f06acfc2c"
   dependencies:
     "@types/chai" "^4.0.4"
     "@types/chai-as-promised" "^7.1.0"
@@ -2888,7 +2888,7 @@ wafl@^0.2.23:
     chai "^4.1.2"
     chai-as-promised "^7.1.1"
     chai-enzyme "^0.8.0"
-    chai-match-snapshot "^1.0.21"
+    chai-match-snapshot "^1.0.22"
     chai-subset "^1.6.0"
     enzyme "^2.9.1"
     enzyme-to-json "^1.5.1"

@@ -70,7 +70,7 @@ export class TestView extends React.PureComponent<TestProps> {
       return false;
     }
 
-    console.log('Rendering: ' + test.name + '[' + test.uid + ']');
+    // console.log('Rendering: ' + test.name + '[' + test.uid + ']');
 
     return (
       <div>

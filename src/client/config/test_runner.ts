@@ -83,7 +83,7 @@ export class TestRunner {
   }
 
   public async startTest(test: Test) {
-    console.log('Executing: ' + test.name + '[' + test.uid + ']');
+    // console.log('Executing: ' + test.name + '[' + test.uid + ']');
 
     const group = test.parent as TestGroup;
     test.startTime = new Date().getTime();
@@ -164,8 +164,6 @@ config.onProcessSnapshots = (_taskName: string, snapshotName: string, current: s
       currentTest.snapshots[index] = snapshot;
     }
 
-    console.log('Adding snapshot: ' + currentTest.name + '[' + currentTest.uid + ']');
-  } else {
-    console.log('No current test ...');
-  }
+    // console.log('Adding snapshot: ' + currentTest.name + '[' + currentTest.uid + ']');
+  } 
 };

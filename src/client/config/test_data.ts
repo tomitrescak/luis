@@ -193,7 +193,7 @@ export class Test extends TestItem  {
     this.url = toUrlName(name);
     this.uid = uid++;
 
-    console.log('Constructed: ' + name + '[' + this.uid  + ']');
+    // console.log('Constructed: ' + name + '[' + this.uid  + ']');
   }
 
   get icon(): { name: string, color: SemanticCOLORS } {

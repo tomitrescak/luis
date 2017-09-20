@@ -1,9 +1,9 @@
 {
   "name": "luis",
-  "version": "2.0.0",
+  "version": "2.0.3",
   "description": "List-of-uis book and testing of uis",
-  "main": "dist/client/client.js",
-  "types": "dist/client/client.d.ts",
+  "main": "dist/client/index.js",
+  "types": "dist/client/index.d.ts",
   "scripts": {
     "luis": "node fuse.js luis",
     "test": "TS_NODE_FAST=true mocha --require ./mocha.js --ui snapshots 'src/**/*.test.ts*' --compilers ts:ts-node/register -P",

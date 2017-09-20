@@ -1,3 +1,2 @@
-import { start } from '../server/server';
-
+import { start } from '../server';
 start('public');
