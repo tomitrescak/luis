@@ -83,13 +83,24 @@ const content = style({
   fontFamily: 'Lato'
 });
 
+const styles = style({
+  $nest: {
+    '& .m12': {
+      margin: '12px!important',
+    },
+    '& .m6': {
+      margin: '6px!important'
+    },
+  }
+})
+
 type Props = {
   state?: App.State;
 };
 
 export const Layout = inject<Props>('state')(
   observer(({ state }: Props) => (
-    <div>
+    <div className={styles}>
       <div className={content}>
         <SplitPane
           className={split(state.theme)}

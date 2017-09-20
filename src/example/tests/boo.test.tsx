@@ -23,6 +23,7 @@ describe('Boo', () => {
           <div>Moo</div>
         </div>;
       },
+      cssClassName: 'm12',
       info: 'Foo Info 567'
     },
     data => {
