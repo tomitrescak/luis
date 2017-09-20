@@ -665,10 +665,10 @@ destroy@~1.0.4:
   resolved "https://registry.yarnpkg.com/destroy/-/destroy-1.0.4.tgz#978857442c44749e4206613e37946205826abd80"
 
 diff-view@^1.0.7:
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/diff-view/-/diff-view-1.0.9.tgz#8fb7a9c5e1f7e2cbcc1a5dec9ae9a1350b1601b6"
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/diff-view/-/diff-view-1.0.12.tgz#9ad4c9cb6e124715c438c9b3caacc895f0769922"
   dependencies:
-    circular-json "^0.3.3"
+    circular-json-es6 "^2.0.1"
 
 diff@3.2.0:
   version "3.2.0"

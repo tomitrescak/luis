@@ -79,7 +79,9 @@ export function setupTestBridge(state: App.State, bridgeInterface: BridgeInterfa
   glob[bridgeInterface.xdescribe] = function(name: string, impl: Impl) {};
 
   glob[bridgeInterface.it] = function(name: string, impl: Impl) {
-    state.currentGroup.tests.push(new Test(name, state.currentGroup, impl));
+    if (state.currentGroup.tests.every(t => t.name !== name)) {
+      state.currentGroup.tests.push(new Test(name, state.currentGroup, impl));
+    }
   };
 
   glob[bridgeInterface.before] = function(impl: Impl) {

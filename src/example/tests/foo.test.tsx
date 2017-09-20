@@ -13,6 +13,10 @@ describe('Component', () => {
       itMountsAnd('renders correctly', () => data.component, (wrapper) => {
         wrapper.should.matchSnapshot('rendered');
       })
+
+      itMountsAnd('genders correctly', () => data.component, (wrapper) => {
+        wrapper.should.matchSnapshot('rendered');
+      })
     }
   );
   console.log('Loaded FOO');

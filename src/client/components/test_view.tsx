@@ -73,9 +73,8 @@ export class TestView extends React.PureComponent<TestProps> {
         <Accordion.Title
           key={test.urlName}
           active={expanded}
-          as={expanded ? Segment : Accordion.Title}
-          attached="top"
           onClick={e => this.canExpand() && state.toggleExpanded(e, test)}
+          { ... expanded ? { as: Segment, attached: 'top' } : {} }
         >
           <Icon name="dropdown" className={this.canExpand() ? 'normal' : hidden} />
           <Icon {...test.icon} />

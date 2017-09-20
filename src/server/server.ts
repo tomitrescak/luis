@@ -5,7 +5,14 @@ const fs = require('fs');
 const app = express();
 const historyAPIFallback = require('connect-history-api-fallback');
 
+import { handler } from './api/snapshot_handler';
+
+app.use('/tests', handler);
 app.use(historyAPIFallback());
+
+// app.get('/', function (req, res) {
+//     res.sendFile(__dirname + '/louis.html');
+// });
 
 export function start(luisPath = `public/`) {
     try {

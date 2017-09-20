@@ -10,7 +10,7 @@ describe('Boo', () => {
           <div>Moo</div>
           <div>Moo</div>
           <div>Moo</div>
-          <div>Moo1</div>
+          <div>Moo27</div>
           <div>Moo</div>
           <div>Moo</div>
           <div>Moo</div>

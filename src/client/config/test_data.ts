@@ -187,7 +187,7 @@ export class Test extends TestItem  {
     super(name, group);
 
     this.impl = impl;
-    this.snapshots = [];
+    this.snapshots = observable([]);
     this.url = toUrlName(name);
   }
 

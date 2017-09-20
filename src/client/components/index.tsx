@@ -6,11 +6,13 @@ import { setupLuis } from 'wafl';
 import { Layout } from './layout';
 import { initState } from '../config/state';
 import { setupTestBridge, bdd } from '../config/bridge';
+import { loadSnapshots } from '../config/test_runner';
 
 const state = initState();
 
 setupLuis();
 setupTestBridge(state, bdd);
+loadSnapshots();
 
 export function renderLuis(root = '#react-root') {
   ReactDOM.render(
