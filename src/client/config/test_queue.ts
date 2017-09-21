@@ -21,7 +21,7 @@ export class TestQueue {
     FuseBox.on("before-import", (_exports: any, _require: any, _module: any, filename: string) => {                
       let file = clearExtension(filename);
       if (this.hmrQueue.indexOf(file) >= 0) {
-        console.log('Allowing to add test for: ' + file);
+        // console.log('Allowing to add test for: ' + file);
         this.canAddTest = true;
       }
     });
@@ -30,20 +30,18 @@ export class TestQueue {
       let file = clearExtension(filename);
       if (this.hmrQueue.indexOf(file) >= 0) {
         this.hmrQueue.splice(this.hmrQueue.indexOf(file), 1);
-        console.log('Removing access for: ' + file);
+        // console.log('Removing access for: ' + file);
         this.canAddTest = false;
       }
     });
   }
   stop() {
-    console.log('Stopping queue');
-
+    // console.log('Stopping queue');
     this.stopped = true;
   }
 
   start() {
-    console.log('Starting queue');
-    
+    // console.log('Starting queue');
     this.stopped = false;
     if (!this.running) {
       this.processQueue();
@@ -52,12 +50,12 @@ export class TestQueue {
 
   add(group: TestGroup) {
     if (group.tests.length == 0) {
-      console.log('Ignoring for no tests: ' + group.name);
+      // console.log('Ignoring for no tests: ' + group.name);
       return;
     }
 
     if (!this.canAddTest) {
-      console.log('Cannot add tests for: ' + group.name);
+      // console.log('Not running tests as not part of HMR: ' + group.name);
       return;
     }
 
@@ -73,8 +71,20 @@ export class TestQueue {
 
 
   hmr(name: string, content: string, dependants: any) {
+    // KNOWN ISSUE: If JSON and JS come in the same HMR batch 
+    //   and js is loaded after json, not all tests will be run
+    //   should not happen very often though
+    //   probably can be solved with some timer
+
     // enable hmr
-    this.canAddTest = false; 
+    // changed snapshot reloads all tests
+    if (name.substring(name.length - 5) == '.json') {
+      // console.log('Adding all tests ...');
+      this.canAddTest = true;
+    } else {
+      // we perform selective tests
+      this.canAddTest = false; 
+    }
     
     if (name.indexOf('.test') > 0) {
       this.hmrQueue.push(clearExtension(name));
@@ -90,7 +100,7 @@ export class TestQueue {
       while (queue.length > 0) {
         let current = queue.shift();
         if (current.indexOf('.test') > 0) {
-          console.log('Adding test after hmr: ' + current);
+          // console.log('Adding test after hmr: ' + current);
           this.hmrQueue.push(clearExtension(current));
         }
         if (dependants[current]) {
@@ -113,7 +123,7 @@ export class TestQueue {
       this.running = true;
       let group = this.queue.shift();
 
-      console.log(`Running ${this.queue.length} tests for: ` + group.name);
+      // console.log(`Running ${this.queue.length} tests for: ` + group.name);
 
       try {
         await this.testRunner.testGroup(group);
@@ -122,7 +132,7 @@ export class TestQueue {
       }
     } else {
       this.running = false;
-      console.log('Finished all tests');
+      // console.log('Finished all tests');
       // update count of passed and failed tests
       this.testRunner.state.liveRoot.updateCounts();
     }
