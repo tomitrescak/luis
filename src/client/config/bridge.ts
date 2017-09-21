@@ -47,6 +47,9 @@ export function setupTestBridge(state: App.State, bridgeInterface: BridgeInterfa
 
 
   glob[bridgeInterface.describe] = function(name: string, impl: Impl) {
+    // stop test queue during execution
+    state.testQueue.stop();
+
     const group = state.currentGroup.getGroup(name, state);
     const parent = group.parent;
     state.currentGroup = group;
@@ -57,10 +60,16 @@ export function setupTestBridge(state: App.State, bridgeInterface: BridgeInterfa
       state.currentGroup = parent;
     }
 
+    // add to test queue
+    state.testQueue.add(group);
+    // start reconciliation
     state.reconciliate();
   };
 
   glob[bridgeInterface.storyOf] = function(name: string, props: StoryConfig, impl: (props: any) => void) {
+    // stop test queue during execution
+    state.testQueue.stop();
+    
     const group = state.currentGroup.getStory(name, props, state);
     const parent = group.parent;
     state.currentGroup = group;
@@ -71,6 +80,9 @@ export function setupTestBridge(state: App.State, bridgeInterface: BridgeInterfa
       state.currentGroup = parent;
     }
 
+    // add to test queue
+    state.testQueue.add(group);
+    // start reconciliation
     state.reconciliate();
   };
 

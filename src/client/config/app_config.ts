@@ -34,7 +34,6 @@ export class AppConfig {
   @action loadTests() {
     this.tests.clear();
 
-
     let testCollection: TestConfig[] = [];
     let storedConfigString = localStorage.getItem('louisTestConfig');
     if (storedConfigString == null) {

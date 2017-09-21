@@ -91,10 +91,12 @@ export class StateModel {
     // remap root and run tests
     this.liveRoot.groups.forEach(g => {
       g.parent = this.liveRoot;
-      this.testQueue.add(g);
     });
 
     // start tests
+    this.testQueue.start();
+
+    // clear updates
     this.updateRoot.groups = [];
     this.updateRoot.tests = [];
 
