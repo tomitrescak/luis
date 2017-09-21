@@ -46,9 +46,6 @@ function throttledUpdate() {
         window.location.reload();
       }
 
-      /** Register this module in test queu so we run only affected tests */
-      state.testQueue.hmr(path, content, dependants);
-
       /** Patch the module at give path */
       FuseBox.dynamic(path, content);
     }

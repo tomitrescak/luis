@@ -5,7 +5,6 @@ export class TestQueue {
   queue: TestGroup[] = [];
   testRunner: TestRunner;
   running = false;
-  hrmQueue = [];
 
   constructor(testRunner: TestRunner) {
     this.testRunner = testRunner;
@@ -18,13 +17,6 @@ export class TestQueue {
     if (!this.running) {
       this.processQueue();
     }
-  }
-
-
-
-  hmr(name: string, content: string, dependants: any) {
-    debugger;
-    console.log('HMR: ' + name);
   }
 
   async processQueue() {
