@@ -1,5 +1,5 @@
 import * as React from 'react';
 
 export const Foo = () => (
-  <div>Foo 40</div>
+  <div>Foo 48</div>
 );

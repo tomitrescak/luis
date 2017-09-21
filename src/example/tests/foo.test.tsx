@@ -15,7 +15,7 @@ describe('Component', () => {
         wrapper.should.matchSnapshot('rendered');
       })
 
-      itMountsAnd('genders correctly', () => data.component, (wrapper) => {
+      itMountsAnd('regenders correctly', () => data.component, (wrapper) => {
         wrapper.should.matchSnapshot('rendered');
       })
     }
