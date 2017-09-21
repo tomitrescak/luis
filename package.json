@@ -1,6 +1,6 @@
 {
   "name": "luis",
-  "version": "2.0.13",
+  "version": "2.1.4",
   "description": "List-of-uis book and testing of uis",
   "main": "dist/client/index.js",
   "types": "dist/client/index.d.ts",
@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/tomitrescak/louis#readme",
   "dependencies": {
+    "body-parser": "^1.18.1",
     "circular-json-es6": "^2.0.1",
     "connect-history-api-fallback": "^1.3.0",
     "diff-view": "^1.0.7",

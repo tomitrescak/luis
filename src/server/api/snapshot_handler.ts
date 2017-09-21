@@ -1,29 +1,46 @@
-const url = require('url');
-const path = require('path');
-const fs = require('fs');
+import * as url from 'url';
+import * as path from 'path';
+import * as fs from 'fs';
 
-const snapshots = path.resolve('./src/tests');
+const snapshotPath = path.resolve('./src/tests/snapshots');
 
 export function handler(request: any, response: any, next: any) {
-  let url_parts = url.parse(request.url, true);
-  let query = url_parts.query;
-  let snapshotName = query.name;
-  let extraParams = query.extraParams || '';
+  const body = request.body;
 
-  // console.log(snapshotName)
+  const mocha = body.mocha;
+ 
+  if (mocha) {
+    const extraParams = body.extraParams || '';
+    const snapshotName = body.name;
+    const execSync = require('child_process').execSync;
+    const command = `TS_NODE_FAST=true UPDATE_SNAPSHOTS=true ./node_modules/.bin/mocha --require ./mocha.js --ui snapshots ${extraParams} 'src/**/*.test.ts*' --compilers ts:ts-node/register --grep "${snapshotName}"`;
+    console.log(`Updating snapshots of "${snapshotName}" with mocha`);
+    console.log(command);
+    try {
+      const code = execSync(command);
+    } catch (ex) {}
+  } else {
+    const name = body.name;
+    const snapshots = body.snapshots;
 
-  const execSync = require('child_process').execSync;
-  // const jestPath = path.resolve('./fuse');
-  // console.log(`UPDATE_SNAPSHOTS=true SNAPSHOT="${snapshotName}" node fuse test`);
-  // const code = execSync(`UPDATE_SNAPSHOTS=true SNAPSHOT="${snapshotName}" node fuse test`);
-  // console.log(`Updating: ${snapshotName}`);
-  const command = `TS_NODE_FAST=true UPDATE_SNAPSHOTS=true ./node_modules/.bin/mocha --require ./mocha.js --ui snapshots ${extraParams} 'src/**/*.test.ts*' --compilers ts:ts-node/register --grep "${snapshotName}"`;
+    const fullPath = path.join(snapshotPath, name + '_snapshots.json');
+    const dirname = path.dirname(fullPath);
 
-  console.log(command);
-  try {
-    const code = execSync(command);
-  } catch (ex) {
+    console.log('Saving snapshots to: ' + fullPath);
+
+    try {
+      fs.statSync(dirname);
+    } catch (ex) {
+      console.log('Directory does not exist. Creating directory at: ' + dirname);
+      fs.mkdirSync(dirname);
+    }
+
+    try {
+      fs.writeFileSync(fullPath, JSON.stringify(snapshots, null, 2));
+    } catch (ex) {
+      console.error('Error writing snapshots: ' + ex.message);
+    }
   }
 
-  response.end('ok');
+  response.end('ok lll');
 }

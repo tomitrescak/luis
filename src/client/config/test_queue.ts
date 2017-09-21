@@ -114,7 +114,7 @@ export class TestQueue {
         dependants[current].visited = true;
       }
     } else {
-      console.log('Ignoring file with no dependants: ' + name)
+      // console.log('Ignoring file with no dependants: ' + name)
     }
   }
 

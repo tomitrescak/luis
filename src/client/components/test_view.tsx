@@ -71,6 +71,11 @@ export class TestView extends React.PureComponent<TestProps> {
     }
 
     // console.log('Rendering: ' + test.name + '[' + test.uid + ']');
+    const compareView =
+      test.error &&
+      test.error.message &&
+      test.error.message.indexOf('expected') >= 0 &&
+      (test.error.actual || test.error.expected);
 
     return (
       <div>
@@ -105,18 +110,31 @@ export class TestView extends React.PureComponent<TestProps> {
           )}
 
           {test.error &&
-          !test.error.actual && (
+          !compareView && (
             <Segment attached="bottom" className={noPadding} inverted color="red">
               <div className={errorMessage}>{test.error.message}</div>
             </Segment>
           )}
 
           {test.error &&
-          test.error.actual && (
+           compareView && (
             <Segment attached="bottom" className={noPadding}>
               <div
                 className={diff}
-                dangerouslySetInnerHTML={{ __html: (DiffView.compare(test.error.actual, test.error.expected, 'Current', 'Expected', 1) as any).outerHTML  }}
+                ref={input => {
+                  if (input) {
+                    if (input.childNodes.length) {
+                      input.removeChild(input.childNodes[0]);
+                    }
+                    input.appendChild(DiffView.compare(
+                      test.error.actual,
+                      test.error.expected,
+                      'Current',
+                      'Expected',
+                      1
+                    ) as any);
+                  }
+                }}
               />
             </Segment>
           )}

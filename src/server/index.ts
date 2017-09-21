@@ -1,13 +1,16 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const bodyParser = require('body-parser');
 
 const app = express();
 const historyAPIFallback = require('connect-history-api-fallback');
 
 import { handler } from './api/snapshot_handler';
 
-app.use('/tests', handler);
+app.use(bodyParser.json());
+app.post('/tests', handler);
+
 app.use(historyAPIFallback());
 
 // app.get('/', function (req, res) {

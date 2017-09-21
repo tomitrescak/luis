@@ -21,11 +21,13 @@ export class AppConfig {
   @observable storyView: StoryView = 'list';
   @observable logLevel = '1';
   @observable theme = 'light';
+  @observable showDevTools = false;
 
   constructor(state: App.State) {
     this.state = state;
     this.storyView = localStorage.getItem('louisStoryView') as StoryView || 'tree';
     this.logLevel = localStorage.getItem('luisLog') || '1';
+    this.showDevTools = localStorage.getItem('luisDevTools') == '1' ? true : false;
     this.theme = localStorage.getItem('luisTheme') || 'light';
     this.tests = observable([]);
     this.loadTests();
@@ -64,6 +66,7 @@ export class AppConfig {
     localStorage.setItem('louisStoryView', this.storyView);
     localStorage.setItem('luisTheme', this.theme);
     localStorage.setItem('luisLog', this.logLevel);
+    localStorage.setItem('luisDevTools', this.showDevTools ? '1' : '0');
   }
 
   @action toggleAllTests(disabled: boolean) {

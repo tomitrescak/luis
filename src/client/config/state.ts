@@ -39,11 +39,13 @@ export type RenderOptions = {
 
 export class StateModel {
   @observable theme: ITheme = lightTheme;
+  @observable autoUpdateSnapshots = false;
   @observable showPassing = true;
   @observable showFailing = true;
 
   expanded: { [index: string]: IObservableValue<boolean> } = {};
 
+  updatingSnapshots = false;
   liveRoot: TestGroup;
   updateRoot: TestGroup;
   currentGroup: TestGroup;

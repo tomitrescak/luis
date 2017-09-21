@@ -1,16 +1,16 @@
-import { observable, action } from 'mobx';
+import { observable, action, IObservableArray } from 'mobx';
 import { SemanticCOLORS } from 'semantic-ui-react';
 
 export type Impl = () => void;
 
-function toUrlName (str: string) {
+function toUrlName (str: string, lowerCase = true) {
   let result = str.replace(/\:/g, '');
   result = result.replace(/ - /g, '-');
   result = result.replace(/\W/g, '-');
   do {
     result = result.replace(/--/g, '-');
   } while (result.indexOf('--') >= 0);
-  return result.toLowerCase();
+  return lowerCase ? result.toLowerCase() : result;
 };
 
 export class TestItem {
@@ -69,7 +69,7 @@ export class TestGroup extends TestItem {
     this.tests = [];
     this.groups = [];
     this.urlName = toUrlName(name);
-    this.pathName = this.urlName.replace(/-/g, '');
+    this.pathName = toUrlName(name, false).replace(/-/g, '');
     if (parent) {
       parent.groups.push(this);
       parent.groups.sort((a, b) => a.name < b.name ? -1 : 1);
@@ -112,6 +112,12 @@ export class TestGroup extends TestItem {
     } else if (passing == 0) {
       return 'red';
     } else return 'orange';
+  }
+
+  get snapshots() {
+    let snapshots: {[index: string]: string} = {};
+    let groupSnapshots = this.tests.forEach(t => t.snapshots.forEach(s => snapshots[s.originalName] = s.current ));
+    return snapshots;
   }
 
   findGroup(test: (group: TestGroup) => boolean): TestGroup {
@@ -214,7 +220,7 @@ export class Test extends TestItem  {
   name: string;
 
   impl: () => void;
-  snapshots: Snapshot[];
+  snapshots: IObservableArray<Snapshot>;
   error: Error & { actual: string, expected: string } ;
 
   url: string;
@@ -245,6 +251,7 @@ export class Test extends TestItem  {
 
 export interface ISnapshot {
   name: string;
+  originalName: string;
   expected: string;
   current: string;
   matching?: boolean;
@@ -253,6 +260,7 @@ export interface ISnapshot {
 
 export class Snapshot {
   name: string;
+  originalName: string;
   url: string;
   parent: Test;
 
@@ -262,6 +270,7 @@ export class Snapshot {
 
   constructor(snapshot: ISnapshot) {
     this.name = snapshot.name;
+    this.originalName = snapshot.originalName;
     this.parent = snapshot.test;
     this.url = toUrlName(snapshot.name);
     this.expected = snapshot.expected;

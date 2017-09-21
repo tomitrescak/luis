@@ -20,11 +20,16 @@ export class TopPanel extends React.PureComponent<Props> {
   handleItemClick = (_e: any, { name }: any) => (this.props.state.viewState.snapshotView = name);
 
   updateClick = async (_e: any) => {
-    this.updating = true;
-    const story = this.props.state.viewState.selectedStory;
-    if (story) {
-      await fetch(`/tests?name=${story.name.replace(/\s/g, '')}&extraParams=${this.props.state.renderOptions.extraUpdateProps}`);
-      this.updating = false;
+    // this.updating = true;
+    // const story = this.props.state.viewState.selectedStory;
+    // if (story) {
+    //   await fetch(`/tests?name=${story.name.replace(/\s/g, '')}&extraParams=${this.props.state.renderOptions.extraUpdateProps}`);
+    //   this.updating = false;
+    // }
+    if (this.props.state.viewState.selectedStory) {
+      this.props.state.updatingSnapshots = true;
+      this.props.state.testQueue.canAddTest = true;
+      this.props.state.testQueue.add(this.props.state.viewState.selectedStory);
     }
   };
 
@@ -46,6 +51,7 @@ export class TopPanel extends React.PureComponent<Props> {
         <Menu.Item name="html" content="Html" active={view === 'html'} icon="html5" onClick={this.handleItemClick} />
         <Menu.Item name="json" content="Json" active={view === 'json'} icon="code" onClick={this.handleItemClick} />
         <Menu.Menu position="right">
+          <Menu.Item active={this.props.state.autoUpdateSnapshots} onClick={() => this.props.state.autoUpdateSnapshots = !this.props.state.autoUpdateSnapshots} icon="refresh" title="Auto Update Snapshots" />
           {this.updating ? (
             <Menu.Item>
               <Loader active inline size="mini" />

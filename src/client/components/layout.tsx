@@ -135,7 +135,7 @@ export const Layout = inject<Props>('state')(
           </div>
         </SplitPane>
       </div>
-      <DevTools position={{ right: 200, top: 0 }} />
+      { state.config.showDevTools && <DevTools position={{ right: 5, top: 42 }} /> }
     </div>
   ))
 );

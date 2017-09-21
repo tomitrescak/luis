@@ -21,6 +21,12 @@ type CallbackParams = {
 };
 
 function queueThrottledUpdate(options: CallbackParams) {
+  // ignore json files
+  // if (options.path.substring(options.path.length - 5) === '.json') {
+  //   console.log('Ignoring JSON update');
+  //   return true;
+  // }
+
   if (throttleTimer) {
     clearTimeout(throttleTimer);
   }
@@ -46,7 +52,7 @@ function update() {
         window.location.reload();
       }
 
-      state.testQueue.hmr(path, content, dependants);      
+      state.testQueue.hmr(path, content, dependants);
 
       /** Patch the module at give path */
       FuseBox.dynamic(path, content);
@@ -71,7 +77,6 @@ function update() {
   }
 }
 
-
 const customizedHMRPlugin = {
   hmrUpdate(options: CallbackParams) {
     if (throttle === 0) {
@@ -85,13 +90,13 @@ const customizedHMRPlugin = {
 type PluginOptions = {
   throttleTime?: number;
   testStateFulModule?: NameTest;
-}
+};
 
 /**
 * Registers given module names as being stateful
 * @param isStateful for a given moduleName returns true if the module is stateful
 */
-export const addPlugin = ({throttleTime = 0, testStateFulModule}: PluginOptions = {}) => {
+export const addPlugin = ({ throttleTime = 0, testStateFulModule }: PluginOptions = {}) => {
   if (!global.alreadyRegistered) {
     global.alreadyRegistered = true;
     throttle = throttleTime;
@@ -100,16 +105,17 @@ export const addPlugin = ({throttleTime = 0, testStateFulModule}: PluginOptions 
   isModuleStateful = testStateFulModule;
 };
 
-
 // Test it
 export function setupHmr() {
-  addPlugin({
-    throttleTime: 10,
-    testStateFulModule: (name: string) => {
-      // Add the things you think are stateful:
-      const result = /router/.test(name) || /state/.test(name);
-      // console.log(`${result} ${name}`);
-      return result;
-    }
-  })
-} 
+  if (global.FuseBox) {
+    addPlugin({
+      throttleTime: 10,
+      testStateFulModule: (name: string) => {
+        // Add the things you think are stateful:
+        const result = /router/.test(name) || /state/.test(name);
+        // console.log(`${result} ${name}`);
+        return result;
+      }
+    });
+  }
+}
