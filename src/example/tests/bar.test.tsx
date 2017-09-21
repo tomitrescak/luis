@@ -2,11 +2,15 @@ import * as React from 'react';
 
 describe('Component', () => {
   describe('Doo', function() {
+    it ('tests', function() {
+
+    });
+
     storyOf(
       'Bar View',
       {
         get component() {
-          return <div>Bar Component 6</div>;
+          return <div>Bar Component 9</div>;
         },
         info: 'Foo Info 567'
       },

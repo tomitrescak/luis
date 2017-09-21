@@ -4,7 +4,7 @@ import { Provider } from 'mobx-react';
 import { setupLuis } from 'wafl';
 
 import { Layout } from './layout';
-import { initState } from '../config/state';
+import { initState, RenderOptions } from '../config/state';
 import { setupTestBridge, bdd } from '../config/bridge';
 import { loadSnapshots } from '../config/snapshot_loader';
 
@@ -14,11 +14,12 @@ setupLuis();
 setupTestBridge(state, bdd);
 loadSnapshots();
 
-export function renderLuis(root = '#react-root') {
-  ReactDOM.render(
+export function renderLuis(options: RenderOptions = {}) {
+  state.renderOptions = options;
+   ReactDOM.render(
     <Provider state={state}>
-      <Layout />     
+      <Layout />
     </Provider>,
-    document.querySelector(root)
+    document.querySelector(options.root || '#react-root')
   );
 }

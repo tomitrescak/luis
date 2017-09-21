@@ -76,6 +76,12 @@ export class TestGroup extends TestItem {
     }
   }
 
+  get nestedGroupsWithTests() {
+    const groups = this.findGroups(g => g.tests.length > 0);
+    groups.sort((a, b) => a.path < b.path ? -1 : 1);
+    return groups;
+  }
+
   get fileName(): string {
     return (this.parent == null || this.parent.parent == null ? '' : (this.parent.fileName + '_')) + this.pathName;
   }
@@ -106,6 +112,35 @@ export class TestGroup extends TestItem {
     } else if (passing == 0) {
       return 'red';
     } else return 'orange';
+  }
+
+  findGroup(test: (group: TestGroup) => boolean): TestGroup {
+    const queue: TestGroup[] = [this];
+    while (queue.length > 0) {
+      let current = queue.shift();
+      if (test(current)) {
+        return current;
+      }
+      for (let group of current.groups) {
+        queue.push(group);
+      }
+    }
+    return null;
+  }
+
+  findGroups(test: (group: TestGroup) => boolean, multiple = false): TestGroup[] {
+    const result: TestGroup[] = [];
+    const queue: TestGroup[] = [this];
+    while (queue.length > 0) {
+      let current = queue.shift();
+      if (test(current)) {
+        result.push(current);
+      }
+      for (let group of current.groups) {
+        queue.push(group);
+      }
+    }
+    return result;
   }
 
   /**

@@ -8,7 +8,7 @@ export function handler(request: any, response: any, next: any) {
   let url_parts = url.parse(request.url, true);
   let query = url_parts.query;
   let snapshotName = query.name;
-  let extraParams = query.params || '';
+  let extraParams = query.extraParams || '';
 
   // console.log(snapshotName)
 
@@ -17,7 +17,7 @@ export function handler(request: any, response: any, next: any) {
   // console.log(`UPDATE_SNAPSHOTS=true SNAPSHOT="${snapshotName}" node fuse test`);
   // const code = execSync(`UPDATE_SNAPSHOTS=true SNAPSHOT="${snapshotName}" node fuse test`);
   // console.log(`Updating: ${snapshotName}`);
-  const command = `TS_NODE_FAST=true UPDATE_SNAPSHOTS=true ./node_modules/.bin/mocha --require ./mocha.js --ui snapshots 'src/**/*.test.ts*' ${extraParams} --compilers ts:ts-node/register --grep "${snapshotName}"`;
+  const command = `TS_NODE_FAST=true UPDATE_SNAPSHOTS=true ./node_modules/.bin/mocha --require ./mocha.js --ui snapshots ${extraParams} 'src/**/*.test.ts*' --compilers ts:ts-node/register --grep "${snapshotName}"`;
 
   console.log(command);
   try {

@@ -1,11 +1,12 @@
 import * as React from 'react';
+import { Foo } from '../components/foo';
 
 describe('Component', () => {
   storyOf(
     'Foo',
     {
       get component() {
-        return <div>Foo1 Component</div>;
+        return <Foo />;
       },
       info: 'Foo Info 66'
     },

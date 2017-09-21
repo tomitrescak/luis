@@ -163,7 +163,8 @@ config.onProcessSnapshots = (_taskName: string, snapshotName: string, current: s
     } else {
       currentTest.snapshots[index] = snapshot;
     }
-
     // console.log('Adding snapshot: ' + currentTest.name + '[' + currentTest.uid + ']');
   } 
+
+  return null;
 };

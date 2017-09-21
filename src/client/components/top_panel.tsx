@@ -23,7 +23,7 @@ export class TopPanel extends React.PureComponent<Props> {
     this.updating = true;
     const story = this.props.state.viewState.selectedStory;
     if (story) {
-      await fetch(`/tests?name=${story.name.replace(/\s/g, '')}`);
+      await fetch(`/tests?name=${story.name.replace(/\s/g, '')}&extraParams=${this.props.state.renderOptions.extraUpdateProps}`);
       this.updating = false;
     }
   };

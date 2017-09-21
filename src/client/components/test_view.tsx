@@ -116,7 +116,18 @@ export class TestView extends React.PureComponent<TestProps> {
             <Segment attached="bottom" className={noPadding}>
               <div
                 className={diff}
-                ref={input => {
+                dangerouslySetInnerHTML={{ __html: (DiffView.compare(test.error.actual, test.error.expected, 'Current', 'Expected', 1) as any).outerHTML  }}
+              />
+            </Segment>
+          )}
+        </Accordion.Content>
+      </div>
+    );
+  }
+}
+
+/*
+ref={input => {
                   if (input) {
                     if (input.childNodes.length) {
                       input.removeChild(input.childNodes[0]);
@@ -126,11 +137,4 @@ export class TestView extends React.PureComponent<TestProps> {
                     );
                   } 
                 }}
-              />
-            </Segment>
-          )}
-        </Accordion.Content>
-      </div>
-    );
-  }
-}
+                */

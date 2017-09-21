@@ -34,6 +34,8 @@ export class AppConfig {
   @action loadTests() {
     this.tests.clear();
 
+
+    let testCollection: TestConfig[] = [];
     let storedConfigString = localStorage.getItem('louisTestConfig');
     if (storedConfigString == null) {
       storedConfigString = '';
@@ -47,12 +49,15 @@ export class AppConfig {
       let current = queue.shift();
       if (current.tests.length > 0) {
         const value = storedConfig.find(c => c[0] === current.id);
-        this.tests.push(new TestConfig(current.id, current.path, value ? value[1] == '0' : false));
+        testCollection.push(new TestConfig(current.id, current.path, value ? value[1] == '0' : false));
       }
       for (let group of current.groups) {
         queue.push(group);
       }
     }
+
+    testCollection.sort((a, b) => a.name < b.name ? -1 : 1);
+    this.tests.replace(testCollection);
   }
 
   saveConfig() {

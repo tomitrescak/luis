@@ -16,6 +16,7 @@ const {
 
 Sparky.task('luis', () => {
   const luisFuse = FuseBox.init({
+    emitHMRDependencies : true,
     homeDir: 'src',
     output: 'public/$name.js',
     plugins: [

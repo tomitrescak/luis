@@ -10,6 +10,7 @@ import { ViewState } from './state_view';
 import { setupRouter } from './router';
 import { setupHmr } from './setup';
 import { AppConfig } from './app_config';
+import { loadSnapshots } from './snapshot_loader';
 
 setupHmr();
 
@@ -30,6 +31,12 @@ declare global {
   namespace App { export type State = StateModel; }
 }
 
+export type RenderOptions = {
+  root?: string;
+  extraUpdateProps?: string;
+  updateUrl?: string;
+};
+
 export class StateModel {
   @observable theme: ITheme = lightTheme;
   @observable showPassing = true;
@@ -48,6 +55,7 @@ export class StateModel {
   beforeHmr = true;
   testQueue: TestQueue;
   testRunner: TestRunner;
+  renderOptions: RenderOptions;
 
   config: AppConfig;
 
@@ -65,32 +73,19 @@ export class StateModel {
     setupRouter(this);
   }
 
-  
-
-  findGroup(test: (group: TestGroup) => boolean, root = this.liveRoot): TestGroup {
-    const queue = [root];
-    while (queue.length > 0) {
-      let current = queue.shift();
-      if (test(current)) {
-        return current;
-      }
-      for (let group of current.groups) {
-        queue.push(group);
-      }
-    }
-    return null;
-  }
-
   findStoryByFileName(fileName: string) {
-    return this.findGroup(g => g.fileName === fileName);
+    return this.liveRoot.findGroup(g => g.fileName === fileName);
   }
 
   findStoryById(id: string) {
-    return this.findGroup(g => g.id === id);
+    return this.liveRoot.findGroup(g => g.id === id);
   }
 
   @action
   performReconciliation() {
+    // load snapshots
+    loadSnapshots();
+    
     this.liveRoot.groups = [...this.updateRoot.groups];
 
     // remap root and run tests

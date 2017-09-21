@@ -43,10 +43,6 @@ export class TestGroupView extends React.PureComponent<Props> {
     const isList = state.config.storyView === 'list';
     const name = isList ? group.path : group.name;
 
-    if (isList && group.tests.length == 0) {
-      return <div>{group.groups.map((g, i) => <TestGroupView state={state} group={g} key={g.fileName} />)}</div>;
-    }
-
     return (
       <div>
         <Accordion.Title
@@ -68,17 +64,13 @@ export class TestGroupView extends React.PureComponent<Props> {
           <div className={timing(group.color)}>{group.duration.toString()}ms</div>
         </Accordion.Title>
         <Accordion.Content active={state.isExpanded(group).get()} className={content}>
-          {group.groups.map((g, i) => <TestGroupView state={state} group={g} key={g.fileName} />)}
+          {!isList && group.groups.map((g, i) => <TestGroupView state={state} group={g} key={g.fileName} />)}
           {group.tests.map((t, i) => <TestView state={state} test={t} key={t.name} />)}
         </Accordion.Content>
-
-
       </div>
     );
   }
 }
-
-
 
 // {this.props.state.liveRoot.groups.map((g, i) => <TestGroupView key={i} group={g} />)}
 
@@ -88,9 +80,15 @@ export class StoryList extends React.PureComponent<Props> {
   render() {
     const state = this.props.state;
     const version = state.liveRoot.version;
+    const isList = state.config.storyView === 'list';
+
     return (
       <Accordion className={pane(this.props.state.theme)}>
-        {state.liveRoot.groups.map((g, i) => <TestGroupView state={state} group={g} key={g.fileName} />)}
+        {isList ? (
+          state.liveRoot.nestedGroupsWithTests.map((g, i) => <TestGroupView state={state} group={g} key={g.fileName} />)
+        ) : (
+          state.liveRoot.groups.map((g, i) => <TestGroupView state={state} group={g} key={g.fileName} />)
+        )}
       </Accordion>
     );
   }
