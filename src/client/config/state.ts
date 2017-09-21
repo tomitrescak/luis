@@ -86,15 +86,20 @@ export class StateModel {
     // load snapshots
     loadSnapshots();
     
+    // copy values so that we remember
+    this.copyValues(this.liveRoot, this.updateRoot)
+
     this.liveRoot.groups = [...this.updateRoot.groups];
 
     // remap root and run tests
     this.liveRoot.groups.forEach(g => {
       g.parent = this.liveRoot;
-      this.testQueue.add(g);
     });
 
     // start tests
+    this.testQueue.start();
+
+    // clear updates
     this.updateRoot.groups = [];
     this.updateRoot.tests = [];
 
@@ -110,6 +115,30 @@ export class StateModel {
     this.liveRoot.version++;
     this.viewState.openAfterTest();
     this.config.loadTests();
+  }
+
+  @action copyValues(from: TestGroup, to: TestGroup) {
+    to.startTime = from.startTime;
+    to.endTime = from.endTime;
+    to.passingTests = from.passingTests;
+    to.failingTests = from.failingTests;
+    
+    for (let test of to.tests) {
+      var fromTest = from.tests.find(t => t.name === test.name);
+      if (fromTest) {
+        test.startTime = fromTest.startTime;
+        test.endTime = fromTest.endTime;
+        test.error = fromTest.error;
+        test.snapshots = fromTest.snapshots;
+      }
+    }
+
+    for (let group of to.groups) {
+      var fromGroup = from.groups.find(g => g.name === group.name);
+      if (fromGroup) {
+        this.copyValues(fromGroup, group);
+      }
+    }
   }
 
   // @action performDeepReconciliation() {

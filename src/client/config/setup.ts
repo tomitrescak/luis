@@ -6,7 +6,7 @@ let isModuleStateful: NameTest = () => false;
 
 /** We may request to throttle updates to avoid unnecessary reloads */
 let throttle = 0;
-let throttleQueue: CallbackParams[] = [];
+let updateQueue: CallbackParams[] = [];
 let throttleTimer: any = null;
 
 type Dependant = {
@@ -24,13 +24,13 @@ function queueThrottledUpdate(options: CallbackParams) {
   if (throttleTimer) {
     clearTimeout(throttleTimer);
   }
-  throttleQueue.push(options);
-  throttleTimer = setTimeout(throttledUpdate, throttle);
+  updateQueue.push(options);
+  throttleTimer = setTimeout(update, throttle);
 
   return true;
 }
 
-function throttledUpdate() {
+function update() {
   let state = initState();
 
   /** Flush modules modules */
@@ -38,47 +38,21 @@ function throttledUpdate() {
     return !isModuleStateful(fileName);
   });
 
-  while (throttleQueue.length > 0) {
-    let { type, path, content, dependants } = throttleQueue.shift();
+  while (updateQueue.length > 0) {
+    let { type, path, content, dependants } = updateQueue.shift();
     if (type === 'js' || type === 'css') {
       /** If a stateful module has changed reload the window */
       if (isModuleStateful(path)) {
         window.location.reload();
       }
 
+      state.testQueue.hmr(path, content, dependants);      
+
       /** Patch the module at give path */
       FuseBox.dynamic(path, content);
     }
   }
 
-  /** Re-import / run the mainFile */
-  importMainFile();
-}
-
-function simpleUpdate({ type, path, content, dependants }: CallbackParams) {
-  if (type === 'js' || type === 'css') {
-    /** If a stateful module has changed reload the window */
-    if (isModuleStateful(path)) {
-      window.location.reload();
-    }
-
-    /** Otherwise flush the other modules */
-    FuseBox.flush(function(fileName: string) {
-      return !isModuleStateful(fileName);
-    });
-
-    /** Patch the module at give path */
-    FuseBox.dynamic(path, content);
-
-    /** Re-import / run the mainFile */
-    importMainFile();
-
-    /** We don't want the default behavior */
-    return true;
-  }
-}
-
-function importMainFile() {
   /** Re-import / run the mainFile */
   if (FuseBox.mainFile) {
     try {
@@ -97,10 +71,12 @@ function importMainFile() {
   }
 }
 
+
 const customizedHMRPlugin = {
   hmrUpdate(options: CallbackParams) {
     if (throttle === 0) {
-      return simpleUpdate(options);
+      updateQueue.push(options);
+      update();
     }
     return queueThrottledUpdate(options);
   }
