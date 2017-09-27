@@ -21,9 +21,14 @@ export function handler(request: any, response: any, next: any) {
     } catch (ex) {}
   } else {
     const name = body.name;
-    const snapshots = body.snapshots;
+    const isCss = name.indexOf('.css') >= 0;
+    let snapshots = body.snapshots;
 
-    const fullPath = path.join(snapshotPath, name + '_snapshots.json');
+    if (!isCss) {
+      snapshots = JSON.stringify(snapshots, null, 2);
+    }
+    
+    const fullPath = path.join(snapshotPath, isCss ? name : (name + '_snapshots.json'));
     const dirname = path.dirname(fullPath);
 
     console.log('Saving snapshots to: ' + fullPath);
@@ -36,7 +41,7 @@ export function handler(request: any, response: any, next: any) {
     }
 
     try {
-      fs.writeFileSync(fullPath, JSON.stringify(snapshots, null, 2));
+      fs.writeFileSync(fullPath, snapshots);
     } catch (ex) {
       console.error('Error writing snapshots: ' + ex.message);
     }

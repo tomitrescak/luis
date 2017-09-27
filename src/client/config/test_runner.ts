@@ -157,6 +157,35 @@ function queueUpdateSnapshot(updateGroup: TestGroup) {
 function updateSnapshot(updateGroup: TestGroup) {
   let state = initState();
 
+  // serialise all generated current styles
+  let allStylesheets: any[] = [];
+  for (let i = 0; i < document.styleSheets.length; i++) {
+    let ss = document.styleSheets[i];
+    if (!ss.href) {
+      allStylesheets.push(ss);
+    }
+  }
+  let val = '';
+  for (let ss of allStylesheets) {
+    for (let rule of ss.rules) {
+      val += rule.cssText + '\n';
+    }
+  }
+
+  // serialise css
+  if (val) {
+    fetch('/tests', {
+      method: 'post',
+      body: JSON.stringify({
+        name: 'generated.css',
+        snapshots: val
+      }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }).catch(e => alert(e));
+  }
 
   fetch('/tests', {
     method: 'post',
@@ -165,7 +194,7 @@ function updateSnapshot(updateGroup: TestGroup) {
       snapshots: updateGroup.snapshots
     }),
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json'
     }
   }).catch(e => alert(e));

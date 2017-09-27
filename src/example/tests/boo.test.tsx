@@ -1,5 +1,11 @@
 import * as React from 'react';
 
+import { style } from 'typestyle';
+
+const s = style({
+  color: 'blue'
+})
+
 describe('Boo', () => {
   storyOf(
     'Bar View',
@@ -7,7 +13,7 @@ describe('Boo', () => {
       get component() {
         return <div>
           <div>Moo</div>
-          <div>Moo</div>
+          <div className={s}>Moo</div>
           <div>Moo</div>
           <div>Moo</div>
           <div>Moo29</div>
