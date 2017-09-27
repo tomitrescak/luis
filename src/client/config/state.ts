@@ -62,6 +62,9 @@ export class StateModel {
   config: AppConfig;
 
   constructor(testRunner: TestRunner = null) {
+    // load snapshots
+    loadSnapshots();
+
     this.testRunner = testRunner || new TestRunner(this);
     this.liveRoot = new TestGroup(null, 'root');
     this.updateRoot = new TestGroup(null, 'update');
@@ -85,9 +88,6 @@ export class StateModel {
 
   @action
   performReconciliation() {
-    // load snapshots
-    loadSnapshots();
-    
     // copy values so that we remember
     this.copyValues(this.liveRoot, this.updateRoot)
 

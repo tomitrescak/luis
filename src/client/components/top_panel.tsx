@@ -50,15 +50,17 @@ export class TopPanel extends React.PureComponent<Props> {
         <Menu.Item name="react" content="React" active={view === 'react'} onClick={this.handleItemClick} />
         <Menu.Item name="html" content="Html" active={view === 'html'} icon="html5" onClick={this.handleItemClick} />
         <Menu.Item name="json" content="Json" active={view === 'json'} icon="code" onClick={this.handleItemClick} />
+        <Menu.Item name="snapshots" content="Snapshots" active={view === 'snapshots'} icon="image" onClick={this.handleItemClick} />
         <Menu.Menu position="right">
-          <Menu.Item active={this.props.state.autoUpdateSnapshots} onClick={() => this.props.state.autoUpdateSnapshots = !this.props.state.autoUpdateSnapshots} icon="refresh" title="Auto Update Snapshots" />
+          
           {this.updating ? (
             <Menu.Item>
               <Loader active inline size="mini" />
             </Menu.Item>
           ) : (
-            <Menu.Item onClick={this.updateClick} content="Update Snapshot" />
+            <Menu.Item onClick={this.updateClick} content="Update" />
           )}
+          <Menu.Item active={this.props.state.autoUpdateSnapshots} onClick={() => this.props.state.autoUpdateSnapshots = !this.props.state.autoUpdateSnapshots} icon="refresh" title="Auto Update Snapshots" />
         </Menu.Menu>
       </Menu>
     );

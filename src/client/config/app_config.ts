@@ -22,6 +22,7 @@ export class AppConfig {
   @observable logLevel = '1';
   @observable theme = 'light';
   @observable showDevTools = false;
+  @observable reverseList = true;
 
   constructor(state: App.State) {
     this.state = state;
@@ -29,6 +30,7 @@ export class AppConfig {
     this.logLevel = localStorage.getItem('luisLog') || '1';
     this.showDevTools = localStorage.getItem('luisDevTools') == '1' ? true : false;
     this.theme = localStorage.getItem('luisTheme') || 'light';
+    this.reverseList = !!localStorage.getItem('luisReverseList');
     this.tests = observable([]);
     this.loadTests();
   }
@@ -67,6 +69,7 @@ export class AppConfig {
     localStorage.setItem('luisTheme', this.theme);
     localStorage.setItem('luisLog', this.logLevel);
     localStorage.setItem('luisDevTools', this.showDevTools ? '1' : '0');
+    localStorage.setItem('luisReverseList', this.reverseList ? '1' : '0');
   }
 
   @action toggleAllTests(disabled: boolean) {

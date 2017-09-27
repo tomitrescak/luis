@@ -14,6 +14,7 @@ import { TopPanel } from './top_panel';
 import { StoryComponent } from './story_component';
 import { SnapshotHtml } from './snapshot_html';
 import { SnapshotJson } from './snapshot_json';
+import { SnapshotsView } from './snapshots_view';
 
 const split = (theme: ITheme) =>
   style({
@@ -130,6 +131,11 @@ export const Layout = inject<Props>('state')(
             {state.viewState.snapshotView === 'json' && (
               <div className={full}>
                 <SnapshotJson state={state} />
+              </div>
+            )}
+            {state.viewState.snapshotView === 'snapshots' && (
+              <div className={pane}>
+                <SnapshotsView state={state} />
               </div>
             )}
           </div>

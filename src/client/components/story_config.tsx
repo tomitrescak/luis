@@ -34,7 +34,9 @@ export const StoryConfig = inject<ModalProps>('state')(
             options={[{ value: 'light', text: 'Light' }, { value: 'dark', text: 'Dark' }]}
             onChange={(_e, selected) => (state.config.theme = selected.value.toString())}
           />
+          <Form.Checkbox label="Reverse snapshot list" checked={state.config.reverseList} onChange={() => (state.config.reverseList = !state.config.reverseList)} />
         </Form>
+        
       </Modal.Content>
       <Modal.Actions>
         <div style={{ padding: '3px', textAlign: 'right' }}>

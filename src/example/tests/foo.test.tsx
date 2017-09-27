@@ -12,11 +12,13 @@ describe('Component', () => {
     },
     data => {
       itMountsAnd('renders correctly', () => data.component, (wrapper) => {
-        wrapper.should.matchSnapshot('rendered');
+        wrapper.should.matchSnapshot('rendered once');
+        wrapper.should.matchSnapshot('rendered again');
+        wrapper.should.matchSnapshot('rendered and again');
       })
 
       itMountsAnd('regenders correctly', () => data.component, (wrapper) => {
-        wrapper.should.matchSnapshot('rendered');
+        wrapper.should.matchSnapshot('rendered twice');
       })
     }
   );

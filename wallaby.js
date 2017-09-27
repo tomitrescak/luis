@@ -7,14 +7,15 @@ module.exports = function(wallaby) {
 
   return {
     files: [
-      'src/client/**/*.ts*',
+      'src/example/client/**/*.ts*',
       'src/example/**/*.ts*',
-      '!src/**/*.d.ts*'
+      '!src/**/*.d.ts*',
+      '!src/example/**/*.test.tsx',
     ],
     // debug: true,
     tests: [
-      'src/tests/**/*.test.tsx',
-      'src/tests/**/*.test.ts',
+      'src/example/**/*.test.tsx',
+      'src/example/**/*.test.ts',
       'src/**/snapshots/*.json'
     ],
     filesWithNoCoverageCalculated: [

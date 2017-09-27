@@ -6,13 +6,11 @@ import { setupLuis } from 'wafl';
 import { Layout } from './layout';
 import { initState, RenderOptions } from '../config/state';
 import { setupTestBridge, bdd } from '../config/bridge';
-import { loadSnapshots } from '../config/snapshot_loader';
 
 const state = initState();
 
 setupLuis();
 setupTestBridge(state, bdd);
-loadSnapshots();
 
 export function renderLuis(options: RenderOptions = {}) {
   state.renderOptions = options;
