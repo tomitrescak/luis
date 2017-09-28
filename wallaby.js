@@ -37,8 +37,11 @@ module.exports = function(wallaby) {
     },
     testFramework: 'mocha',
     setup: function(wallaby) {
-      console.log('SETUP!!');  
-    
+      const { config } = require('chai-match-snapshot');
+      config.snapshotDir = '/Users/tomi/Github/packages/louis/src/tests/snapshots';
+
+      process.env.UPDATE_SNAPSHOTS = 1;
+
       require('wafl').setup({ wallaby });
     }
   };

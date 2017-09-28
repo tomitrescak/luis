@@ -38,9 +38,9 @@ let currentTest: Test;
 export class TestRunner {
   private startTime: number;
 
-  state: App.State;
+  state: Luis.State;
 
-  constructor(state: App.State) {
+  constructor(state: Luis.State) {
     this.startTime = new Date().getTime();
     this.state = state;
   }
@@ -207,6 +207,12 @@ function updateSnapshot(updateGroup: TestGroup) {
 
 config.onProcessSnapshots = (_taskName: string, snapshotName: string, current: string, expected: string) => {
   let state = initState();
+  if (current) {
+    current = current.replace(/ style="pointer-events: all;"/g, '');
+  }
+  if (expected) {
+    expected = expected.replace(/ style="pointer-events: all;"/g, '');
+  }
 
   if (currentTest) {
     // if (!currentStory.snapshots) {
@@ -242,5 +248,8 @@ config.onProcessSnapshots = (_taskName: string, snapshotName: string, current: s
     // console.log('Adding snapshot: ' + currentTest.name + '[' + currentTest.uid + ']');
   }
 
-  return null;
+  return {
+    actual: current,
+    expected
+  };
 };

@@ -6,7 +6,7 @@ const resultsHTML = style({ display: 'table', width: '100%' });
 const resultHTML = style({ display: 'table-cell', width: '50%' });
 
 export interface PreviewProps {
-  state?: App.State;
+  state?: Luis.State;
 }
 
 const DefaultDecorator = ({ children }: any) => <div>{children}</div>;

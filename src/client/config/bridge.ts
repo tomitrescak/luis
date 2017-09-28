@@ -42,7 +42,7 @@ export const test: BridgeInterface = {
   afterEach: 'afterEachTest'
 };
 
-export function setupTestBridge(state: App.State, bridgeInterface: BridgeInterface = test, startImmediately = true) {
+export function setupTestBridge(state: Luis.State, bridgeInterface: BridgeInterface = test, startImmediately = true) {
   const glob = global;
 
 

@@ -5,7 +5,7 @@ import { style } from 'typestyle';
 import { Snapshot } from '../config/test_data';
 
 export type Props = {
-  state: App.State;
+  state: Luis.State;
 };
 
 const margined = style({
@@ -18,7 +18,7 @@ const margined = style({
 
 @inject('state')
 @observer
-export class SnapshotsView extends React.PureComponent<Props> {
+export class SnapshotsView extends React.Component<Props> {
   render() {
     const test = this.props.state.viewState.selectedTest;
     if (!test) {

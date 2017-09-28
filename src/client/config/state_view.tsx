@@ -13,9 +13,9 @@ export class ViewState {
   @observable selectedStory: Story = null;
   @observable selectedTest: Test = null;
   
-  state: App.State;
+  state: Luis.State;
 
-  constructor (state: App.State) {
+  constructor (state: Luis.State) {
     this.state = state;
   }
 

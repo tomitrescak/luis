@@ -23,12 +23,12 @@ const content = style({
 });
 
 export type Props = {
-  state?: App.State;
+  state?: Luis.State;
   group?: TestGroup;
 };
 
 @observer
-export class TestGroupView extends React.PureComponent<Props> {
+export class TestGroupView extends React.Component<Props> {
   render(): any {
     const { group, state } = this.props;
 
@@ -74,16 +74,13 @@ export class TestGroupView extends React.PureComponent<Props> {
 
 // {this.props.state.liveRoot.groups.map((g, i) => <TestGroupView key={i} group={g} />)}
 
-@inject('state')
-@observer
-export class StoryList extends React.PureComponent<Props> {
-  render() {
-    const state = this.props.state;
+export const StoryList = inject('state')(
+  observer<Props>(({ state }) => {
     const version = state.liveRoot.version;
     const isList = state.config.storyView === 'list';
 
     return (
-      <Accordion className={pane(this.props.state.theme)}>
+      <Accordion className={pane(state.theme)}>
         {isList ? (
           state.liveRoot.nestedGroupsWithTests.map((g, i) => <TestGroupView state={state} group={g} key={g.fileName} />)
         ) : (
@@ -91,5 +88,5 @@ export class StoryList extends React.PureComponent<Props> {
         )}
       </Accordion>
     );
-  }
-}
+  })
+);

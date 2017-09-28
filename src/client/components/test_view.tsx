@@ -9,7 +9,7 @@ import { DiffView } from 'diff-view';
 import { diff, timing } from './component_styles';
 
 export type TestProps = {
-  state: App.State;
+  state: Luis.State;
   test: Test;
 };
 
@@ -49,7 +49,7 @@ const content = style({
 });
 
 @observer
-export class TestView extends React.PureComponent<TestProps> {
+export class TestView extends React.Component<TestProps> {
   errorView: HTMLDivElement;
 
   canExpand() {

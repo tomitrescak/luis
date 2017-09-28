@@ -17,14 +17,14 @@ export type StoryView = 'list' | 'tree';
 
 export class AppConfig {
   tests: IObservableArray<TestConfig>;
-  state: App.State;
+  state: Luis.State;
   @observable storyView: StoryView = 'list';
   @observable logLevel = '1';
   @observable theme = 'light';
   @observable showDevTools = false;
   @observable reverseList = true;
 
-  constructor(state: App.State) {
+  constructor(state: Luis.State) {
     this.state = state;
     this.storyView = localStorage.getItem('louisStoryView') as StoryView || 'tree';
     this.logLevel = localStorage.getItem('luisLog') || '1';

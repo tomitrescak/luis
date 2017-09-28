@@ -5,7 +5,7 @@ import { style } from 'typestyle';
 import { observable } from 'mobx';
 
 export type Props = {
-  state?: App.State;
+  state?: Luis.State;
 };
 
 const noMargin = style({
@@ -14,7 +14,7 @@ const noMargin = style({
 
 @inject('state')
 @observer
-export class TopPanel extends React.PureComponent<Props> {
+export class TopPanel extends React.Component<Props> {
   @observable updating = false;
 
   handleItemClick = (_e: any, { name }: any) => (this.props.state.viewState.snapshotView = name);

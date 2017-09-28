@@ -15,7 +15,7 @@ export default function createRouter(view: any, routes: any) {
   };
 }
 
-export function setupRouter(state: App.State) {
+export function setupRouter(state: Luis.State) {
   // rewrites urls
   reaction(
     () => state.viewState.currentUrl,

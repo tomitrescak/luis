@@ -4,7 +4,7 @@ import { MonacoEditor } from './editor';
 
 
 export interface SnapshotsProps {
-  state?: App.State;
+  state?: Luis.State;
 }
 
 const requireConfig = {
@@ -17,7 +17,7 @@ const requireConfig = {
 
 @inject('state')
 @observer
-export class SnapshotJson extends React.PureComponent<SnapshotsProps, {}> {
+export class SnapshotJson extends React.Component<SnapshotsProps, {}> {
   editor: monaco.editor.IStandaloneDiffEditor;
 
   initEditor = (mountEditor: monaco.editor.IStandaloneDiffEditor) => {

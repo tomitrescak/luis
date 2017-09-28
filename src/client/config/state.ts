@@ -28,7 +28,7 @@ setupHmr();
 // });
 
 declare global {
-  namespace App { export type State = StateModel; }
+  namespace Luis { export type State = StateModel; }
 }
 
 export type RenderOptions = {

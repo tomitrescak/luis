@@ -32,6 +32,9 @@ Sparky.task('luis', () => {
     shim: {
       crypto: {
         exports: '{ randomBytes: () => crypto.getRandomValues(new global.Uint16Array(1))[0] }'
+      },
+      stream: {
+        exports: '{ Writable: function() {}, Readable: function() {}, Transform: function() {} }'
       }
     }
   });

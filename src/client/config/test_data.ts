@@ -155,16 +155,16 @@ export class TestGroup extends TestItem {
    * or one that is being updated
    * 
    * @param {string} groupName 
-   * @param {App.State} state 
+   * @param {Luis.State} state 
    * @returns 
    * @memberof TestGroup
    */
-  getGroup(name: string, state: App.State) {
+  getGroup(name: string, state: Luis.State) {
     let possibleRoot = state.currentGroup.groups.find(g => g.name === name);
     return possibleRoot ? possibleRoot : new TestGroup(state.currentGroup, name);
   }
 
-  getStory(name: string, props: StoryConfig, state: App.State): Story {
+  getStory(name: string, props: StoryConfig, state: Luis.State): Story {
     let possibleRoot = state.currentGroup.groups.find(g => g.name === name) as Story;
     return possibleRoot ? possibleRoot : new Story(state.currentGroup, name, props);
   }

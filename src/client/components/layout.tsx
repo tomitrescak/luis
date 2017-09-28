@@ -96,7 +96,7 @@ const styles = style({
 })
 
 type Props = {
-  state?: App.State;
+  state?: Luis.State;
 };
 
 export const Layout = inject<Props>('state')(

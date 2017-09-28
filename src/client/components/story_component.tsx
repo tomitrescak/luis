@@ -2,11 +2,11 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 
 export type Props = {
-  state: App.State;
+  state: Luis.State;
 };
 
 @observer
-export class StoryComponent extends React.PureComponent<Props> {
+export class StoryComponent extends React.Component<Props> {
   render() {
     var state = this.props.state;
     if (state.viewState.selectedStory == null) {

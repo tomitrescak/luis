@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react';
 import { Modal, Button, Form, Divider, Menu, Icon } from 'semantic-ui-react';
 
 export interface ModalProps {
-  state?: App.State;
+  state?: Luis.State;
 }
 
 export const StoryConfig = inject<ModalProps>('state')(
