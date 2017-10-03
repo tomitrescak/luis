@@ -53,7 +53,7 @@ export class TestGroupView extends React.Component<Props> {
           <Icon name="dropdown" />
           {group.constructor.name == 'Story' ? (
             <span>
-              <a href={`/${group.id}`} onClick={e => state.viewState.openStoryFromList(e, group.id)}>
+              <a href={`/stories/${group.id}`} onClick={e => state.viewState.openStoryFromList(e, group.id)}>
                 {name}
               </a>
             </span>

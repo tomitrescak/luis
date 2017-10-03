@@ -9,7 +9,7 @@ import { StoryList } from './story_list';
 import { SideBar } from './side_bar';
 
 import DevTools from 'mobx-react-devtools';
-import { TopPanel } from './top_panel';
+import { TopPanel, TopPanelSingle } from './top_panel';
 import { StoryComponent } from './story_component';
 import { SnapshotHtml } from './snapshot_html';
 import { SnapshotJson } from './snapshot_json';
@@ -100,7 +100,7 @@ type Props = {
 
 export const Story = observer(({ state }: { state: Luis.State }) => (
   <div className={full}>
-    <TopPanel />
+    
     {state.viewState.snapshotView === 'react' && (
       <div className={pane}>
         <StoryComponent state={state} />
@@ -130,6 +130,7 @@ export const Layout = inject<Props>('state')(
       return (
         <div className={styles}>
           <div className={content}>
+            <TopPanelSingle />
             <Story state={state} />
           </div>
         </div>
@@ -152,6 +153,7 @@ export const Layout = inject<Props>('state')(
               </div>
             </div>
             <div className={full}>
+              <TopPanel />
               <Story state={state} />
             </div>
           </SplitPane>

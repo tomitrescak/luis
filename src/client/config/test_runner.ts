@@ -89,6 +89,12 @@ export class TestRunner {
   public async startTest(test: Test) {
     // console.log('Executing: ' + test.name + '[' + test.uid + ']');
 
+    // in single mode we only add current tests
+    const state = this.state.viewState;
+    if (state.bare && state.selectedTest != test) {
+      return;
+    }
+
     const group = test.parent as TestGroup;
     test.startTime = new Date().getTime();
     test.endTime = 0;

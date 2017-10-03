@@ -22,12 +22,18 @@ export class ViewState {
 
   @computed
   get currentUrl() {
+    const prefix = this.bare ? '/story' : '/stories';
     if (this.snapshotName) {
       return (
-        '/' + this.storyPath + '/' + this.testName + '/' + this.snapshotName
+        prefix + '/' + this.storyPath + '/' + this.testName + '/' + this.snapshotName
       );
     }
-    return '/' + this.storyPath;
+    if (this.testName) {
+      return (
+        prefix + '/' + this.storyPath + '/' + this.testName
+      );
+    }
+    return prefix + '/' + this.storyPath;
   }
 
   get selectedSnapshot() {
@@ -61,7 +67,7 @@ export class ViewState {
   }
 
   @action
-  openBareStory(groupPath: string = '', testName: string = '', snapshotName = '') {
+  openSingleStory(groupPath: string = '', testName: string = '', snapshotName = '') {
     this.bare = true;
     this.openStory(groupPath, testName, snapshotName);
   }

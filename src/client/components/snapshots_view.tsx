@@ -23,7 +23,7 @@ export class SnapshotsView extends React.Component<Props> {
     e.preventDefault();
     let parts = e.currentTarget.getAttribute('data-path').split('/');
     this.props.state.viewState.bare
-      ? this.props.state.viewState.openBareStory(parts[0], parts[1], parts[2])
+      ? this.props.state.viewState.openSingleStory(parts[0], parts[1], parts[2])
       : this.props.state.viewState.openStory(parts[0], parts[1], parts[2]);
       this.props.state.viewState.snapshotView = 'html';
   };

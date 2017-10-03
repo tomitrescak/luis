@@ -27,13 +27,13 @@ export function setupRouter(state: Luis.State) {
   );
 
   const router = createRouter(state.viewState, {
-    '/bare/:name': ({ name }: any) => state.viewState.openBareStory(name),
-    '/:name': ({ name }: any) => state.viewState.openStory(name),
-    '/bare/:name/:snapshotName': ({ name, snapshotName }: any) => state.viewState.openBareStory(name, snapshotName),
-    '/:name/:snapshotName': ({ name, snapshotName }: any) => state.viewState.openStory(name, snapshotName),
-    '/bare/:name/:snapshotName/:snapshot': ({ name, snapshotName, snapshot }: any) =>
-      state.viewState.openBareStory(name, snapshotName, snapshot),
-    '/:name/:snapshotName/:snapshot': ({ name, snapshotName, snapshot }: any) =>
+    '/story/:name': ({ name }: any) => state.viewState.openSingleStory(name),
+    '/stories/:name': ({ name }: any) => state.viewState.openStory(name),
+    '/story/:name/:snapshotName': ({ name, snapshotName }: any) => state.viewState.openSingleStory(name, snapshotName),
+    '/stories/:name/:snapshotName': ({ name, snapshotName }: any) => state.viewState.openStory(name, snapshotName),
+    '/story/:name/:snapshotName/:snapshot': ({ name, snapshotName, snapshot }: any) =>
+      state.viewState.openSingleStory(name, snapshotName, snapshot),
+    '/stories/:name/:snapshotName/:snapshot': ({ name, snapshotName, snapshot }: any) =>
       state.viewState.openStory(name, snapshotName, snapshot),
     // '/': state.viewState.openStory
   });

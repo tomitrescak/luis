@@ -48,6 +48,48 @@ const content = style({
   marginBottom: '6px'
 });
 
+type ErrorViewProps = {
+  test: Test;
+};
+
+export const ErrorView = ({ test }: ErrorViewProps) => {
+  const compareView =
+    test.error &&
+    test.error.message &&
+    test.error.message.indexOf('expected') >= 0 &&
+    (test.error.actual || test.error.expected);
+
+  if (!compareView) {
+    return (
+      <Segment attached="bottom" className={noPadding} inverted color="red">
+        <div className={errorMessage}>{test.error.message}</div>
+      </Segment>
+    );
+  }
+
+  return (
+    <Segment attached="bottom" className={noPadding}>
+      <div
+        className={diff}
+        ref={input => {
+          if (input) {
+            if (input.childNodes.length) {
+              input.removeChild(input.childNodes[0]);
+            }
+            input.appendChild(DiffView.compare(
+              test.error.actual,
+              test.error.expected,
+              'Current',
+              'Expected',
+              1
+            ) as any);
+          }
+        }}
+      />
+    </Segment>
+  );
+};
+
 @observer
 export class TestView extends React.Component<TestProps> {
   errorView: HTMLDivElement;
@@ -71,11 +113,7 @@ export class TestView extends React.Component<TestProps> {
     }
 
     // console.log('Rendering: ' + test.name + '[' + test.uid + ']');
-    const compareView =
-      test.error &&
-      test.error.message &&
-      test.error.message.indexOf('expected') >= 0 &&
-      (test.error.actual || test.error.expected);
+    const prefix = state.viewState.bare ? '/story' : '/stories';
 
     return (
       <div>
@@ -98,7 +136,7 @@ export class TestView extends React.Component<TestProps> {
                   <List.Item
                     as="a"
                     data-path={`${test.parent.id}/${test.urlName}/${s.url}`}
-                    href={`/${test.parent.id}/${test.urlName}/${s.url}`}
+                    href={`${prefix}/${test.parent.id}/${test.urlName}/${s.url}`}
                     onClick={this.openSnapshot}
                     icon="image"
                     key={s.name}
@@ -109,35 +147,7 @@ export class TestView extends React.Component<TestProps> {
             </Segment>
           )}
 
-          {test.error &&
-          !compareView && (
-            <Segment attached="bottom" className={noPadding} inverted color="red">
-              <div className={errorMessage}>{test.error.message}</div>
-            </Segment>
-          )}
-
-          {test.error &&
-           compareView && (
-            <Segment attached="bottom" className={noPadding}>
-              <div
-                className={diff}
-                ref={input => {
-                  if (input) {
-                    if (input.childNodes.length) {
-                      input.removeChild(input.childNodes[0]);
-                    }
-                    input.appendChild(DiffView.compare(
-                      test.error.actual,
-                      test.error.expected,
-                      'Current',
-                      'Expected',
-                      1
-                    ) as any);
-                  }
-                }}
-              />
-            </Segment>
-          )}
+          {test.error && <ErrorView test={test} />}
         </Accordion.Content>
       </div>
     );
