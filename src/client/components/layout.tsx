@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as SplitPane from 'react-split-pane';
 
-
 import { style } from 'typestyle';
 import { StateModel } from '../config/state';
 import { ITheme } from '../config/themes';
@@ -87,61 +86,78 @@ const content = style({
 const styles = style({
   $nest: {
     '& .m12': {
-      margin: '12px!important',
+      margin: '12px!important'
     },
     '& .m6': {
       margin: '6px!important'
-    },
+    }
   }
-})
+});
 
 type Props = {
   state?: Luis.State;
 };
 
-export const Layout = inject<Props>('state')(
-  observer(({ state }: Props) => (
-    <div className={styles}>
-      <div className={content}>
-        <SplitPane
-          className={split(state.theme)}
-          split="vertical"
-          minSize={100}
-          defaultSize={parseInt(localStorage.getItem('luis-v-splitPos'), 10)}
-          onChange={(size: string) => localStorage.setItem('luis-v-splitPos', size)}
-        >
-          <div>
-            <SideBar />
-            <div className={pane}>
-              <StoryList />
-            </div>
-          </div>
-          <div className={full}>
-            <TopPanel />
-            {state.viewState.snapshotView === 'react' && (
-              <div className={pane}>
-                <StoryComponent state={state} />
-              </div>
-            )}
-            {state.viewState.snapshotView === 'html' && (
-              <div className={pane}>
-                <SnapshotHtml state={state} />
-              </div>
-            )}
-            {state.viewState.snapshotView === 'json' && (
-              <div className={full}>
-                <SnapshotJson state={state} />
-              </div>
-            )}
-            {state.viewState.snapshotView === 'snapshots' && (
-              <div className={pane}>
-                <SnapshotsView state={state} />
-              </div>
-            )}
-          </div>
-        </SplitPane>
+export const Story = observer(({ state }: { state: Luis.State }) => (
+  <div className={full}>
+    <TopPanel />
+    {state.viewState.snapshotView === 'react' && (
+      <div className={pane}>
+        <StoryComponent state={state} />
       </div>
-      { state.config.showDevTools && <DevTools position={{ right: 5, top: 42 }} /> }
-    </div>
-  ))
+    )}
+    {state.viewState.snapshotView === 'html' && (
+      <div className={pane}>
+        <SnapshotHtml state={state} />
+      </div>
+    )}
+    {state.viewState.snapshotView === 'json' && (
+      <div className={full}>
+        <SnapshotJson state={state} />
+      </div>
+    )}
+    {state.viewState.snapshotView === 'snapshots' && (
+      <div className={pane}>
+        <SnapshotsView state={state} />
+      </div>
+    )}
+  </div>
+));
+
+export const Layout = inject<Props>('state')(
+  observer(({ state }: Props) => {
+    if (state.viewState.bare) {
+      return (
+        <div className={styles}>
+          <div className={content}>
+            <Story state={state} />
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div className={styles}>
+        <div className={content}>
+          <SplitPane
+            className={split(state.theme)}
+            split="vertical"
+            minSize={100}
+            defaultSize={parseInt(localStorage.getItem('luis-v-splitPos'), 10)}
+            onChange={(size: string) => localStorage.setItem('luis-v-splitPos', size)}
+          >
+            <div>
+              <SideBar />
+              <div className={pane}>
+                <StoryList />
+              </div>
+            </div>
+            <div className={full}>
+              <Story state={state} />
+            </div>
+          </SplitPane>
+        </div>
+        {state.config.showDevTools && <DevTools position={{ right: 5, top: 42 }} />}
+      </div>
+    );
+  })
 );

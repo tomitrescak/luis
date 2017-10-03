@@ -14,6 +14,7 @@ export class ViewState {
   @observable selectedTest: Test = null;
   
   state: Luis.State;
+  bare: boolean;
 
   constructor (state: Luis.State) {
     this.state = state;
@@ -60,6 +61,12 @@ export class ViewState {
   }
 
   @action
+  openBareStory(groupPath: string = '', testName: string = '', snapshotName = '') {
+    this.bare = true;
+    this.openStory(groupPath, testName, snapshotName);
+  }
+
+  @action
   openStory(groupPath: string = '', testName: string = '', snapshotName = '') {
     
     this.storyPath = groupPath;
@@ -67,7 +74,7 @@ export class ViewState {
     this.snapshotName = snapshotName;
     
     this.selectedStory = this.state.findStoryById(groupPath) as Story;
-    if (this.selectedStory && snapshotName) {
+    if (this.selectedStory && testName) {
       this.selectedTest = this.selectedStory.findTestByUrlName(testName);
     }
 
@@ -78,7 +85,7 @@ export class ViewState {
 
     if (this.snapshotName) {
       this.snapshotView = this.snapshotView == 'react' ? 'html' : this.snapshotView;
-    } else {
+    } else if (!this.testName && this.snapshotView != 'snapshots') {
       this.snapshotView = 'react';
     }
   }

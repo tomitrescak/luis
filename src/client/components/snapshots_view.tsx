@@ -14,17 +14,33 @@ const margined = style({
   borderRadius: '6px',
   textAlign: 'center',
   marginBottom: '6px!important'
-})
+});
 
 @inject('state')
 @observer
 export class SnapshotsView extends React.Component<Props> {
+  openSnapshot = (e: any) => {
+    e.preventDefault();
+    let parts = e.currentTarget.getAttribute('data-path').split('/');
+    this.props.state.viewState.bare
+      ? this.props.state.viewState.openBareStory(parts[0], parts[1], parts[2])
+      : this.props.state.viewState.openStory(parts[0], parts[1], parts[2]);
+      this.props.state.viewState.snapshotView = 'html';
+  };
+
   render() {
-    const test = this.props.state.viewState.selectedTest;
+    let list: Snapshot[];
+    let view = this.props.state.viewState;
+    let story = view.selectedStory;
+    const test = view.selectedTest;
     if (!test) {
-      return <div>No test selected</div>;
+      if (!story) {
+        return <div>No story selected</div>;
+      }
+      list = story.allSnapshots;
+    } else {
+      list = test.snapshots;
     }
-    let list: Snapshot[] = test.snapshots;
     if (this.props.state.config.reverseList) {
       list = list.reverse();
     }
@@ -36,7 +52,16 @@ export class SnapshotsView extends React.Component<Props> {
               <List.Description>
                 <div dangerouslySetInnerHTML={{ __html: s.current }} />
               </List.Description>
-              <List.Header className={margined}><Label icon="image" content={s.name} /></List.Header>
+              <List.Header className={margined}>
+                <Label
+                  as="a"
+                  data-path={`${story.id}/${s.parent.urlName}/${s.url}`}
+                  href={`/${story.id}/${s.parent.urlName}/${s.url}`}
+                  onClick={this.openSnapshot}
+                  icon="image"
+                  content={s.name}
+                />
+              </List.Header>
             </List.Content>
           </List.Item>
         ))}

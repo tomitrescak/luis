@@ -27,7 +27,12 @@ export function setupRouter(state: Luis.State) {
   );
 
   const router = createRouter(state.viewState, {
+    '/bare/:name': ({ name }: any) => state.viewState.openBareStory(name),
     '/:name': ({ name }: any) => state.viewState.openStory(name),
+    '/bare/:name/:snapshotName': ({ name, snapshotName }: any) => state.viewState.openBareStory(name, snapshotName),
+    '/:name/:snapshotName': ({ name, snapshotName }: any) => state.viewState.openStory(name, snapshotName),
+    '/bare/:name/:snapshotName/:snapshot': ({ name, snapshotName, snapshot }: any) =>
+      state.viewState.openBareStory(name, snapshotName, snapshot),
     '/:name/:snapshotName/:snapshot': ({ name, snapshotName, snapshot }: any) =>
       state.viewState.openStory(name, snapshotName, snapshot),
     // '/': state.viewState.openStory

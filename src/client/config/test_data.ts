@@ -120,6 +120,12 @@ export class TestGroup extends TestItem {
     return snapshots;
   }
 
+  get allSnapshots() {
+    let snapshots: Snapshot[] = [];
+    let groupSnapshots = this.tests.forEach(t => t.snapshots.forEach(s => snapshots.push(s)));
+    return snapshots;
+  }
+
   findGroup(test: (group: TestGroup) => boolean): TestGroup {
     const queue: TestGroup[] = [this];
     while (queue.length > 0) {
