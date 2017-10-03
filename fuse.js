@@ -60,7 +60,7 @@ Sparky.task('luis', () => {
     .hmr()
     .target('browser')
     .sourceMaps(true)
-    .instructions(' !> [example/luis.ts] + **/**.json');
+    .instructions(' !> [example/luis.ts] + **/**.json + **/**.test.tsx');
 
   luisFuse.run();
 

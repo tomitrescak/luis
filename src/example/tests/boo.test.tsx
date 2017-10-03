@@ -60,7 +60,6 @@ describe('Boo', () => {
         'renders correctly',
         () => data.component,
         wrapper => {
-          debugger;
           const state = data.state;
           const m = mount(<Component state={state} />);
           state.number = 9;
