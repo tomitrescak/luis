@@ -14,6 +14,7 @@ import { StoryComponent } from './story_component';
 import { SnapshotHtml } from './snapshot_html';
 import { SnapshotJson } from './snapshot_json';
 import { SnapshotsView } from './snapshots_view';
+import { ErrorBoundary } from './error_boundary';
 
 const split = (theme: ITheme) =>
   style({
@@ -100,10 +101,11 @@ type Props = {
 
 export const Story = observer(({ state }: { state: Luis.State }) => (
   <div className={full}>
-    
     {state.viewState.snapshotView === 'react' && (
       <div className={pane}>
-        <StoryComponent state={state} />
+        <ErrorBoundary>
+          <StoryComponent state={state} />
+        </ErrorBoundary>
       </div>
     )}
     {state.viewState.snapshotView === 'html' && (

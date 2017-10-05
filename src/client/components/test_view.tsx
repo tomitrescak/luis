@@ -125,7 +125,14 @@ export class TestView extends React.Component<TestProps> {
         >
           <Icon name="dropdown" className={this.canExpand() ? 'normal' : hidden} />
           <Icon {...test.icon} />
-          {test.name}
+
+          <a
+            href={`${test.parent.id}/${test.urlName}/`}
+            data-path={`${test.parent.id}/${test.urlName}/`}
+            onClick={this.openSnapshot}
+          >
+            {test.name}
+          </a>
           <div className={timing('#AAA')}>{test.duration.toString()}ms</div>
         </Accordion.Title>
         <Accordion.Content active={expanded} className={content}>

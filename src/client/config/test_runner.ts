@@ -46,6 +46,15 @@ export class TestRunner {
   }
 
   public async testGroup(group: TestGroup) {
+    const state = this.state.viewState;
+    if (
+      state.bare &&
+      state.selectedTest &&
+      state.selectedTest.parent.id != group.id
+    ) {
+      return;
+    }
+
     if (this.state.config.isDisabled(group)) {
       return true;
     }
@@ -91,7 +100,7 @@ export class TestRunner {
 
     // in single mode we only add current tests
     const state = this.state.viewState;
-    if (state.bare && state.selectedTest != test) {
+    if (state.bare && state.selectedTest && state.selectedTest.name != test.name) {
       return;
     }
 

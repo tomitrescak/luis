@@ -37,12 +37,13 @@ module.exports = function(wallaby) {
     },
     testFramework: 'mocha',
     setup: function(wallaby) {
-      const { config } = require('chai-match-snapshot');
-      config.snapshotDir = '/Users/tomi/Github/packages/louis/src/tests/snapshots';
+      // const { config } = require('chai-match-snapshot');
+      // config.snapshotDir = '/Users/tomi/Github/packages/louis/src/tests/snapshots';
 
-      process.env.UPDATE_SNAPSHOTS = 1;
-
-      require('wafl').setup({ wallaby });
+      require('wafl').setup({ 
+        wallaby, 
+        snapshotDir: '/Users/tomi/Github/packages/louis/src/tests/snapshots',
+        snapshotsOverTcp: true });
     }
   };
 };
