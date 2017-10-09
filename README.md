@@ -29,6 +29,8 @@ yarn run luis // or npm run luis
 
 Luis now runs on `http://localhost:9001`. Open this url in your browser and you should see a screen, similar to following:
 
+![luis-ui](https://user-images.githubusercontent.com/2682705/31363176-58b63068-ada8-11e7-8e1c-1c8349814de3.png)
+
 The main buttons of Luis interface perform following actions:
 
 1. Tree mode / flat mode changes the way the list of tests are displayed
