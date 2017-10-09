@@ -7,47 +7,27 @@ describe('Component', () => {
     });
 
     storyOf(
-      'Bar View',
+      'Bar',
       {
         get component() {
-          return <div>Bar Component 986</div>;
+          return <div>Bar Component</div>;
         },
-        info: 'Foo Info 567'
+        info: 'Bar'
       },
       data => {
         itMountsAnd(
           'renders correctly',
           () => data.component,
           wrapper => {
-            // const t = {
-            //   tomi: '1',
-            //   bobo: '3',
-            //   dodo: '5'
-            // };
-            // t.should.deep.equal({
-            //   tomi: '1',
-            //   bobo: '2',
-            //   dodo: '5',
-            //   lolo: 'rer'
-            // })
             wrapper.should.matchSnapshot('rendered');
           }
         );
 
-        itMountsAnd(
-          'renders 2 correctly',
-          () => data.component,
-          wrapper => {
-            wrapper.should.matchSnapshot('rendered 6');
-          }
-        );
-
-        it('Passes', function() {
-          throw new Error('Failed');
+        it('Fails', function() {
+          throw new Error('Failed miserably');
         });
 
-        it('Passes 9', function() {
-          // throw new Error('Failed');
+        it('Passes', function() {
         });
       }
     );

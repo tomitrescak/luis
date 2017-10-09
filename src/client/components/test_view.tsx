@@ -133,7 +133,7 @@ export class TestView extends React.Component<TestProps> {
           >
             {test.name}
           </a>
-          <div className={timing('#AAA')}>{test.duration.toString()}ms</div>
+          <div className={timing(test.error ? 'red' : 'green')}>{test.duration.toString()}ms</div>
         </Accordion.Title>
         <Accordion.Content active={expanded} className={content}>
           {test.snapshots.length > 0 && (

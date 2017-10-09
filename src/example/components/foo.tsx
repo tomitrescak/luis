@@ -1,5 +1,5 @@
 import * as React from 'react';
 
 export const Foo = () => (
-  <div>Foo wewewewe weerer</div>
+  <div>This is the component version</div>
 );

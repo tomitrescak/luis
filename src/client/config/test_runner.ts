@@ -59,6 +59,7 @@ export class TestRunner {
       return true;
     }
 
+    group.reset();
     group.startTime = new Date().getTime();
 
     consoleGroup(group.path);
@@ -105,6 +106,7 @@ export class TestRunner {
     }
 
     const group = test.parent as TestGroup;
+    test.reset();
     test.startTime = new Date().getTime();
     test.endTime = 0;
     test.snapshots.clear();

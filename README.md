@@ -1,26 +1,59 @@
-# LUIS: Fast and agile React component catalogue, test runner and snaphost manager that is in love with Typescript.
+# LUIS: Component development and testing framework
 
-## Quick Start 
+## Introduction
 
-To run Luis, first install all dependencies with `yarn`. then run with `npm run luis` or `npm start`.
+LUIS (**L**ist of **U**ser **I**nterface**s**) is framework for collaborative building and testing React web components. It harnesses the power of [FuseBox](https://github.com/fuse-box/fuse-box) for **fastest** bundling, hot reloads, and out-of-the-box Typescript support. Following are stats for application with 976 typescript sources and 56 imported packages:
 
-To run application only do `npm run app`
+* **StoryBook** — Start `36 seconds`, Hot Module Reload with sourcemaps `9 seconds`.
+* **LUIS** — Start `400 ms`, Hot Module Reload with sourcemaps `750 ms`. Now that's what I call a significant difference.
 
-## TL;DR;
+Luis is using well known technologies ([Mocha](https://mochajs.org), [React](https://reactjs.org), optionally [Wallaby](https://wallabyjs.com)) and methodologies (TDD, BDD, Snapshot testing), so there is almost nothing new to learn (apart from two new functions, **storyOf** and **itMountsAnd**). Luis, takes away the complex configuration, using [wafl](https://github.com/tomitrescak/wafl) package to set-up your testing environment. 
 
-LUIS (**L**ist of **U**ser **I**nterface**s**) is the React component catalogue that uses the power of FuseBox to display and live reload React components almost instantly, independent of the size of the application.
+To facilitate your component development, testing, and collaboration LUIS supports four different modes. Each mode is described in detail further below.
 
-Following are stats for my application with 976 typescript sources and 56 imported packages:
+1. **Web Application** - Luis comes pre-configured to run on its own so you can start working instantly
+2. **Package** - With a little bit of configuration you can bring Luis to your application and run side by side with your project
+3. **Visual Studio Code plugin** - Luis incorporates seamlessly into your (my) favourite editor, where it visualises your current snapshots and automatically reloads them as you type (with help of Wallaby.js or Mocha.js in watch mode)
+4. **CI** - Luis defines CI configurations so bringing your project to CI is a breeze.
 
-**StoryBook** — Start `36 seconds`, Hot Module Reload with sourcemaps `9 seconds`.
+Pictures are worth thousand words, so let us introduce each mode and our API with many examples.
 
-**LUIS** — Start `400 ms`, Hot Module Reload with sourcemaps `750 ms`. Now that's what I call a significant difference.
+## Web Application
 
-![luis](https://cloud.githubusercontent.com/assets/2682705/23295353/41a809ba-fac4-11e6-8464-b8690a38aa74.gif)
+Web application mode runs directly from the source of of Luis package. To run it, clone the repository into any directory and run following (depending on your choice of package manager):
 
-Moreover, Luis runs your tests in the browser, tests and manages the server-side snapshots, displays possible differences and updates them when necessary.
+```
+yarn install // or npm install
+yarn run luis // or npm run luis
+```
 
-![luis2](https://cloud.githubusercontent.com/assets/2682705/23295366/570b4c2c-fac4-11e6-98f3-de2503887387.gif)
+Luis now runs on `http://localhost:9001`. Open this url in your browser and you should see a screen, similar to following:
+
+The main buttons of Luis interface perform following actions:
+
+1. Tree mode / flat mode changes the way the list of tests are displayed
+2. Configuration allows you to enable / disable specific tests and more
+3. Update button updates current snapshot to the new version and saves it on your drive
+4. Auto-update toggle allows to update snapshot automatically when tests are run. This is very useful during component development and writing of tests.
+
+Luis has four view modes:
+
+1. *React*: Displays a "live" React components, used mostly during component development
+2. *Html*: Displays a HTML version of the snapshot and shows side-by-side comparison if snapshots differ.
+3. *Json*: Displays *raw* source of the snapshot and compares the differences
+4. *Snapshots*: Show all saved snapshots for a current test 
+
+*Tree view* shows all tests and snapshots. It also shows all test results, and if possible, it shows side-by-side comparison of actual vs. expected value. The number next to the test item represent the execution time of the test. When number is:
+
+* Green - all tests pass
+* Orange - some tests pass
+* Red - all tests fail
+
+The exact functionality of each button is shown below:
+
+
+
+
 
 ## Introduction
 

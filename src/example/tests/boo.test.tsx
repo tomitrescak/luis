@@ -76,10 +76,15 @@ describe('Boo', () => {
       );
 
       itMountsAnd(
-        'renders two correctly',
-        () => data.component2,
+        'renders chain correctly',
+        () => data.component,
         wrapper => {
-          wrapper.should.matchSnapshot('rendered two');
+          wrapper.should.matchSnapshot('initial render');
+          wrapper.find('button').simulate('click');
+          wrapper.should.matchSnapshot('change value');
+          wrapper.find('button').simulate('click');
+          wrapper.should.matchSnapshot('change again');
+          wrapper.find('button').simulate('click');
         }
       );
     }

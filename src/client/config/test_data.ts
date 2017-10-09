@@ -1,4 +1,4 @@
-import { observable, action, IObservableArray } from 'mobx';
+import { observable, action, IObservableArray, computed } from 'mobx';
 import { SemanticCOLORS } from 'semantic-ui-react';
 
 export type Impl = () => void;
@@ -18,8 +18,8 @@ export class TestItem {
   parent: TestItem;
   urlName: string;
 
-  @observable startTime: number = 0;
-  @observable endTime: number = 0;
+  @observable protected _startTime: number = 0;
+  @observable protected _endTime: number = 0;
 
   constructor(name: string, parent: TestItem) {
     this.name = name;
@@ -34,8 +34,37 @@ export class TestItem {
     return (this.parent == null || this.parent.parent == null ? '' : (this.parent.id + '-')) + this.urlName;
   }
 
+  @computed get startTime() {
+    return this._startTime;
+  } 
+
+  set startTime(value: number) {
+    if (!this._startTime) {
+      this._startTime = value;
+    }
+    if (this.parent) {
+      this.parent.startTime = value;
+    }
+  }
+
+  @computed get endTime() {
+    return this._endTime;
+  } 
+
+  set endTime(value: number) {
+    this._endTime = value;
+    if (this.parent) {
+      this.parent.endTime = value;
+    }
+  }
+
   get duration() {
     return (this.endTime - this.startTime < 0) ? 0 : (this.endTime - this.startTime);
+  }
+
+  reset() {
+    this._startTime = 0;
+    this._endTime = 0;
   }
 }
 
@@ -124,6 +153,17 @@ export class TestGroup extends TestItem {
     let snapshots: Snapshot[] = [];
     let groupSnapshots = this.tests.forEach(t => t.snapshots.forEach(s => snapshots.push(s)));
     return snapshots;
+  }
+
+  reset() {
+    this._startTime = 0;
+    this._endTime = 0;
+    for (let group of this.groups) {
+      group.reset();
+    }
+    for (let test of this.tests) {
+      test.reset();
+    }
   }
 
   findGroup(test: (group: TestGroup) => boolean): TestGroup {
