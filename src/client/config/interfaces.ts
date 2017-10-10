@@ -1,6 +1,13 @@
 import { ReactElement } from "react";
 import { ReactWrapper } from 'enzyme';
 
+declare module 'enzyme' {
+  interface ReactWrapper {
+    change(value: string): void;
+    select(value: number): void;
+  }
+}
+
 declare global {
   function xit(name: string, implementation: () => void): void;
   function it(name: string, implementation: () => void): void;
@@ -14,17 +21,17 @@ declare global {
   function afterEach(implementation: () => void): void;
   function afterAll(implementation: () => void): void;
 
-  function xitTest(name: string, implementation: () => void): void;
-  function itTest(name: string, implementation: () => void): void;
-  function describeTest(name: string, implementation: () => void): void;
-  function storyOfTest<T extends StoryConfig>(name: string, config: T, implementation: (params: T) => void): void;
-  function xdescribeTest(name: string, implementation: () => void): void;
-  function beforeTest(implementation: () => void): void;
-  function beforeAllTest(implementation: () => void): void;
-  function beforeEachTest(implementation: () => void): void;
-  function afterTest(implementation: () => void): void;
-  function afterEachTest(implementation: () => void): void;
-  function afterAllTest(implementation: () => void): void;
+  // function xitTest(name: string, implementation: () => void): void;
+  // function itTest(name: string, implementation: () => void): void;
+  // function describeTest(name: string, implementation: () => void): void;
+  // function storyOfTest<T extends StoryConfig>(name: string, config: T, implementation: (params: T) => void): void;
+  // function xdescribeTest(name: string, implementation: () => void): void;
+  // function beforeTest(implementation: () => void): void;
+  // function beforeAllTest(implementation: () => void): void;
+  // function beforeEachTest(implementation: () => void): void;
+  // function afterTest(implementation: () => void): void;
+  // function afterEachTest(implementation: () => void): void;
+  // function afterAllTest(implementation: () => void): void;
 
 
   interface StoryConfig {
