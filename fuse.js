@@ -26,8 +26,7 @@ Sparky.task('luis', () => {
         group: 'luis.css',
         outFile: `public/styles/luis.css`,
         inject: false
-      }),
-      WebIndexPlugin({ template: 'src/client/luis.html', target: 'luis.html' }),
+      })
     ],
     shim: {
       crypto: {
@@ -60,7 +59,7 @@ Sparky.task('luis', () => {
     .hmr()
     .target('browser')
     .sourceMaps(true)
-    .instructions(' !> [example/luis.ts] + **/**.json + **/**.test.tsx');
+    .instructions(' !> [example/luis.ts] + **/**.json');
 
   luisFuse.run();
 
@@ -69,7 +68,10 @@ Sparky.task('luis', () => {
   // luisFuse
   const serverFuse = FuseBox.init({
     homeDir: 'src',
-    output: 'public/$name.js'
+    output: 'public/$name.js',
+    plugins: [
+      WebIndexPlugin({ template: 'src/client/luis.html', target: 'luis.html' })
+    ]
   });
   serverFuse
     .bundle('luis-server')
