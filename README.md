@@ -53,19 +53,11 @@ Luis has four view modes:
 
 The exact functionality of each button is shown below:
 
+![luis_introduction](https://user-images.githubusercontent.com/2682705/31411377-29cb8298-ae5d-11e7-9817-6b1368af5954.gif)
+
+## API
 
 
-
-
-## Introduction
-
-First, [React](https://facebook.github.io/react/) changed the way we develop web applications. Then, [StoryBook](https://getstorybook.io) changed the way we develop React components, harnessing the power of Webpack over the way we bundle javascript applications. StoryBook community developed powerful plugins, such as [StoryShots](https://github.com/storybooks/storyshots), a convenient way of generating [Jest](https://facebook.github.io/jest/) snap-shots, or [Spec Runner](jstory specs mthurot), that allows to execute and display test result next to your stories. I guess that here we could end our story.
-
-But ... along came FuseBox, a bundler so fast that left all its competitors eating the dust, introducing first-class support for [Typescript](https://www.typescriptlang.org), an amazing, type-safe superclass of javascript language. 
-
-Tadaaa ... It’s time for a new kid on the block, [LUIS](https://github.com/tomitrescak/luis-app), speed junkie who’s deeply in love with Typescript. LUIS is fully compatible with StoryBook API using: `storiesOf, add, addWithInfo` commands to define your stories. As a result, you can conveniently tests your existing storybooks in the new environment.
-
-Yet, LUIS introduces many new features, such as folders and snapshots management, and encourages to use the well known BDD (test) notation instead of storybook one. Check out following example of a story in LUIS.
 
 ```javascript
 describe('User', () => {
