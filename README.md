@@ -10,7 +10,20 @@
 </tr>
 </table>
 
-## Introduction
+# TL; DR;
+
+If you prefer video to text, check out this 3 minute video showing off all capabilities of Luis:
+
+- React component development
+- Seamless snapshot-based testing
+- Snapshot management
+- Web component catalogue
+- Integration with VS Code and Wallaby.js
+... and much more!
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_EhiLLOhVis" frameborder="0" allowfullscreen></iframe>
+
+# Introduction
 
 LUIS (**L**ist of **U**ser **I**nterface**s**) is framework for collaborative building and testing React web components. It harnesses the power of [FuseBox](https://github.com/fuse-box/fuse-box) for **fastest** bundling, hot reloads, and out-of-the-box Typescript support. Following are stats for application with 976 typescript sources and 56 imported packages:
 
@@ -28,7 +41,7 @@ To facilitate your component development, testing, and collaboration LUIS suppor
 
 Pictures are worth thousand words, so let us introduce each mode and our API with many examples.
 
-## Web Application
+# Web Application
 
 Web application mode runs directly from the source of of Luis package. To run it, clone the repository into any directory and run following (depending on your choice of package manager):
 
@@ -69,7 +82,7 @@ The exact functionality of each button is shown below:
 
 The API of Luis is dead simple. It uses classic testing methodology using `describe, it, before, beforeEach, beforeAll, after, afterEach, afterAll` and `xit` for skipping tests.
 
-The specific significance has `describe` function, which represents a `folder` in luis and it is rendered accordingly in the test tree. The two new functions are `storyOf` and `itMountsAnd` and matcher `matchSnapshot`.
+The specific significance has `describe` function, which represents a `folder` in luis and it is rendered accordingly in the test tree. The new functions are `storyOf` and `itMountsAnd` and matcher `matchSnapshot`.
 
 ### storyOf
 
@@ -163,7 +176,7 @@ itMountsAnd('tests description', () => {
     const cls = new SomeClass();
     return {
       cls,
-      component: <Foo some={cls} />,
+      component: <Foo some={cls} />, // this is compulsory !!!
     }
   }, function({ wrapper, cls }) {
 
@@ -173,6 +186,78 @@ itMountsAnd('tests description', () => {
 ```
 
 This allows you to prepare data for your wrapped component and then pass this data to the component. Please check out the [tests](https://github.com/tomitrescak/luis/tree/2.0/src/example/tests) directory for more examples.
+
+### matchSnapshot
+
+This matcher compares a current version of the object with snapshot that has been saved to disk. It operates differently from the Jest snapshot and its performance has been tuned for use with front and back-end. The main differences are:
+
+- All snapshots saved into the same directory and named by the test name. This directory is by default `/src/tests/snapshots` but this can be configured (more on this later)
+- Enzyme wrapper saves `html` representation of the component
+- All other objects save circular-free json stringified representation
+
+`matchSnapshot` has a following signature:
+
+```typescript
+type MatchOptions = {
+  decorator?: (source: string) => string;
+};
+
+matchSnapshot(name?: string, options: MatchOptions): Assertion
+```
+
+If `name` is specified, snapshot is saved under this name and it is visualised in LUIS accordingly. This is a fundamental difference to `Storybook` approach, where one component has many stories. In our approach, one component is represented by one story, which contains chapters (tests), each having several bookmarks (snapshots). Decorator can add additional HTML code to your snapshot, for example if you need to wrap your component in some extra code. Check out following examples:
+
+```typescript
+// snapshot will be named by the test name
+wrapper.should.matchSnapshot();
+
+// snapshot will have its own name
+wrapper.should.matchSnapshot('button click increases number');
+
+// we will wrap snapshot with margin and add background color
+// this is particularly useful, when used with VS Code extension
+const decorator = (html: string) => `<div style={margin: 20px, color: black}>${html}</div>`;
+wrapper.should.matchSnapshot('button click increases number', { decorator });
+```
+
+#### Snapshot Configuration 
+
+The snapshots can be easily configured modifying the default config of `chai-match-snapshot` package. Following is the signature of the config:
+
+```typescript
+export type Config = {
+  /** directory where snapshots are stored */
+  snapshotDir: string;
+  /** custom serialiser */
+  serializer: (obj: any) => string;
+  /** custom replacer for JSON.stringify */
+  replacer: (key: string, value: any) => any;
+};
+
+// example
+import { config } from 'chai-match-snapshot';
+config.snapshotDir = '/my/custom/dir';
+``` 
+
+## Adding Test Files
+
+If you add a new test file, you need to import to `src/example/luis`. This is the start file of Luis project. This can be changed in `fuse.js` file.
+
+```js
+import { renderLuis } from '../client/components/index';
+
+import './tests/foo.test';
+import './tests/bar.test';
+import './tests/boo.test';
+
+renderLuis();
+```
+
+# Package Mode
+
+# Visual Studio Extension
+
+# CI
 
 ## Troubleshooting
 

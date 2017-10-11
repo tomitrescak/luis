@@ -37,9 +37,13 @@ declare global {
   interface StoryConfig {
     [index: string]: any;
     component: JSX.Element;
-    info: string;
-    decorator?: React.SFC;
+    info?: string;
     cssClassName?: string;
+    componentWithData? (...props: any[]): JSX.Element | {
+      [index: string]: any;
+      component: JSX.Element;
+      afterMount?(wrapper: ReactWrapper): void;
+    }
   }
 
   type FunctionInitialiser<P> = () => ReactElement<P>;
