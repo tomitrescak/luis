@@ -38,5 +38,4 @@ describe('Component', () => {
       });
     }
   );
-  console.log('Loaded FOO');
 });

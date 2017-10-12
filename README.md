@@ -35,10 +35,12 @@ To facilitate your component development, testing, and collaboration LUIS suppor
     2. [**itMountsAnd**](#itMountsAnd)
     3. [**matchSnapshot**](#matchSnapshot)
 3. [**Adding new tests**](#addingTests)
-4. [**Working with Wallaby.js**](#wallaby)
-5. [**Adding Luis to your project as npm package**](#package) - With a little bit of configuration you can bring Luis to your application and run side by side with your project
-6. [**Visual Studio Code plugin**](#plugin) - Luis incorporates seamlessly into your (my) favourite editor, where it visualises your current snapshots and automatically reloads them as you type (with help of Wallaby.js or Mocha.js in watch mode)
-7. [**CI**](#ci) - Luis defines CI configurations so bringing your project to CI is a breeze.
+4. [**Working with Mocha, Jest and CI**](#wallaby)
+5. [**Working with Wallaby.js**](#wallaby)
+6. [**Adding Luis to your project as npm package**](#package) - With a little bit of configuration you can bring Luis to your application and run side by side with your project
+7. [**Visual Studio Code plugin**](#plugin) - Luis incorporates seamlessly into your (my) favourite editor, where it visualises your current snapshots and automatically reloads them as you type (with help of Wallaby.js or Mocha.js in watch mode)
+8. [**CI**](#ci) - Luis defines CI configurations so bringing your project to CI is a breeze.
+9. [**Stubbing components**]
 
 Pictures are worth thousand words, so let us introduce each mode and our API with many examples.
 
@@ -254,6 +256,13 @@ import './tests/boo.test';
 renderLuis();
 ```
 
+# Working with Mocha, Jest and CI
+
+It is fairly easy to configure your testing environment to work with Luis. Once again, `wafl` does all the heavy lifting for you. Please see following examples of run scripts for Mocha (check out ):
+
+```
+```
+
 # Working with Wallaby.js
 
 In our team we :heart: [Wallaby.js](https://wallabyjs.com). It is THE best test runner in the world, making writing tests FUN. Luis :heart: wallabies more then any other animal in the world (closely followed by [Wombats](https://www.youtube.com/watch?v=OiuQ_rVM-WE)). As a result, Luis (or in this case `wafl`) comes with a set of configurations to enable snapshot insanely fast snapshot testing and its integration in VS Code. All you need to do is to modify your `wallaby.js` file and add following setting in the `setup` function (please check out the [wallaby.js](https://github.com/tomitrescak/luis/blob/master/wallaby.js)):
@@ -272,7 +281,7 @@ setup: function(wallaby) {
        this is quite useful when you are writing your tests
      * - test: standard mode during testing, when snapshots are NOT updated
      * - tcp: updated snapshots are sent to VS Code extension over TCP. 
-     *        Make sure the extension is enabled before running
+     *        [!!! IMPORTANT] Make sure the extension is enabled before running
      * - drive: updated snapshots are automatically saved to your drive
      * - both: snapshots are sent to TCP AND saved to drive
      */
@@ -284,8 +293,6 @@ setup: function(wallaby) {
 # Package Mode
 
 # Visual Studio Extension
-
-# CI
 
 ## Troubleshooting
 

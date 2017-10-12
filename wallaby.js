@@ -31,12 +31,12 @@ module.exports = function(wallaby) {
         snapshotDir,
         /* you can choose following snapshot mode
            * - tcp: updated snapshots are sent to VS Code extension over TCP. 
-           *        Make sure the extension is enabled before running
+           *        [!!! IMPORTANT] Make sure the extension is enabled before running
            * - drive: updated snapshots are automatically saved to your drive
            * - both: snapshots are sent to TCP AND saved to drive
            * - test: standard mode during running your tests, when snapshots are NOT updated but compared
            */
-        snapshotMode: 'drive'
+        snapshotMode: 'tcp'
       });
     }
   };

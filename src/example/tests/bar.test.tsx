@@ -31,7 +31,6 @@ describe('Component', () => {
         });
       }
     );
-    console.log('Loaded BAR');
   });
 });
 

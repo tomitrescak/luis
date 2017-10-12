@@ -88,5 +88,4 @@ describe('Boo', () => {
       );
     }
   );
-  console.log('Loaded BAR');
 });
