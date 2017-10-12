@@ -1,16 +1,9 @@
-<table>
-<tr>
-<td>
+<center>
 <img src="https://user-images.githubusercontent.com/2682705/31411885-c22597e4-ae5e-11e7-8ea0-fa93b62596fd.png" />
-</td>
-<td>
 <h2>LUIS: Component development and testing framework</h2>
-</td>
+</center>
 
-</tr>
-</table>
-
-## Introduction
+# Introduction
 
 LUIS (**L**ist of **U**ser **I**nterface**s**) is framework for collaborative building and testing React web components. It harnesses the power of [FuseBox](https://github.com/fuse-box/fuse-box) for **fastest** bundling, hot reloads, and out-of-the-box Typescript support. Following are stats for application with 976 typescript sources and 56 imported packages:
 
@@ -21,14 +14,16 @@ Luis is using well known technologies ([Mocha](https://mochajs.org), [React](htt
 
 To facilitate your component development, testing, and collaboration LUIS supports four different modes. Each mode is described in detail further below.
 
-1. **Web Application** - Luis comes pre-configured to run on its own so you can start working instantly
-2. **Package** - With a little bit of configuration you can bring Luis to your application and run side by side with your project
-3. **Visual Studio Code plugin** - Luis incorporates seamlessly into your (my) favourite editor, where it visualises your current snapshots and automatically reloads them as you type (with help of Wallaby.js or Mocha.js in watch mode)
-4. **CI** - Luis defines CI configurations so bringing your project to CI is a breeze.
+# Table of Contents
+
+1. [**Web Application**](#web) - Luis comes pre-configured to run on its own so you can start working instantly
+2. [**Package**](#package) - With a little bit of configuration you can bring Luis to your application and run side by side with your project
+3. [**Visual Studio Code plugin**](#plugin) - Luis incorporates seamlessly into your (my) favourite editor, where it visualises your current snapshots and automatically reloads them as you type (with help of Wallaby.js or Mocha.js in watch mode)
+4. [**CI**](#ci) - Luis defines CI configurations so bringing your project to CI is a breeze.
 
 Pictures are worth thousand words, so let us introduce each mode and our API with many examples.
 
-## Web Application
+## Web Application <a name="web"></a>
 
 Web application mode runs directly from the source of of Luis package. To run it, clone the repository into any directory and run following (depending on your choice of package manager):
 
@@ -65,13 +60,13 @@ The exact functionality of each button is shown below:
 
 ![luis_introduction](https://user-images.githubusercontent.com/2682705/31411377-29cb8298-ae5d-11e7-9817-6b1368af5954.gif)
 
-## API
+## API <a name="api"></a>
 
 The API of Luis is dead simple. It uses classic testing methodology using `describe, it, before, beforeEach, beforeAll, after, afterEach, afterAll` and `xit` for skipping tests.
 
 The specific significance has `describe` function, which represents a `folder` in luis and it is rendered accordingly in the test tree. The two new functions are `storyOf` and `itMountsAnd` and matcher `matchSnapshot`.
 
-### storyOf
+### storyOf <a name="storyOf"></a>
 
 We have borrowed the naming from the very popular [Storybook](https://storybook.js.org) package. The `storyOf` function is an extension of the `describe` and its purpose is to define a React component and all the tests with snapshots. Followiong is a definition of `storyOf`:
 
@@ -114,7 +109,7 @@ storyOf(
 )
 ```
 
-### itMountsAnd
+### itMountsAnd <a name="itMountsAnd"></a>
 
 This funstion is an extension of a classic `it` function. The difference to the original `it` is that it uses `enzyme` to mount a provided component and then unmount once the test is finished. This is important in the browser, since all mounted components would stay mounted forever, until page refresh. Following is the definition of the `itMountsAnd` function:
 
@@ -173,6 +168,10 @@ itMountsAnd('tests description', () => {
 ```
 
 This allows you to prepare data for your wrapped component and then pass this data to the component. Please check out the [tests](https://github.com/tomitrescak/luis/tree/2.0/src/example/tests) directory for more examples.
+
+### matchSnapshot <a name="matchSnapshot"></a>
+
+
 
 ## Troubleshooting
 
