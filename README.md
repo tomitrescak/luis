@@ -3,6 +3,19 @@
 <h2>LUIS: Component development and testing framework</h2>
 </center>
 
+# TL; DR;
+
+If you prefer video to text, check out this 3 minute video showing off all capabilities of Luis:
+
+- React component development
+- Seamless snapshot-based testing
+- Snapshot management
+- Web component catalogue
+- Integration with VS Code and Wallaby.js
+... and much more!
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_EhiLLOhVis" frameborder="0" allowfullscreen></iframe>
+
 # Introduction
 
 LUIS (**L**ist of **U**ser **I**nterface**s**) is framework for collaborative building and testing React web components. It harnesses the power of [FuseBox](https://github.com/fuse-box/fuse-box) for **fastest** bundling, hot reloads, and out-of-the-box Typescript support. Following are stats for application with 976 typescript sources and 56 imported packages:
@@ -17,13 +30,19 @@ To facilitate your component development, testing, and collaboration LUIS suppor
 # Table of Contents
 
 1. [**Web Application**](#web) - Luis comes pre-configured to run on its own so you can start working instantly
-2. [**Package**](#package) - With a little bit of configuration you can bring Luis to your application and run side by side with your project
-3. [**Visual Studio Code plugin**](#plugin) - Luis incorporates seamlessly into your (my) favourite editor, where it visualises your current snapshots and automatically reloads them as you type (with help of Wallaby.js or Mocha.js in watch mode)
-4. [**CI**](#ci) - Luis defines CI configurations so bringing your project to CI is a breeze.
+2. [**API**](#api)
+    1. [**storyOf**](#storyOf)
+    2. [**itMountsAnd**](#itMountsAnd)
+    3. [**matchSnapshot**](#matchSnapshot)
+3. [**Adding new tests**](#addingTests)
+4. [**Working with Wallaby.js**](#wallaby)
+5. [**Adding Luis to your project as npm package**](#package) - With a little bit of configuration you can bring Luis to your application and run side by side with your project
+6. [**Visual Studio Code plugin**](#plugin) - Luis incorporates seamlessly into your (my) favourite editor, where it visualises your current snapshots and automatically reloads them as you type (with help of Wallaby.js or Mocha.js in watch mode)
+7. [**CI**](#ci) - Luis defines CI configurations so bringing your project to CI is a breeze.
 
 Pictures are worth thousand words, so let us introduce each mode and our API with many examples.
 
-## Web Application <a name="web"></a>
+# Web Application <a name="web"></a>
 
 Web application mode runs directly from the source of of Luis package. To run it, clone the repository into any directory and run following (depending on your choice of package manager):
 
@@ -60,13 +79,13 @@ The exact functionality of each button is shown below:
 
 ![luis_introduction](https://user-images.githubusercontent.com/2682705/31411377-29cb8298-ae5d-11e7-9817-6b1368af5954.gif)
 
-## API <a name="api"></a>
+# API <a name="api"></a>
 
 The API of Luis is dead simple. It uses classic testing methodology using `describe, it, before, beforeEach, beforeAll, after, afterEach, afterAll` and `xit` for skipping tests.
 
-The specific significance has `describe` function, which represents a `folder` in luis and it is rendered accordingly in the test tree. The two new functions are `storyOf` and `itMountsAnd` and matcher `matchSnapshot`.
+The specific significance has `describe` function, which represents a `folder` in luis and it is rendered accordingly in the test tree. The new functions are `storyOf` and `itMountsAnd` and matcher `matchSnapshot`.
 
-### storyOf <a name="storyOf"></a>
+## storyOf <a name="storyOf"></a>
 
 We have borrowed the naming from the very popular [Storybook](https://storybook.js.org) package. The `storyOf` function is an extension of the `describe` and its purpose is to define a React component and all the tests with snapshots. Followiong is a definition of `storyOf`:
 
@@ -109,7 +128,7 @@ storyOf(
 )
 ```
 
-### itMountsAnd <a name="itMountsAnd"></a>
+## itMountsAnd <a name="itMountsAnd"></a>
 
 This funstion is an extension of a classic `it` function. The difference to the original `it` is that it uses `enzyme` to mount a provided component and then unmount once the test is finished. This is important in the browser, since all mounted components would stay mounted forever, until page refresh. Following is the definition of the `itMountsAnd` function:
 
@@ -158,7 +177,7 @@ itMountsAnd('tests description', () => {
     const cls = new SomeClass();
     return {
       cls,
-      component: <Foo some={cls} />,
+      component: <Foo some={cls} />, // this is compulsory !!!
     }
   }, function({ wrapper, cls }) {
 
@@ -169,9 +188,104 @@ itMountsAnd('tests description', () => {
 
 This allows you to prepare data for your wrapped component and then pass this data to the component. Please check out the [tests](https://github.com/tomitrescak/luis/tree/2.0/src/example/tests) directory for more examples.
 
-### matchSnapshot <a name="matchSnapshot"></a>
+## matchSnapshot <a name="matchSnapshot"></a>
 
+This matcher compares a current version of the object with snapshot that has been saved to disk. It operates differently from the Jest snapshot and its performance has been tuned for use with front and back-end. The main differences are:
 
+- All snapshots saved into the same directory and named by the test name. This directory is by default `/src/tests/snapshots` but this can be configured (more on this later)
+- Enzyme wrapper saves `html` representation of the component
+- All other objects save circular-free json stringified representation
+
+`matchSnapshot` has a following signature:
+
+```typescript
+type MatchOptions = {
+  decorator?: (source: string) => string;
+};
+
+matchSnapshot(name?: string, options: MatchOptions): Assertion
+```
+
+If `name` is specified, snapshot is saved under this name and it is visualised in LUIS accordingly. This is a fundamental difference to `Storybook` approach, where one component has many stories. In our approach, one component is represented by one story, which contains chapters (tests), each having several bookmarks (snapshots). Decorator can add additional HTML code to your snapshot, for example if you need to wrap your component in some extra code. Check out following examples:
+
+```typescript
+// snapshot will be named by the test name
+wrapper.should.matchSnapshot();
+
+// snapshot will have its own name
+wrapper.should.matchSnapshot('button click increases number');
+
+// we will wrap snapshot with margin and add background color
+// this is particularly useful, when used with VS Code extension
+const decorator = (html: string) => `<div style={margin: 20px, color: black}>${html}</div>`;
+wrapper.should.matchSnapshot('button click increases number', { decorator });
+```
+
+### Snapshot Configuration <a name="snapshotConfiguration"></a>
+
+The snapshots can be easily configured modifying the default config of `chai-match-snapshot` package. Following is the signature of the config:
+
+```typescript
+export type Config = {
+  /** directory where snapshots are stored relative to the project directory */
+  snapshotDir: string;
+  /** custom serialiser */
+  serializer: (obj: any) => string;
+  /** custom replacer for JSON.stringify */
+  replacer: (key: string, value: any) => any;
+};
+
+// example
+import { config } from 'chai-match-snapshot';
+config.snapshotDir = '/my/custom/dir';
+``` 
+
+# Adding Test Files  <a name="addingTests"></a>
+
+If you add a new test file, you need to import to `src/example/luis`. This is the start file of Luis project. This can be changed in `fuse.js` file.
+
+```js
+import { renderLuis } from '../client/components/index';
+
+import './tests/foo.test';
+import './tests/bar.test';
+import './tests/boo.test';
+
+renderLuis();
+```
+
+# Working with Wallaby.js
+
+In our team we :heart: [Wallaby.js](https://wallabyjs.com). It is THE best test runner in the world, making writing tests FUN. Luis :heart: wallabies more then any other animal in the world (closely followed by [Wombats](https://www.youtube.com/watch?v=OiuQ_rVM-WE)). As a result, Luis (or in this case `wafl`) comes with a set of configurations to enable snapshot insanely fast snapshot testing and its integration in VS Code. All you need to do is to modify your `wallaby.js` file and add following setting in the `setup` function (please check out the [wallaby.js](https://github.com/tomitrescak/luis/blob/master/wallaby.js)):
+
+```js
+...
+setup: function(wallaby) {
+  const path = require('path');
+  const snapshotDir= path.join(wallaby.localProjectDir, 'src', 'tests', 'snapshots');
+  
+  require('wafl').setup({ 
+    wallaby, 
+    // if you want wallaby to save snapshots, you need to specify absolute path to their location 
+    snapshotDir, 
+    /* you can choose to automatically update your snapshots when tests are run
+       this is quite useful when you are writing your tests
+     * - test: standard mode during testing, when snapshots are NOT updated
+     * - tcp: updated snapshots are sent to VS Code extension over TCP. 
+     *        Make sure the extension is enabled before running
+     * - drive: updated snapshots are automatically saved to your drive
+     * - both: snapshots are sent to TCP AND saved to drive
+     */
+    snapshotMode: 'tcp' 
+  });
+}
+```
+
+# Package Mode
+
+# Visual Studio Extension
+
+# CI
 
 ## Troubleshooting
 

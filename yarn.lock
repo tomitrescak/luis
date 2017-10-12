@@ -28,12 +28,12 @@
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.0.4.tgz#fe86315d9a66827feeb16f73bc954688ec950e18"
 
 "@types/cheerio@*":
-  version "0.22.2"
-  resolved "https://registry.yarnpkg.com/@types/cheerio/-/cheerio-0.22.2.tgz#539625874bc856086ad491c2fdc9b10c05ae308e"
+  version "0.22.3"
+  resolved "https://registry.yarnpkg.com/@types/cheerio/-/cheerio-0.22.3.tgz#c448036ec3d1b4fd8a61c6b37b3faa6d9c8b7b97"
 
 "@types/enzyme@*":
-  version "2.8.11"
-  resolved "https://registry.yarnpkg.com/@types/enzyme/-/enzyme-2.8.11.tgz#d8fb69c934ab4e1cd2099d0d390eac72f20d107c"
+  version "2.8.12"
+  resolved "https://registry.yarnpkg.com/@types/enzyme/-/enzyme-2.8.12.tgz#a669d79ce1760d7241bc4b6fb7535d68669d78ad"
   dependencies:
     "@types/cheerio" "*"
     "@types/react" "*"
@@ -43,8 +43,8 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.89.tgz#154be0e6a823760cd6083aa8c48f952e2e63e0b0"
 
 "@types/node@^8.0.17":
-  version "8.0.33"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.33.tgz#1126e94374014e54478092830704f6ea89df04cd"
+  version "8.0.34"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.34.tgz#55f801fa2ddb2a40dd6dfc15ecfe1dde9c129fe9"
 
 "@types/react@*", "@types/react@^16.0.9":
   version "16.0.10"
@@ -57,9 +57,9 @@
     "@types/chai" "*"
     "@types/sinon" "*"
 
-"@types/sinon@*", "@types/sinon@^2.3.5":
-  version "2.3.5"
-  resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-2.3.5.tgz#68f1e0ac15f2eb6cc682b7af87cd517acc77b589"
+"@types/sinon@*", "@types/sinon@^2.3.6":
+  version "2.3.6"
+  resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-2.3.6.tgz#ff600951c756286e38ce14d0b0e2924e38a91006"
 
 abab@^1.0.3:
   version "1.0.4"
@@ -382,9 +382,9 @@ chai-enzyme@^0.8.0:
     html "^1.0.0"
     react-element-to-jsx-string "^5.0.0"
 
-chai-match-snapshot@^1.0.40:
-  version "1.0.40"
-  resolved "https://registry.yarnpkg.com/chai-match-snapshot/-/chai-match-snapshot-1.0.40.tgz#422487e5ff0d691119de301a870241dea3138750"
+chai-match-snapshot@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/chai-match-snapshot/-/chai-match-snapshot-1.2.0.tgz#ed64140bec4b89d5b6028101aad8ad7501d8de7e"
   dependencies:
     "@types/node" "^8.0.17"
 
@@ -1587,7 +1587,7 @@ isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
 
-js-beautify@^1.7.3:
+js-beautify@^1.7.4:
   version "1.7.4"
   resolved "https://registry.yarnpkg.com/js-beautify/-/js-beautify-1.7.4.tgz#fa0dfa8fef594d6a6253755fe26af5d0a22cbd90"
   dependencies:
@@ -1612,7 +1612,7 @@ jsdom-global@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/jsdom-global/-/jsdom-global-3.0.2.tgz#6bd299c13b0c4626b2da2c0393cd4385d606acb9"
 
-jsdom@^11.2.0:
+jsdom@^11.3.0:
   version "11.3.0"
   resolved "https://registry.yarnpkg.com/jsdom/-/jsdom-11.3.0.tgz#7b2dfe6227d014084d80f6b3e98fa1e4cef199e7"
   dependencies:
@@ -2032,8 +2032,8 @@ number-is-nan@^1.0.0:
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
 
 nwmatcher@^1.4.1:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/nwmatcher/-/nwmatcher-1.4.2.tgz#c5e545ab40d22a56b0326531c4beaed7a888b3ea"
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/nwmatcher/-/nwmatcher-1.4.3.tgz#64348e3b3d80f035b40ac11563d278f8b72db89c"
 
 oauth-sign@~0.8.1, oauth-sign@~0.8.2:
   version "0.8.2"
@@ -2276,9 +2276,9 @@ proxy-addr@~2.0.2:
     forwarded "~0.1.2"
     ipaddr.js "1.5.2"
 
-proxyrequire@^1.0.15:
-  version "1.0.15"
-  resolved "https://registry.yarnpkg.com/proxyrequire/-/proxyrequire-1.0.15.tgz#0c9b9768791e545258bc61fd2e0e5a1184e37876"
+proxyrequire@^1.0.17:
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/proxyrequire/-/proxyrequire-1.0.17.tgz#c8beaa0cac405d13f4b955c6659cbe24bec0cc25"
 
 pseudomap@^1.0.1:
   version "1.0.2"
@@ -2300,7 +2300,7 @@ qs@~6.4.0:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.4.0.tgz#13e26d28ad6b0ffaa91312cd3bf708ed351e7233"
 
-raf@^3.3.2:
+raf@^3.3.2, raf@^3.4.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/raf/-/raf-3.4.0.tgz#a28876881b4bc2ca9117d4138163ddb80f781575"
   dependencies:
@@ -2646,11 +2646,11 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
 
-sinon-chai@^2.13.0:
+sinon-chai@^2.14.0:
   version "2.14.0"
   resolved "https://registry.yarnpkg.com/sinon-chai/-/sinon-chai-2.14.0.tgz#da7dd4cc83cd6a260b67cca0f7a9fdae26a1205d"
 
-sinon@^4.0.0:
+sinon@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/sinon/-/sinon-4.0.1.tgz#e46146a8a8420f837bdba32e2965bd1fe43d5b05"
   dependencies:
@@ -2916,8 +2916,8 @@ typestyle@^1.4.1:
     free-style "2.4.1"
 
 ua-parser-js@^0.7.9:
-  version "0.7.14"
-  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.14.tgz#110d53fa4c3f326c121292bbeac904d2e03387ca"
+  version "0.7.17"
+  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.17.tgz#e9ec5f9498b9ec910e7ae3ac626a805c4d09ecac"
 
 uid-number@^0.0.6:
   version "0.0.6"
@@ -2970,32 +2970,33 @@ verror@1.10.0:
     extsprintf "^1.2.0"
 
 wafl@^0.3.0:
-  version "0.3.15"
-  resolved "https://registry.yarnpkg.com/wafl/-/wafl-0.3.15.tgz#ed0fe44471958a2a253b2579f7b782041d71902e"
+  version "0.3.25"
+  resolved "https://registry.yarnpkg.com/wafl/-/wafl-0.3.25.tgz#5ad66f94c7d4f548c5967a7b6edb5d54d5463974"
   dependencies:
     "@types/chai" "^4.0.4"
     "@types/chai-as-promised" "^7.1.0"
     "@types/chai-enzyme" "^0.6.3"
     "@types/chai-subset" "^1.3.1"
-    "@types/sinon" "^2.3.5"
+    "@types/sinon" "^2.3.6"
     "@types/sinon-chai" "^2.7.29"
     chai "^4.1.2"
     chai-as-promised "^7.1.1"
     chai-enzyme "^0.8.0"
-    chai-match-snapshot "^1.0.40"
+    chai-match-snapshot "^1.2.0"
     chai-subset "^1.6.0"
     circular-json-es6 "^2.0.1"
     enzyme "^3.1.0"
     enzyme-adapter-react-16 "^1.0.1"
-    js-beautify "^1.7.3"
-    jsdom "^11.2.0"
+    js-beautify "^1.7.4"
+    jsdom "^11.3.0"
     jsdom-global "^3.0.2"
     json-socket "^0.3.0"
     jsx-controls-loader "^0.1.1"
-    proxyrequire "^1.0.15"
+    proxyrequire "^1.0.17"
+    raf "^3.4.0"
     react-test-renderer "^16.0.0"
-    sinon "^4.0.0"
-    sinon-chai "^2.13.0"
+    sinon "^4.0.1"
+    sinon-chai "^2.14.0"
 
 watch@^1.0.1:
   version "1.0.2"

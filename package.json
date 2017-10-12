@@ -6,7 +6,7 @@
   "types": "dist/client/index.d.ts",
   "scripts": {
     "luis": "node fuse.js luis",
-    "test": "TS_NODE_FAST=true mocha --require ./mocha.js --ui snapshots 'src/**/*.test.ts*' --compilers ts:ts-node/register -P",
+    "test": "TS_NODE_FAST=true mocha --require ts-node/register --require ./mocha.js --ui snapshots 'src/example/**/*.test.ts*' -P",
     "us": "UPDATE_SNAPSHOTS=true npm run test"
   },
   "repository": {

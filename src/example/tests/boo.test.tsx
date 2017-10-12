@@ -24,10 +24,9 @@ class Component extends React.Component<Props, State> {
     this.state = { number: 1 };
   }
   render() {
-    console.log('Rendering ...: ' + this.props.state.number);
     return (
       <div>
-        <div>Current mobx number 679: {this.props.state.number}</div>
+        <div>Current mobx number: {this.props.state.number}</div>
         <div>Current state number: {this.state.number}</div>
         <button onClick={() => this.setState({ number: this.state.number + 1 })}>Increase</button>
       </div>
