@@ -8,8 +8,8 @@
     "luis": "node fuse.js luis",
     "test": "mocha --require ./mocha.js --ui snapshots 'src/example/**/*.test.ts*' -P",
     "testWatch": "mocha --require ./mocha.js --ui snapshots --watch --watch-extensions ts,tsx 'src/example/**/*.test.ts*' -P",
-    "us": "mocha --require ./us.js --ui snapshots --watch --watch-extensions ts,tsx 'src/example/**/*.test.ts*' -P",
-    "usWatch": "mocha --require ./us.js --ui snapshots 'src/example/**/*.test.ts*' -P"
+    "us": "mocha --require ./us.js --ui snapshots 'src/example/**/*.test.ts*' -P",
+    "usWatch": "mocha --require ./us.js --ui snapshots --watch --watch-extensions ts,tsx 'src/example/**/*.test.ts*' -P"
   },
   "repository": {
     "type": "git",

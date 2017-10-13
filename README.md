@@ -260,7 +260,48 @@ renderLuis();
 
 It is fairly easy to configure your testing environment to work with Luis. Once again, `wafl` does all the heavy lifting for you. Please see following examples of run scripts for Mocha (check out ):
 
+```json
+"scripts": {
+  "test": "mocha --require ./mocha.js --ui snapshots 'src/example/**/*.test.ts*' -P",
+  "testWatch": "mocha --require ./mocha.js --ui snapshots --watch --watch-extensions ts,tsx 'src/example/**/*.test.ts*' -P",
+  "us": "mocha --require ./us.js --ui snapshots --watch --watch-extensions ts,tsx 'src/example/**/*.test.ts*' -P",
+  "usWatch": "mocha --require ./us.js --ui snapshots 'src/example/**/*.test.ts*' -P"
+},
 ```
+
+The `test` executes all tests from the example folder. The `testWatch` executed tests in watch mode (it will stay active and watch for your changes). The `us` and `usWatch`execute tests and update snapshots. The configuration of mocha tests is performed in `[mocha.js](https://github.com/tomitrescak/luis/blob/master/mocha.js)` and `[us.js](https://github.com/tomitrescak/luis/blob/master/us.js)` files. 
+
+```js
+// mocha.js
+const { setup } = require('wafl');
+
+// setup compiler
+process.env.TS_NODE_FAST = true;
+require('ts-node/register');
+
+// setup snapshots for mocha
+require('chai-match-snapshot/mocha').setupMocha();
+
+// setup app
+setup();
+```
+
+The `us.js` sets the snapshot mode to update snapshots and save them to their location:
+
+```js
+// us.js
+require('./mocha');
+
+const config = require('chai-match-snapshot').config;
+
+/* you can choose following snapshot mode
+ * - tcp: updated snapshots are sent to VS Code extension over TCP. 
+ *        [!!! IMPORTANT] Make sure the extension is enabled before running
+ * - drive: updated snapshots are automatically saved to your drive
+ * - both: snapshots are sent to VS Code extension AND saved to drive
+ * - test: standard mode during running your tests, when snapshots are NOT updated but compared
+ */
+config.snapshotMode = 'drive';
 ```
 
 # Working with Wallaby.js
