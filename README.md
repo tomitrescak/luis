@@ -231,7 +231,15 @@ The snapshots can be easily configured modifying the default config of `chai-mat
 export type Config = {
   /** directory where snapshots are stored relative to the project directory */
   snapshotDir: string;
-  /** custom serialiser */
+  /* you can choose following snapshot mode
+   * - tcp: updated snapshots are sent to VS Code extension over TCP. 
+   *        [!!! IMPORTANT] Make sure the extension is enabled before running
+   * - drive: updated snapshots are automatically saved to your drive
+   * - both: snapshots are sent to VS Code extension AND saved to drive
+   * - test: standard mode during running your tests, when snapshots are NOT updated but compared
+   */
+  snapshotMode: 'test' | 'tcp' | 'drive' | 'both';
+  /** custom serializer */
   serializer: (obj: any) => string;
   /** custom replacer for JSON.stringify */
   replacer: (key: string, value: any) => any;
@@ -293,20 +301,12 @@ The `us.js` sets the snapshot mode to update snapshots and save them to their lo
 require('./mocha');
 
 const config = require('chai-match-snapshot').config;
-
-/* you can choose following snapshot mode
- * - tcp: updated snapshots are sent to VS Code extension over TCP. 
- *        [!!! IMPORTANT] Make sure the extension is enabled before running
- * - drive: updated snapshots are automatically saved to your drive
- * - both: snapshots are sent to VS Code extension AND saved to drive
- * - test: standard mode during running your tests, when snapshots are NOT updated but compared
- */
 config.snapshotMode = 'drive';
 ```
 
 # Working with Wallaby.js
 
-In our team we :heart: [Wallaby.js](https://wallabyjs.com). It is THE best test runner in the world, making writing tests FUN. Luis :heart: wallabies more then any other animal in the world (closely followed by [Wombats](https://www.youtube.com/watch?v=OiuQ_rVM-WE)). As a result, Luis (or in this case `wafl`) comes with a set of configurations to enable snapshot insanely fast snapshot testing and its integration in VS Code. All you need to do is to modify your `wallaby.js` file and add following setting in the `setup` function (please check out the [wallaby.js](https://github.com/tomitrescak/luis/blob/master/wallaby.js)):
+In our team we :heart: [Wallaby.js](https://wallabyjs.com). It is THE best test runner in the world, making writing tests FUN. Luis :heart: wallabies more then any other animal in the world (closely followed by [Wombats](https://www.youtube.com/watch?v=OiuQ_rVM-WE)). As a result, Luis (or in this case `wafl`) comes with a set of configurations to enable insanely fast snapshot testing and its integration in VS Code. All you need to do is to modify [wallaby.js](https://github.com/tomitrescak/luis/blob/master/wallaby.js) file and add following setting in the `setup` function:
 
 ```js
 ...
@@ -318,14 +318,7 @@ setup: function(wallaby) {
     wallaby, 
     // if you want wallaby to save snapshots, you need to specify absolute path to their location 
     snapshotDir, 
-    /* you can choose to automatically update your snapshots when tests are run
-       this is quite useful when you are writing your tests
-     * - test: standard mode during testing, when snapshots are NOT updated
-     * - tcp: updated snapshots are sent to VS Code extension over TCP. 
-     *        [!!! IMPORTANT] Make sure the extension is enabled before running
-     * - drive: updated snapshots are automatically saved to your drive
-     * - both: snapshots are sent to TCP AND saved to drive
-     */
+    // see matchSnapshot configuration for options: 'tcp' | 'drive' | 'both' | 'test'
     snapshotMode: 'tcp' 
   });
 }
@@ -335,7 +328,7 @@ setup: function(wallaby) {
 
 # Visual Studio Extension
 
-## Troubleshooting
+# Troubleshooting
 
 If at any point things start to go sideways, try deleting the .fusebox folder in the root of your project and restart Luis.
 
