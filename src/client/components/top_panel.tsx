@@ -19,7 +19,7 @@ const noMargin = style({
 export class TopPanel extends React.Component<Props> {
   @observable updating = false;
 
-  handleItemClick = (_e: any, { name }: any) => (this.props.state.viewState.snapshotView = name);
+  handleItemClick = (e: React.MouseEvent<any>) => (this.props.state.viewState.snapshotView = e.currentTarget.getAttribute('data-name'));
 
   updateClick = async (_e: any) => {
     // this.updating = true;
@@ -49,12 +49,11 @@ export class TopPanel extends React.Component<Props> {
           <Icon name="remove" color="red" />
           <div className="lbl">{story.failingTests}</div>
         </Menu.Item>
-        <Menu.Item name="react" content="React" active={view === 'react'} onClick={this.handleItemClick} />
-        <Menu.Item name="html" content="Html" active={view === 'html'} icon="html5" onClick={this.handleItemClick} />
-        <Menu.Item name="json" content="Json" active={view === 'json'} icon="code" onClick={this.handleItemClick} />
+        <Menu.Item data-name="react" content="React" icon="cube" active={view === 'react'} onClick={this.handleItemClick} />
+        <Menu.Item data-name="html" content="Html" active={view === 'html'} icon="html5" onClick={this.handleItemClick} />
+        <Menu.Item data-name="json" content="Json" active={view === 'json'} icon="code" onClick={this.handleItemClick} />
         <Menu.Item
-          name="snapshots"
-          content="Snapshots"
+          data-name="snapshots"
           active={view === 'snapshots'}
           icon="image"
           onClick={this.handleItemClick}
@@ -65,12 +64,12 @@ export class TopPanel extends React.Component<Props> {
               <Loader active inline size="mini" />
             </Menu.Item>
           ) : (
-            <Menu.Item onClick={this.updateClick} content="Update" />
+            <Menu.Item onClick={this.updateClick} icon="refresh" />
           )}
           <Menu.Item
             active={this.props.state.autoUpdateSnapshots}
             onClick={() => (this.props.state.autoUpdateSnapshots = !this.props.state.autoUpdateSnapshots)}
-            icon="refresh"
+            icon="lock"
             title="Auto Update Snapshots"
           />
         </Menu.Menu>
