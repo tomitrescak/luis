@@ -17,17 +17,28 @@ app.use(historyAPIFallback());
 //     res.sendFile(__dirname + '/louis.html');
 // });
 
-export function start(luisPath = `public/`) {
-    try {
-        fs.statSync(path.join(path.resolve(luisPath), 'luis.html'));
+export type ConfigCallback = (app: any) => void;
 
-        app.use(express.static(path.resolve(luisPath), { index: false }));
-        app.use((req: any, res: any) => res.sendFile(`${path.resolve(luisPath)}/luis.html`));
-        
-        app.listen(9001, function () {
-            console.log('LUIS is listening to you on port 9001!');
-        });
-    } catch (ex) {
-        console.error("ERROR!: You need to have 'luis.html' in your static directory")
+export interface Config {
+  luisPath?: string;
+  serverConfig?: ConfigCallback[];
+}
+
+export function start({ luisPath = `public/`, serverConfig = [] }: Config = {}) {
+  try {
+    fs.statSync(path.join(path.resolve(luisPath), 'luis.html'));
+
+    for (let config of serverConfig) {
+      config(app);
     }
+
+    app.use(express.static(path.resolve(luisPath), { index: false }));
+    app.use((req: any, res: any) => res.sendFile(`${path.resolve(luisPath)}/luis.html`));
+
+    app.listen(9001, function() {
+      console.log('LUIS is listening to you on port 9001!');
+    });
+  } catch (ex) {
+    console.error("ERROR!: You need to have 'luis.html' in your static directory");
+  }
 }

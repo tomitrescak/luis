@@ -30,7 +30,9 @@ export const SideBar = inject('state')(
       <Menu.Item onClick={() => state.config.toggleStoryView()}>
         <Icon name={state.config.storyView === 'list' ? 'content' : 'indent'} />
       </Menu.Item>
-      <StoryConfig />
+      <Menu.Item onClick={() => state.viewState.snapshotView = 'config'}>
+        <Icon name="cogs" />
+      </Menu.Item>
     </Menu>
   ))
 );

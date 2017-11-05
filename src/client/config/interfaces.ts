@@ -5,6 +5,7 @@ declare module 'enzyme' {
   interface ReactWrapper {
     change(value: string): void;
     select(value: number): void;
+    click(): void;
   }
 }
 
@@ -36,7 +37,7 @@ declare global {
 
   interface StoryConfig {
     [index: string]: any;
-    component: JSX.Element;
+    component?: JSX.Element;
     info?: string;
     cssClassName?: string;
     componentWithData? (...props: any[]): JSX.Element | {
@@ -73,9 +74,13 @@ declare global {
     test: (data: Wrapper<P, S, W>) => void
   ): void;
 
+  export type MatchOptions = {
+    serializer?: (source: string) => string;
+  };
+
   export namespace Chai {
     interface Assertion {
-      matchSnapshot(name?: string): Assertion
+      matchSnapshot(name?: string, options?: MatchOptions): Assertion
     }
   }
 }

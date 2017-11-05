@@ -15,6 +15,7 @@ import { SnapshotHtml } from './snapshot_html';
 import { SnapshotJson } from './snapshot_json';
 import { SnapshotsView } from './snapshots_view';
 import { ErrorBoundary } from './error_boundary';
+import { StoryConfig } from './story_config';
 
 const split = (theme: ITheme) =>
   style({
@@ -121,6 +122,11 @@ export const Story = observer(({ state }: { state: Luis.State }) => (
     {state.viewState.snapshotView === 'snapshots' && (
       <div className={pane}>
         <SnapshotsView state={state} />
+      </div>
+    )}
+    {state.viewState.snapshotView === 'config' && (
+      <div className={pane}>
+        <StoryConfig state={state} />
       </div>
     )}
   </div>
