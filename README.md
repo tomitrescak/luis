@@ -49,6 +49,7 @@ Pictures are worth thousand words, so let us introduce each mode and our API wit
 Web application mode runs directly from the source of of Luis package. To run it, clone the repository into any directory and run following (depending on your choice of package manager):
 
 ```
+git clone https://github.com/tomitrescak/luis
 yarn // or npm install
 yarn run luis // or npm run luis
 ```
