@@ -4,7 +4,7 @@ import { create } from './test_data';
 import { Layout, ComponentProps } from '../layout';
 
 import { proxy } from 'proxyrequire';
-import * as sinon from 'sinon';
+
 
 // create stub
 
