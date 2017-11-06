@@ -38,6 +38,7 @@
     "mobx-react-devtools": "^4.2.15",
     "path-match": "^1.2.4",
     "react": "^16.0.0",
+    "react-icons": "^2.2.7",
     "react-split-pane": "^0.1.66",
     "tslib": "^1.7.1",
     "tslint": "^5.8.0",
@@ -55,6 +56,6 @@
     "stream": "^0.0.2",
     "ts-node": "^3.3.0",
     "typescript": "^2.5.3",
-    "wafl": "^0.3.0"
+    "wafl": "^0.3.38"
   }
 }

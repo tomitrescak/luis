@@ -2,20 +2,15 @@ import * as React from 'react';
 import * as SplitPane from 'react-split-pane';
 
 import { style } from 'typestyle';
-import { StateModel } from '../config/state';
 import { ITheme } from '../config/themes';
 import { inject, observer } from 'mobx-react';
-import { StoryList } from './story_list';
-import { SideBar } from './side_bar';
 
-import DevTools from 'mobx-react-devtools';
-import { TopPanel, TopPanelSingle } from './top_panel';
-import { StoryComponent } from './story_component';
-import { SnapshotHtml } from './snapshot_html';
-import { SnapshotJson } from './snapshot_json';
-import { SnapshotsView } from './snapshots_view';
-import { ErrorBoundary } from './error_boundary';
-import { StoryConfig } from './story_config';
+import { LeftPanel } from './left_panel';
+import { RightPanel } from './right_panel';
+import { content } from './component_styles';
+
+//@ts-ignore
+import { StateModel } from '../config/state';
 
 const split = (theme: ITheme) =>
   style({
@@ -61,30 +56,6 @@ const split = (theme: ITheme) =>
     }
   });
 
-const full = style({
-  width: '100%',
-  height: '100%'
-});
-
-const pane = style({
-  padding: '6px',
-  position: 'absolute',
-  overflow: 'auto',
-  top: 42,
-  bottom: 0,
-  left: 0,
-  right: 0
-});
-
-const content = style({
-  position: 'absolute',
-  left: 0,
-  right: 0,
-  top: 0,
-  bottom: 0,
-  fontFamily: 'Lato'
-});
-
 const styles = style({
   $nest: {
     '& .m12': {
@@ -96,51 +67,16 @@ const styles = style({
   }
 });
 
-type Props = {
+export type ComponentProps = {
   state?: Luis.State;
 };
 
-export const Story = observer(({ state }: { state: Luis.State }) => (
-  <div className={full}>
-    {state.viewState.snapshotView === 'react' && (
-      <div className={pane}>
-        <ErrorBoundary>
-          <StoryComponent state={state} />
-        </ErrorBoundary>
-      </div>
-    )}
-    {state.viewState.snapshotView === 'html' && (
-      <div className={pane}>
-        <SnapshotHtml state={state} />
-      </div>
-    )}
-    {state.viewState.snapshotView === 'json' && (
-      <div className={full}>
-        <SnapshotJson state={state} />
-      </div>
-    )}
-    {state.viewState.snapshotView === 'snapshots' && (
-      <div className={pane}>
-        <SnapshotsView state={state} />
-      </div>
-    )}
-    {state.viewState.snapshotView === 'config' && (
-      <div className={pane}>
-        <StoryConfig state={state} />
-      </div>
-    )}
-  </div>
-));
-
-export const Layout = inject<Props>('state')(
-  observer(({ state }: Props) => {
+export const Layout = inject('state')(
+  observer(({ state }: ComponentProps) => {    
     if (state.viewState.bare) {
       return (
         <div className={styles}>
-          <div className={content}>
-            <TopPanelSingle />
-            <Story state={state} />
-          </div>
+          
         </div>
       );
     }
@@ -151,22 +87,13 @@ export const Layout = inject<Props>('state')(
             className={split(state.theme)}
             split="vertical"
             minSize={100}
-            defaultSize={parseInt(localStorage.getItem('luis-v-splitPos'), 10)}
+            defaultSize={parseInt(localStorage.getItem('luis-v-splitPos') || "280px", 10)}
             onChange={(size: string) => localStorage.setItem('luis-v-splitPos', size)}
           >
-            <div>
-              <SideBar />
-              <div className={pane}>
-                <StoryList />
-              </div>
-            </div>
-            <div className={full}>
-              <TopPanel />
-              <Story state={state} />
-            </div>
+            <LeftPanel state={state} />
+            <RightPanel state={state} />
           </SplitPane>
         </div>
-        {state.config.showDevTools && <DevTools position={{ right: 5, top: 42 }} />}
       </div>
     );
   })

@@ -20,7 +20,8 @@
         "skipLibCheck": true,
         "strictNullChecks": false,
         "target": "es2017",
-        "noUnusedLocals": false
+        "noUnusedLocals": true,
+        "noUnusedParameters": true
     },
     "exclude": [
         "node_modules",

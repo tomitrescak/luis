@@ -1,28 +1,17 @@
 import * as React from 'react';
+
 import { observer } from 'mobx-react';
-import { Accordion, Icon, List, Message, Segment } from 'semantic-ui-react';
+import { DiffView } from 'diff-view';
+import { Accordion, Icon, List, Segment } from 'semantic-ui-react';
 import { style } from 'typestyle';
 
-import { Test } from '../config/test_data';
-
-import { DiffView } from 'diff-view';
 import { diff, timing } from './component_styles';
+import { Test } from '../models/test_model';
 
 export type TestProps = {
   state: Luis.State;
   test: Test;
 };
-
-const snapshotContent = style({
-  paddingLeft: '24px!important',
-  paddingTop: '6px!important',
-  paddingBottom: '0px!important',
-  $nest: {
-    '& .icon': {
-      paddingRight: '0px!important'
-    }
-  }
-});
 
 const errorMessage = style({
   padding: '3px 6px!important',
@@ -139,7 +128,7 @@ export class TestView extends React.Component<TestProps> {
           {test.snapshots.length > 0 && (
             <Segment attached={test.error ? true : 'bottom'} secondary>
               <List className={snapshotMenu}>
-                {test.snapshots.map((s, i) => (
+                {test.snapshots.map((s) => (
                   <List.Item
                     as="a"
                     data-path={`${test.parent.id}/${test.urlName}/${s.url}`}

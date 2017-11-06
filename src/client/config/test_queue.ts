@@ -1,5 +1,5 @@
-import { TestGroup } from './test_data';
 import { TestRunner } from './test_runner';
+import { TestGroup } from '../models/test_group_model';
 
 function clearExtension(path: string) {
   return path.substring(0, path.lastIndexOf('.'));
@@ -15,25 +15,29 @@ export class TestQueue {
   canAddTest = true;
   hmrQueue: string[] = [];
 
+  testIndex = 0;
+
   constructor(testRunner: TestRunner) {
     this.testRunner = testRunner;
 
-    FuseBox.on("before-import", (_exports: any, _require: any, _module: any, filename: string) => {                
-      let file = clearExtension(filename);
-      if (this.hmrQueue.indexOf(file) >= 0) {
-        // console.log('Allowing to add test for: ' + file);
-        this.canAddTest = true;
-      }
-    });
-    
-    FuseBox.on("after-import", (_exports: any, _require: any, _module: any, filename: string) => {                
-      let file = clearExtension(filename);
-      if (this.hmrQueue.indexOf(file) >= 0) {
-        this.hmrQueue.splice(this.hmrQueue.indexOf(file), 1);
-        // console.log('Removing access for: ' + file);
-        this.canAddTest = false;
-      }
-    });
+    if (typeof FuseBox !== 'undefined') {
+      FuseBox.on("before-import", (_exports: any, _require: any, _module: any, filename: string) => {                
+        let file = clearExtension(filename);
+        if (this.hmrQueue.indexOf(file) >= 0) {
+          // console.log('Allowing to add test for: ' + file);
+          this.canAddTest = true;
+        }
+      });
+      
+      FuseBox.on("after-import", (_exports: any, _require: any, _module: any, filename: string) => {                
+        let file = clearExtension(filename);
+        if (this.hmrQueue.indexOf(file) >= 0) {
+          this.hmrQueue.splice(this.hmrQueue.indexOf(file), 1);
+          // console.log('Removing access for: ' + file);
+          this.canAddTest = false;
+        }
+      });
+    }
   }
   stop() {
     // console.log('Stopping queue');
@@ -70,7 +74,7 @@ export class TestQueue {
   }
 
 
-  hmr(name: string, content: string, dependants: any) {
+  hmr(name: string, _content: string, dependants: any) {
     // KNOWN ISSUE: If JSON and JS come in the same HMR batch 
     //   and js is loaded after json, not all tests will be run
     //   should not happen very often though

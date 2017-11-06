@@ -1,14 +1,13 @@
 import * as React from 'react';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import { Accordion, Icon } from 'semantic-ui-react';
 import { style } from 'typestyle';
 
-import { ITheme } from '../config/themes';
-import { TestGroup } from '../config/test_data';
 import { TestView } from './test_view';
 import { timing } from './component_styles';
+import { TestGroup } from '../models/test_group_model';
 
-const pane = (theme: ITheme) =>
+const pane = () =>
   style({
     $nest: {
       '& .title': {
@@ -23,7 +22,7 @@ const content = style({
 });
 
 export type Props = {
-  state?: Luis.State;
+  state: Luis.State;
   group?: TestGroup;
 };
 
@@ -53,7 +52,10 @@ export class TestGroupView extends React.Component<Props> {
           <Icon name="dropdown" />
           {group.constructor.name == 'Story' ? (
             <span>
-              <a href={`/stories/${group.id}`} onClick={e => state.viewState.openStoryFromList(e, group.id)}>
+              <a
+                href={`/stories/${group.id}`}
+                onClick={e => state.viewState.openStoryFromList(e, group.id)}
+              >
                 {name}
               </a>
             </span>
@@ -64,8 +66,9 @@ export class TestGroupView extends React.Component<Props> {
           <div className={timing(group.color)}>{group.duration.toString()}ms</div>
         </Accordion.Title>
         <Accordion.Content active={state.isExpanded(group).get()} className={content}>
-          {!isList && group.groups.map((g, i) => <TestGroupView state={state} group={g} key={g.fileName} />)}
-          {group.tests.map((t, i) => <TestView state={state} test={t} key={t.name} />)}
+          {!isList &&
+            group.groups.map((g) => <TestGroupView state={state} group={g} key={g.fileName} />)}
+          {group.tests.map((t) => <TestView state={state} test={t} key={t.name} />)}
         </Accordion.Content>
       </div>
     );
@@ -74,19 +77,18 @@ export class TestGroupView extends React.Component<Props> {
 
 // {this.props.state.liveRoot.groups.map((g, i) => <TestGroupView key={i} group={g} />)}
 
-export const StoryList = inject('state')(
-  observer<Props>(({ state }) => {
-    const version = state.liveRoot.version;
-    const isList = state.config.storyView === 'list';
-
-    return (
-      <Accordion className={pane(state.theme)}>
-        {isList ? (
-          state.liveRoot.nestedGroupsWithTests.map((g, i) => <TestGroupView state={state} group={g} key={g.fileName} />)
-        ) : (
-          state.liveRoot.groups.map((g, i) => <TestGroupView state={state} group={g} key={g.fileName} />)
-        )}
-      </Accordion>
-    );
-  })
-);
+export const StoryList = observer(({ state }: Props) => {
+  const isList = state.config.storyView === 'list';
+  let version = state.liveRoot.version;
+  return (
+    <Accordion className={pane()}>
+      {isList
+        ? state.liveRoot.nestedGroupsWithTests.map((g) => (
+            <TestGroupView state={state} group={g} key={g.fileName + version } />
+          ))
+        : state.liveRoot.groups.map((g) => (
+            <TestGroupView state={state} group={g} key={g.fileName + version} />
+          ))}
+    </Accordion>
+  );
+});

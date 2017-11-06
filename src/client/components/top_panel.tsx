@@ -3,18 +3,25 @@ import { Menu, Icon, Loader, Dropdown, Popup } from 'semantic-ui-react';
 import { inject, observer } from 'mobx-react';
 import { style } from 'typestyle';
 import { observable } from 'mobx';
-import { Test } from '../config/test_data';
 import { ErrorView } from './test_view';
+import { Test } from '../models/test_model';
+
+const image = process.env.NODE_ENV == 'test' ? 'react.png' : require("./react.png");
 
 export type Props = {
-  state?: Luis.State;
+  state: Luis.State;
 };
 
 const noMargin = style({
   marginBottom: '0px!important'
 });
 
-@inject('state')
+const menuImage = style({
+  width: '18px!important',
+  height: '18px',
+  margin: '-2px 6px -2px 0px!important'
+});
+
 @observer
 export class TopPanel extends React.Component<Props> {
   @observable updating = false;
@@ -28,11 +35,16 @@ export class TopPanel extends React.Component<Props> {
     //   await fetch(`/tests?name=${story.name.replace(/\s/g, '')}&extraParams=${this.props.state.renderOptions.extraUpdateProps}`);
     //   this.updating = false;
     // }
-    if (this.props.state.viewState.selectedStory) {
-      this.props.state.updatingSnapshots = true;
-      this.props.state.testQueue.canAddTest = true;
-      this.props.state.testQueue.add(this.props.state.viewState.selectedStory);
-    }
+
+    // we need to do this asynchronously to get around batched updates of React fibers
+    setTimeout(() => {
+      if (this.props.state.viewState.selectedStory) {
+        this.props.state.updatingSnapshots = true;
+        this.props.state.testQueue.canAddTest = true;
+        this.props.state.testQueue.add(this.props.state.viewState.selectedStory);
+      }
+    }, 10);
+    
   };
 
   render() {
@@ -41,37 +53,40 @@ export class TopPanel extends React.Component<Props> {
 
     return (
       <Menu pointing secondary inverted color="blue" className={noMargin}>
-        <Menu.Item>
+        <Menu.Item title={`${story.passingTests} / ${story.passingTests + story.failingTests} test(s) are passing.`}>
           <Icon name="check" color="green" />
           <div className="lbl">{story.passingTests}</div>
         </Menu.Item>
-        <Menu.Item>
+        <Menu.Item title={`${story.failingTests} / ${story.passingTests + story.failingTests} test(s) are failing.`}>
           <Icon name="remove" color="red" />
           <div className="lbl">{story.failingTests}</div>
         </Menu.Item>
-        <Menu.Item data-name="react" content="React" icon="cube" active={view === 'react'} onClick={this.handleItemClick} />
-        <Menu.Item data-name="html" content="Html" active={view === 'html'} icon="html5" onClick={this.handleItemClick} />
-        <Menu.Item data-name="json" content="Json" active={view === 'json'} icon="code" onClick={this.handleItemClick} />
+        <Menu.Item data-name="react" active={view === 'react'} onClick={this.handleItemClick} title="View of the React component">
+          <img src={image} className={menuImage} /> React1
+        </Menu.Item>
+        <Menu.Item data-name="html" content="Html" active={view === 'html'} icon="html5" onClick={this.handleItemClick} title="View currently selected snapshot and visualise possible differences with stored snapshot" />
+        <Menu.Item data-name="json" content="Json" active={view === 'json'} icon="code" onClick={this.handleItemClick} title="View the source currently selected snapshot and visualise possible differences with stored snapshot" />
         <Menu.Item
-          data-name="snapshots"
           active={view === 'snapshots'}
-          icon="image"
           onClick={this.handleItemClick}
-        />
+          title="View all snapshots of a currently selected test or story"
+        ><Icon name="image" /></Menu.Item>
         <Menu.Menu position="right">
           {this.updating ? (
-            <Menu.Item>
+            <Menu.Item title="Update test snapshots to reflect current changes and save snapshots on server.">
               <Loader active inline size="mini" />
             </Menu.Item>
           ) : (
-            <Menu.Item onClick={this.updateClick} icon="refresh" />
+            <Menu.Item onClick={this.updateClick}>
+              <Icon name="refresh" />
+            </Menu.Item>
           )}
           <Menu.Item
+            title="Auto-update test snapshots with each hot reload to reflect current changes and save snapshots on server."
             active={this.props.state.autoUpdateSnapshots}
-            onClick={() => (this.props.state.autoUpdateSnapshots = !this.props.state.autoUpdateSnapshots)}
-            icon="lock"
-            title="Auto Update Snapshots"
-          />
+            onClick={() => (this.props.state.autoUpdateSnapshots = !this.props.state.autoUpdateSnapshots)}>
+           <Icon name="lock" />
+          </Menu.Item>
         </Menu.Menu>
       </Menu>
     );
@@ -95,7 +110,6 @@ export class TopPanelSingle extends React.Component<Props> {
 
   render() {
     const view = this.props.state.viewState.snapshotView;
-    const story = this.props.state.viewState.selectedStory || { passingTests: 0, failingTests: 0 };
     const test: Test = this.props.state.viewState.selectedTest;
     const viewState = this.props.state.viewState;
 

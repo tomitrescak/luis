@@ -1,7 +1,9 @@
 import { config } from 'chai-match-snapshot';
-import { TestGroup, Test, Snapshot } from './test_data';
-import { initState } from './state';
 import { updateStoredSnapshot } from './snapshot_loader';
+import { Test } from '../models/test_model';
+import { TestGroup } from '../models/test_group_model';
+import { initState } from '../models/state_model';
+import { Snapshot } from '../models/snapshot_model';
 
 export function logError(message: string, ...props: string[]) {
   if (localStorage.getItem('luisLog') == null) {
@@ -36,12 +38,10 @@ function consoleGroupEnd() {
 let currentTest: Test;
 
 export class TestRunner {
-  private startTime: number;
 
   state: Luis.State;
 
   constructor(state: Luis.State) {
-    this.startTime = new Date().getTime();
     this.state = state;
   }
 
@@ -58,9 +58,6 @@ export class TestRunner {
     if (this.state.config.isDisabled(group)) {
       return true;
     }
-
-    group.reset();
-    group.startTime = new Date().getTime();
 
     consoleGroup(group.path);
     let result = true;
@@ -85,8 +82,6 @@ export class TestRunner {
       group.after();
     }
 
-    group.endTime = new Date().getTime();
-
     // calculate passing and failing
     group.passingTests = group.countTests(true);
     group.failingTests = group.countTests(false);
@@ -106,7 +101,6 @@ export class TestRunner {
     }
 
     const group = test.parent as TestGroup;
-    test.reset();
     test.startTime = new Date().getTime();
     test.endTime = 0;
     test.snapshots.clear();
@@ -120,7 +114,9 @@ export class TestRunner {
 
       config.currentTask = {
         title: test.name,
-        className: group.fileName
+        className: group.fileName,
+        cssClassName: null,
+        decorator: null
       };
 
       await test.impl.call(null);
@@ -200,7 +196,7 @@ function updateSnapshot(updateGroup: TestGroup) {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
-      }
+      } as any
     }).catch(e => alert(e));
   }
 
@@ -213,7 +209,7 @@ function updateSnapshot(updateGroup: TestGroup) {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json'
-    }
+    } as any
   }).catch(e => alert(e));
 
   state.updatingSnapshots = false;

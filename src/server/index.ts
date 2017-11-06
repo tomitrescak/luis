@@ -33,7 +33,7 @@ export function start({ luisPath = `public/`, serverConfig = [] }: Config = {}) 
     }
 
     app.use(express.static(path.resolve(luisPath), { index: false }));
-    app.use((req: any, res: any) => res.sendFile(`${path.resolve(luisPath)}/luis.html`));
+    app.use((_req: any, res: any) => res.sendFile(`${path.resolve(luisPath)}/luis.html`));
 
     app.listen(9001, function() {
       console.log('LUIS is listening to you on port 9001!');

@@ -63,6 +63,30 @@ export const diff = style({
   }
 });
 
+export const content = style({
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  fontFamily: 'Lato'
+});
+
+export const full = style({
+  width: '100%',
+  height: '100%'
+});
+
+export const pane = style({
+  padding: '6px',
+  position: 'absolute',
+  overflow: 'auto',
+  top: 42,
+  bottom: 0,
+  left: 0,
+  right: 0
+});
+
 export const timing = (color: string) =>
   style({
     float: 'right',

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
-import { Modal, Button, Form, Divider, Menu, Icon, Header } from 'semantic-ui-react';
+import { Button, Form, Divider, Header } from 'semantic-ui-react';
 
 export interface ModalProps {
   state?: Luis.State;
 }
 
-export const StoryConfig = inject<ModalProps>('state')(
+export const StoryConfig = inject('state')(
   observer(({ state }: ModalProps) => (
     <div style={{ padding: '12px'}}>
       <Header icon="cogs" content="Options" dividing />

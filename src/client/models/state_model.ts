@@ -1,16 +1,16 @@
 import { observable, action, IObservableValue } from 'mobx';
 
 import { lightTheme, ITheme } from '../config/themes';
-
-import { TestGroup, TestItem } from './test_data';
-import { TestQueue } from './test_queue';
-import { TestRunner } from './test_runner';
-
-import { ViewState } from './state_view';
-import { setupRouter } from './router';
-import { setupHmr } from './setup';
-import { AppConfig } from './app_config';
-import { loadSnapshots } from './snapshot_loader';
+import { setupHmr } from '../config/setup';
+import { TestGroup } from './test_group_model';
+import { ViewState } from './state_view_model';
+import { TestQueue } from '../config/test_queue';
+import { TestRunner } from '../config/test_runner';
+import { AppConfig } from '../config/app_config';
+import { loadSnapshots } from '../config/snapshot_loader';
+import { setupRouter } from '../config/router';
+import { TestItem } from './test_item_model';
+import { Story } from './story_model';
 
 setupHmr();
 
@@ -37,6 +37,8 @@ export type RenderOptions = {
   updateUrl?: string;
 };
 
+let id = 0;
+
 export class StateModel {
   @observable theme: ITheme = lightTheme;
   @observable autoUpdateSnapshots = false;
@@ -60,8 +62,10 @@ export class StateModel {
   renderOptions: RenderOptions;
 
   config: AppConfig;
+  uid: number;
 
   constructor(testRunner: TestRunner = null) {
+    this.uid = id++;
     // load snapshots
     loadSnapshots();
 
@@ -86,6 +90,10 @@ export class StateModel {
     return this.liveRoot.findGroup(g => g.id === id);
   }
 
+  createStory(name: string, props: StoryConfig) {
+    return new Story(this.currentGroup, name, props)
+  }
+
   @action
   performReconciliation() {
     // copy values so that we remember
@@ -98,8 +106,7 @@ export class StateModel {
       g.parent = this.liveRoot;
     });
 
-    // start tests
-    this.testQueue.start();
+    
 
     // clear updates
     this.updateRoot.groups = [];
@@ -117,11 +124,12 @@ export class StateModel {
     this.liveRoot.version++;
     this.viewState.openAfterTest();
     this.config.loadTests();
+
+    // start tests asynchronously
+    setTimeout(() => this.testQueue.start(), 10);
   }
 
   @action copyValues(from: TestGroup, to: TestGroup) {
-    to.startTime = from.startTime;
-    to.endTime = from.endTime;
     to.passingTests = from.passingTests;
     to.failingTests = from.failingTests;
     

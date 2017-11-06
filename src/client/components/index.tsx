@@ -4,12 +4,12 @@ import { Provider } from 'mobx-react';
 import { setupLuis } from 'wafl';
 
 import { Layout } from './layout';
-import { initState, RenderOptions } from '../config/state';
 import { setupTestBridge, bdd } from '../config/bridge';
+import { initState, RenderOptions } from '../models/state_model';
 
 const state = initState();
 
-setupLuis();
+setupLuis({});
 setupTestBridge(state, bdd);
 
 export function renderLuis(options: RenderOptions = {}) {

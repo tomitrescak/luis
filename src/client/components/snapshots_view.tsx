@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
-import { Header, Segment, List, Message, Label } from 'semantic-ui-react';
+import { List, Label } from 'semantic-ui-react';
 import { style } from 'typestyle';
-import { Snapshot } from '../config/test_data';
+import { Snapshot } from '../models/snapshot_model';
 
 export type Props = {
   state: Luis.State;

@@ -1,5 +1,6 @@
-import { TestGroup, Test } from '../client/config/test_data';
 import { TestRunner } from '../client/config/test_runner';
+import { TestGroup } from '../client/models/test_group_model';
+import { Test } from '../client/models/test_model';
 
 describe('Test', function() {
   let testRunner: TestRunner;
@@ -17,9 +18,8 @@ describe('Test', function() {
     const result = await testRunner.testGroup(group);
     result.should.be.false;
 
-    group.startTime.should.be.greaterThan(0);
-    group.endTime.should.be.greaterThan(0);
-    group.duration.should.equal(group.endTime - group.startTime);
+
+    group.duration.should.equal(test1.duration + test2.duration);
     
     test1.startTime.should.be.greaterThan(0);
     test1.endTime.should.be.greaterThan(0);

@@ -4,12 +4,13 @@ const jsxTransform = require('jsx-controls-loader').loader;
 module.exports = function(wallaby) {
   return {
     files: [
-      'src/example/client/**/*.ts*',
-      'src/example/**/*.ts*',
+      'src/client/**/*.ts*',
+      '!src/client/**/*.png',
+      'src/**/*.ts*',
       '!src/**/*.d.ts*',
-      '!src/example/**/*.test.tsx'
+      '!src/**/*.test.tsx'
     ],
-    tests: ['src/example/**/*.test.tsx', 'src/example/**/*.test.ts', 'src/**/snapshots/*.json'],
+    tests: ['src/client/**/*.test.tsx', 'src/client/**/*.test.ts', 'src/**/snapshots/*.json'],
     filesWithNoCoverageCalculated: ['src/**/*mocha*.ts', 'src/**/*wallaby*.ts', 'src/**/test_*.ts'],
     compilers: {
       '**/*.ts?(x)': wallaby.compilers.typeScript({ jsx: 'react', module: 'commonjs' })
@@ -20,8 +21,13 @@ module.exports = function(wallaby) {
     env: {
       type: 'node'
     },
+    hints: {
+      ignoreCoverage: /ignore coverage/ // or /istanbul ignore next/, or any RegExp
+    },
     testFramework: 'mocha',
     setup: function(wallaby) {
+      process.env.NODE_ENV = 'test';
+      
       const path = require('path');
       const snapshotDir = path.join(wallaby.localProjectDir, 'src', 'tests', 'snapshots');
 

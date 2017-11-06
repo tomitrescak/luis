@@ -1,5 +1,5 @@
 import { config } from 'chai-match-snapshot';
-import { TestGroup } from './test_data';
+import { TestGroup } from '../models/test_group_model';
 
 const snapshots: { [index: string]: object } = {};
 
@@ -15,7 +15,7 @@ export function loadSnapshots() {
       name = name.replace('_snapshots.json', '');
       snapshots[name] = snapshotsRaw[key];
     }
-    config.snapshotLoader = (name: string, className: string) => {
+    config.snapshotLoader = (_name: string, className: string) => {
       return snapshots[className];
     };
   }

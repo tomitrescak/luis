@@ -1,13 +1,7 @@
 import * as React from 'react';
 
-import { style } from 'typestyle';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { mount } from 'enzyme';
-
-const s = style({
-  color: 'blue'
-});
 
 class State {
   @observable number = 1;
@@ -36,56 +30,48 @@ class Component extends React.Component<Props, State> {
 
 describe('Boo', () => {
   storyOf(
-    'Bar View',
+    'Boo View',
     {
-      get state() {
-        return new State();
-      },
-      get component() {
-        return <Component state={this.state} />;
-      },
-      get component2() {
-        return (
-          <div>
-            <div>Moo rrr we weweee wewe ioio ioi</div>
-          </div>
-        );
-      },
-      cssClassName: 'm12',
-      info: 'Foo Info 567'
+      componentWithData() {
+        console.log('Creating state and component ...');
+        const state = new State();
+        return {
+          state,
+          component: <Component state={state} />
+        };
+      }
     },
     data => {
       itMountsAnd(
         'renders correctly',
-        () => data.component,
-        wrapper => {
-          const state = data.state;
-          const m = mount(<Component state={state} />);
+        () => data.componentWithData(),
+        ({ wrapper, state }) => {
           state.number = 9;
-          m.find('button').simulate('click');
-          m.render();
-          console.log(m.html());
+          wrapper.should.matchSnapshot('changed to 9');
+          //state.number = 10;
+          wrapper.find('button').simulate('click');
+          // wrapper.find('button').simulate('click');
+          state.number = 10;
+          wrapper.should.matchSnapshot('changed to 10');
 
-          wrapper.should.matchSnapshot('rendered');
-          wrapper.prop<State>('state').number = 7;
-          console.log(wrapper.html());
-          // wrapper.update();
-          wrapper.should.matchSnapshot('mobx fired back');
+          // //state.number = 7;
+          // wrapper.should.matchSnapshot('changed to 7');
         }
       );
 
-      itMountsAnd(
-        'renders chain correctly',
-        () => data.component,
-        wrapper => {
-          wrapper.should.matchSnapshot('initial render');
-          wrapper.find('button').simulate('click');
-          wrapper.should.matchSnapshot('change value');
-          wrapper.find('button').simulate('click');
-          wrapper.should.matchSnapshot('change again');
-          wrapper.find('button').simulate('click');
-        }
-      );
+      //   itMountsAnd(
+      //     'renders chain correctly',
+      //     () => data.componentWithData(),
+      //     ({wrapper}) => {
+      //       wrapper.should.matchSnapshot('initial render');
+      //       wrapper.find('button').simulate('click');
+      //       wrapper.should.matchSnapshot('change value');
+      //       wrapper.find('button').simulate('click');
+      //       wrapper.should.matchSnapshot('change again');
+      //       wrapper.find('button').simulate('click');
+      //     }
+      //   );
+      // }
     }
   );
 });

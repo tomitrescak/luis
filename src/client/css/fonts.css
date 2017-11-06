@@ -1,0 +1,11 @@
+@font-face {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    src: url(Lato_400_normal.eot); /* {{embedded-opentype-gf-url}} */
+    src: local('☺'),
+        url(Lato_400_normal.eot?#iefix) format('embedded-opentype'), /* {{embedded-opentype-gf-url}} */
+        url(Lato_400_normal.woff) format('woff'), /* http://fonts.gstatic.com/s/lato/v14/9k-RPmcnxYEPm8CNFsH2gg.woff */
+        url(Lato_400_normal.ttf) format('truetype'), /* http://fonts.gstatic.com/s/lato/v14/1EqTbJWOZQBfhZ0e3RL9uvesZW2xOQ-xsNqO47m55DA.ttf */
+        url(Lato_400_normal.svg#Lato_400_normal) format('svg'); /* http://fonts.gstatic.com/l/font?kit=hLECvlEj3pKlnS4NFs8NQw&skey=2d58b92a99e1c086&v=v14#Lato */
+}

@@ -34,9 +34,9 @@ export const SnapshotHtml = inject('state')(observer(({ state }: PreviewProps) =
       { snapshot &&
         <div className={story.cssClassName}>
           { snapshot.expected !== snapshot.current
-            ? <div className={resultsHTML}>
-                <div className={resultHTML} dangerouslySetInnerHTML={{ __html: snapshot.current }} />
-                <div className={resultHTML} dangerouslySetInnerHTML={{ __html: snapshot.expected }} />
+            ? <div className={resultsHTML + ' bothView'}>
+                <div className={resultHTML + ' leftView'} dangerouslySetInnerHTML={{ __html: snapshot.current }} />
+                <div className={resultHTML + ' rightView'} dangerouslySetInnerHTML={{ __html: snapshot.expected }} />
               </div>
             : <div dangerouslySetInnerHTML={{ __html: snapshot.current }} />
           }

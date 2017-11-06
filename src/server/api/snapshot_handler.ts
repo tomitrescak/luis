@@ -1,10 +1,9 @@
-import * as url from 'url';
 import * as path from 'path';
 import * as fs from 'fs';
 
 const snapshotPath = path.resolve('./src/tests/snapshots');
 
-export function handler(request: any, response: any, next: any) {
+export function handler(request: any, response: any) {
   const body = request.body;
 
   const mocha = body.mocha;
@@ -17,7 +16,7 @@ export function handler(request: any, response: any, next: any) {
     console.log(`Updating snapshots of "${snapshotName}" with mocha`);
     console.log(command);
     try {
-      const code = execSync(command);
+      execSync(command);
     } catch (ex) {}
   } else {
     const name = body.name;

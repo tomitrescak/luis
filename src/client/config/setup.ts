@@ -1,4 +1,4 @@
-import { initState } from './state';
+import { initState } from '../models/state_model';
 
 type NameTest = (moduleName: string) => boolean;
 /** Current names of stateful modules */

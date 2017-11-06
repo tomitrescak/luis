@@ -1,4 +1,5 @@
-import { Test, Impl } from './test_data';
+import { Impl } from '../models/test_item_model';
+import { Test } from '../models/test_model';
 
 export interface BridgeInterface {
   describe: string;
@@ -28,21 +29,7 @@ export const bdd: BridgeInterface = {
   afterEach: 'afterEach'
 };
 
-export const test: BridgeInterface = {
-  describe: 'describeTest',
-  xdescribe: 'xdescribeTest',
-  it: 'itTest',
-  xit: 'xitTest',
-  storyOf: 'storyOfTest',
-  before: 'beforeTest',
-  beforeAll: 'beforeAllTest',
-  beforeEach: 'beforeEachTest',
-  after: 'afterTest',
-  afterAll: 'afterAllTest',
-  afterEach: 'afterEachTest'
-};
-
-export function setupTestBridge(state: Luis.State, bridgeInterface: BridgeInterface = test, startImmediately = true) {
+export function setupTestBridge(state: Luis.State, bridgeInterface: BridgeInterface = bdd) {
   const glob = global;
 
 
@@ -86,9 +73,9 @@ export function setupTestBridge(state: Luis.State, bridgeInterface: BridgeInterf
     state.reconciliate();
   };
 
-  glob[bridgeInterface.xit] = function(name: string, impl: Impl) {};
+  glob[bridgeInterface.xit] = function() {};
 
-  glob[bridgeInterface.xdescribe] = function(name: string, impl: Impl) {};
+  glob[bridgeInterface.xdescribe] = function() {};
 
   glob[bridgeInterface.it] = function(name: string, impl: Impl) {
     if (state.currentGroup.tests.every(t => t.name !== name)) {

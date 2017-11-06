@@ -4,17 +4,25 @@ const {
   JSONPlugin,
   CSSPlugin,
   CSSResourcePlugin,
+  ImageBase64Plugin,
   EnvPlugin,
   WebIndexPlugin,
   UglifyJSPlugin,
   QuantumPlugin
 } = require('fuse-box');
+const StubPlugin = require('proxyrequire').FuseBoxStubPlugin(/\.tsx?/);
 
 // const StubPlugin = require('proxyrequire').FuseBoxStubPlugin(/\.tsx?/);
 // const JsxControlsPugin = require('jsx-controls-loader').fuseBoxPlugin;
 
+let serverRunning = false;
 
 function runServer() {
+  if (serverRunning) {
+    return;
+  }
+  serverRunning = true;
+
   const serverFuse = FuseBox.init({
     homeDir: 'src',
     output: 'public/$name.js'
@@ -36,18 +44,19 @@ Sparky.task('luis', () => {
     homeDir: 'src',
     output: 'public/$name.js',
     plugins: [
+      StubPlugin,
+      ImageBase64Plugin(),
       JSONPlugin(),
+      EnvPlugin({ NODE_ENV: 'test' }),
       CSSPlugin({
         group: 'luis.css',
-        outFile: `public/styles/luis.css`,
+        outFile: `public/styles/bundle.css`,
         inject: false
       }),
       WebIndexPlugin({ template: 'src/client/luis.html', target: 'luis.html' }),
     ],
     shim: {
-      crypto: {
-        exports: '{ randomBytes: () => crypto.getRandomValues(new global.Uint16Array(1))[0] }'
-      },
+      
       stream: {
         exports: '{ Writable: function() {}, Readable: function() {}, Transform: function() {} }'
       }
@@ -65,9 +74,10 @@ Sparky.task('luis', () => {
     //.watch()
     // first bundle will get HMR related code injected
     // it will notify as well
+    .sourceMaps(true)
     .hmr()
     .target('browser')
-    .instructions(' ~ example/luis.ts'); // nothing has changed here
+    .instructions(' ~ client/luis.ts'); // nothing has changed here
 
   luisFuse
     .bundle('luis-client')
@@ -75,7 +85,10 @@ Sparky.task('luis', () => {
     .hmr()
     .target('browser')
     .sourceMaps(true)
-    .instructions(' !> [example/luis.ts] + **/**.json + **/**.test.tsx')
+    .instructions(' !> [client/luis.ts] + **/**.json')
+    .globals({
+      proxyrequire: '*'
+    })
     .completed(() => runServer());
     
   luisFuse.run();

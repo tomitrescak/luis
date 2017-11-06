@@ -1,1 +1,50 @@
-.f1mb383g{color:blue}
+#fuse-box-output, #fuse-box-output * { box-sizing: border-box; }
+#fuse-box-output { z-index: 2147483647; position: fixed; top: 10px; right: 10px; width: 400px; overflow: auto; background: rgb(253, 243, 241); border: 1px solid rgb(236, 164, 148); border-radius: 5px; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 6px 1px; }
+#fuse-box-output.fuse-box-expanded-output { height: auto; width: auto; left: 10px; max-height: calc(100vh - 50px); }
+#fuse-box-output .fuse-box-errors { display: none; }
+#fuse-box-output.fuse-box-expanded-output .fuse-box-errors { display: block; border-top: 1px solid rgb(236, 164, 148); padding: 0px 10px; }
+#fuse-box-output button { border: 1px solid rgb(236, 164, 148); padding: 5px 10px; border-radius: 4px; margin-left: 5px; background-color: white; color: black; box-shadow: rgba(0, 0, 0, 0.05) 0px 2px 2px 0px; }
+#fuse-box-output .fuse-box-header { padding: 10px; }
+#fuse-box-output .fuse-box-header h4 { display: inline-block; margin: 4px; }
+.fsb16uc table { background: white; color: black; width: 100%; }
+.fsb16uc .diff { border-collapse: collapse; white-space: pre-wrap; }
+.fsb16uc .diff tbody { font-family: Courier, monospace; font-size: 11px; }
+.fsb16uc .diff tbody th { background: rgb(238, 238, 221); border: 1px solid rgb(187, 187, 204); color: rgb(136, 136, 102); font-size: 11px; font-weight: normal; padding: 0.1em 0.4em; text-align: right; vertical-align: top; width: 30px; }
+.fsb16uc .diff thead { background: rgb(239, 239, 239); border-bottom: 1px solid rgb(187, 187, 204); }
+.fsb16uc .diff thead th.texttitle { font-size: 11px; text-align: left; }
+.fsb16uc .diff tbody td { padding-left: 0.4em; vertical-align: top; }
+.fsb16uc .diff .empty { background-color: rgb(221, 221, 221); }
+.fsb16uc .diff .replace { background-color: rgb(255, 221, 136); }
+.fsb16uc .diff .delete { background-color: rgb(238, 153, 153); }
+.fsb16uc .diff .skip { background-color: rgb(239, 239, 239); border-width: 1px; border-style: solid; border-color: rgb(170, 170, 170) rgb(187, 187, 204) rgb(170, 170, 170) rgb(170, 170, 170); border-image: initial; }
+.fsb16uc .diff .insert { background-color: rgb(153, 238, 153); }
+.fsb16uc .diff th.author { background: rgb(239, 239, 239); text-align: right; }
+.f1jaz1f5 { bottom: 0px; font-family: Lato; left: 0px; position: absolute; right: 0px; top: 0px; }
+.fk87jrb { height: 100%; width: 100%; }
+.f18j17qk { bottom: 0px; left: 0px; overflow: auto; padding: 6px; position: absolute; right: 0px; top: 42px; }
+.fgi9gf2 { font-size: 11px; padding: 3px 6px !important; }
+.f1ndebgx { padding: 0px !important; }
+.f1fg0msu { font-size: 12px !important; margin-top: 0px !important; }
+.f2oiu1u { color: white !important; }
+.fqy2xzz { margin-bottom: 6px; margin-top: -1px; padding: 0px !important; }
+.f1fydz8d { padding-left: 12px !important; padding-top: 0px !important; }
+.f1ujhx0c { margin-bottom: 0px !important; }
+.f1eyelge { height: 18px; margin: -2px 6px -2px 0px !important; width: 18px !important; }
+.f18zp93c { display: table; width: 100%; }
+.fyeoduf { display: table-cell; width: 50%; }
+.f1q3211y .vs .lineHighlight { background: lightblue; }
+.f1q3211y .vs-dark .lineHighlight { background: darkblue; }
+.f1hteiwq { background: rgb(232, 232, 232); border-radius: 6px; text-align: center; margin-bottom: 6px !important; margin-top: 6px !important; }
+.fiyeusl .m12 { margin: 12px !important; }
+.fiyeusl .m6 { margin: 6px !important; }
+.fxj8es9 { background: white; color: black !important; }
+.fxj8es9 .Resizer { background: padding-box rgb(0, 0, 0); box-sizing: border-box; opacity: 0.2; z-index: 1; }
+.fxj8es9 .Resizer:hover { transition: all 2s ease; }
+.fxj8es9 .Resizer.horizontal { border-bottom: 5px solid rgba(255, 255, 255, 0); border-top: 6px solid rgba(255, 255, 255, 0); cursor: row-resize; height: 11px; margin: -5px 0px; width: 100%; }
+.fxj8es9 .Resizer.horizontal:hover { border-bottom: 5px solid rgba(0, 0, 0, 0.5); border-top: 5px solid rgba(0, 0, 0, 0.5); }
+.fxj8es9 .Resizer.vertical { border-left: 5px solid rgba(255, 255, 255, 0); border-right: 5px solid rgba(255, 255, 255, 0); cursor: col-resize; margin: 0px -5px; width: 11px; }
+.fxj8es9 .Resizer.vertical:hover { border-left: 5px solid rgba(0, 0, 0, 0.5); border-right: 5px solid rgba(0, 0, 0, 0.5); }
+.fxj8es9 .SplitPane.horizontal { position: inherit !important; }
+.f16u1bay .title { padding: 3px !important; }
+.f1no2g37 { color: red; float: right; font-size: 10px; }
+.f11w6lvf { color: green; float: right; font-size: 10px; }
