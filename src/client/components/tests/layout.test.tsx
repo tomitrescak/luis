@@ -4,7 +4,7 @@ import { create } from './test_data';
 import { Layout, ComponentProps } from '../layout';
 
 import { proxy } from 'proxyrequire';
-
+import * as sinon from 'sinon';
 
 // create stub
 
@@ -14,26 +14,43 @@ const LayoutStubbed: typeof Layout = proxy(() => require('../layout'), {
   },
   './right_panel': {
     RightPanel: () => <div>[Right&nbsp;Panel]</div>
+  },
+  './bare_view': {
+    BareView: () => <div>[Bare&nbsp;View]</div>
   }
 }).Layout;
 
 // describe story
 
-    storyOf(
-      'Layout',
-      {
-        get component() {
-          return this.componentWithData().component;
-        },
-        componentWithData({}: Partial<ComponentProps> = {}) {
-          return {
-            component: <LayoutStubbed state={create.state} />
-          }
+storyOf(
+  'Layout',
+  {
+    get component() {
+      return this.componentWithData().component;
+    },
+    componentWithData({ state = create.state() }: Partial<ComponentProps> = {}) {
+      const localStorageStub = {
+        getItem() {
+          return '150px';
         }
-      },
-      data => {
-        itMountsAnd('renders correctly', () => data.componentWithData(), function({ wrapper }) {
-          wrapper.should.matchSnapshot();
-        })
-      }
-    );
+      } as any;
+      return {
+        localStorageStub,
+        component: <LayoutStubbed state={state} localStorage={localStorageStub} />
+      };
+    }
+  },
+  data => {
+    itMountsAnd('renders standard view', () => data.componentWithData(), function({
+      wrapper
+    }) {
+      wrapper.should.matchSnapshot();
+    });
+
+    itMountsAnd('renders bare view', () => data.componentWithData({ state: create.state(null, { bare: true }) }), function({
+      wrapper
+    }) {
+      wrapper.should.matchSnapshot();
+    });
+  }
+);

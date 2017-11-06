@@ -16,7 +16,7 @@ export function renderLuis(options: RenderOptions = {}) {
   state.renderOptions = options;
    ReactDOM.render(
     <Provider state={state}>
-      <Layout />
+      <Layout localStorage={localStorage} />
     </Provider>,
     document.querySelector(options.root || '#react-root')
   );

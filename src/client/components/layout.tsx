@@ -11,6 +11,7 @@ import { content } from './component_styles';
 
 //@ts-ignore
 import { StateModel } from '../config/state';
+import { BareView } from './bare_view';
 
 const split = (theme: ITheme) =>
   style({
@@ -69,14 +70,15 @@ const styles = style({
 
 export type ComponentProps = {
   state?: Luis.State;
+  localStorage: Storage;
 };
 
 export const Layout = inject('state')(
-  observer(({ state }: ComponentProps) => {    
+  observer(({ state, localStorage }: ComponentProps) => {    
     if (state.viewState.bare) {
       return (
         <div className={styles}>
-          
+          <BareView state={state} />
         </div>
       );
     }

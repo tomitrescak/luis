@@ -9,9 +9,9 @@ import { SnapshotsView } from './snapshots_view';
 import { StoryConfig } from './story_config';
 
 //@ts-ignore
-import { Story } from '../config/test_data';
+import { Story } from '../models/story_model';
 //@ts-ignore
-import { StateModel } from '../config/state';
+import { StateModel } from '../models/state_model';
 
 type ComponentProps = {
   state?: Luis.State;
@@ -27,7 +27,7 @@ export const StoryView = observer(({ state }: ComponentProps) => (
       </div>
     )}
     {state.viewState.snapshotView === 'html' && (
-      <div className={pane}>
+      <div>
         <SnapshotHtml state={state} />
       </div>
     )}
