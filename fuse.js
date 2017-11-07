@@ -50,7 +50,7 @@ Sparky.task('luis', () => {
       EnvPlugin({ NODE_ENV: 'test' }),
       CSSPlugin({
         group: 'luis.css',
-        outFile: `public/styles/bundle.css`,
+        outFile: `public/styles/luis.css`,
         inject: false
       }),
       WebIndexPlugin({ template: 'src/client/luis.html', target: 'luis.html' }),

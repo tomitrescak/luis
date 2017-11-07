@@ -25,7 +25,7 @@ export class SnapshotsView extends React.Component<Props> {
     this.props.state.viewState.bare
       ? this.props.state.viewState.openSingleStory(parts[0], parts[1], parts[2])
       : this.props.state.viewState.openStory(parts[0], parts[1], parts[2]);
-      this.props.state.viewState.snapshotView = 'html';
+    this.props.state.viewState.snapshotView = 'html';
   };
 
   render() {
@@ -49,9 +49,6 @@ export class SnapshotsView extends React.Component<Props> {
         {list.map((s, i) => (
           <List.Item key={s.name + i}>
             <List.Content>
-              <List.Description>
-                <div dangerouslySetInnerHTML={{ __html: s.current }} />
-              </List.Description>
               <List.Header className={margined}>
                 <Label
                   as="a"
@@ -62,6 +59,9 @@ export class SnapshotsView extends React.Component<Props> {
                   content={s.name}
                 />
               </List.Header>
+              <List.Description>
+                <div dangerouslySetInnerHTML={{ __html: s.current }} />
+              </List.Description>
             </List.Content>
           </List.Item>
         ))}

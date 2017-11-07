@@ -13,12 +13,12 @@ export type TestProps = {
   test: Test;
 };
 
-const errorMessage = style({
+export const errorMessage = style({
   padding: '3px 6px!important',
   fontSize: '11px'
 });
 
-const noPadding = style({
+export const noPadding = style({
   padding: '0px!important'
 });
 
@@ -39,9 +39,10 @@ const content = style({
 
 type ErrorViewProps = {
   test: Test;
+  single?: boolean;
 };
 
-export const ErrorView = ({ test }: ErrorViewProps) => {
+export const ErrorView = ({ test, single }: ErrorViewProps) => {
   const compareView =
     test.error &&
     test.error.message &&
@@ -50,7 +51,7 @@ export const ErrorView = ({ test }: ErrorViewProps) => {
 
   if (!compareView) {
     return (
-      <Segment attached="bottom" className={noPadding} inverted color="red">
+      <Segment attached={single ? undefined: "bottom"} className={noPadding} inverted color="red">
         <div className={errorMessage}>{test.error.message}</div>
       </Segment>
     );

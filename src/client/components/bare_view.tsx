@@ -5,7 +5,8 @@ import { TopPanelSingle } from './top_panel';
 import { StoryView } from './story_view';
 
 //@ts-ignore
-import { StateModel } from '../config/state';
+import { StateModel } from '../models/state_model';
+
 
 type ComponentProps = {
   state?: Luis.State;

@@ -95,8 +95,9 @@ export class TestRunner {
     // console.log('Executing: ' + test.name + '[' + test.uid + ']');
 
     // in single mode we only add current tests
+    // if we are updating snapshots we run all tests
     const state = this.state.viewState;
-    if (state.bare && state.selectedTest && state.selectedTest.name != test.name) {
+    if (!this.state.updatingSnapshots && state.bare && state.selectedTest && state.selectedTest.name != test.name) {
       return;
     }
 

@@ -8,11 +8,11 @@ const noMargin = style({
   marginBottom: '0px!important'
 });
 
-export type Props = {
+export type ComponentProps = {
   state: Luis.State;
 };
 
-export const SideBar = observer(({ state }: Props) => (
+export const LeftMenu = observer(({ state }: ComponentProps) => (
   <Menu pointing secondary inverted color="blue" className={noMargin}>
     <Menu.Item name="home">
       <Loader size="tiny" active={state.testQueue.running} />
@@ -25,10 +25,10 @@ export const SideBar = observer(({ state }: Props) => (
       <Icon name="remove" color="red" />
       <div className="lbl">{state.liveRoot.failingTests}</div>
     </Menu.Item>
-    <Menu.Item onClick={() => state.config.toggleStoryView()}>
+    <Menu.Item id="listView" onClick={() => state.config.toggleStoryView()}>
       <Icon name={state.config.storyView === 'list' ? 'content' : 'indent'} />
     </Menu.Item>
-    <Menu.Item onClick={() => (state.viewState.snapshotView = 'config')}>
+    <Menu.Item id="configView" onClick={() => (state.viewState.snapshotView = 'config')}>
       <Icon name="cogs" />
     </Menu.Item>
   </Menu>

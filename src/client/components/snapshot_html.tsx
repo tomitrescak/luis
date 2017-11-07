@@ -7,7 +7,7 @@ const frameHolder = style({
   position: 'absolute',
   left: '0px',
   right: '0px',
-  top: '45px',
+  top: '42px',
   bottom: '0px'
 });
 const leftFrame = style({ position: 'absolute', left: '0px', right: '50%', height: '100%', margin: '3px', borderRight: '1px dashed #ddd' });
@@ -40,19 +40,26 @@ export class SnapshotHtml extends React.Component<PreviewProps> {
       return <div>Snapshot does not exist ;(</div>;
     }
 
+    // deal with json
+    let { current, expected } = snapshot;
+    if (current.trim()[0] === '{') {
+      current = `<pre>${current}</pre>`;
+      expected = `<pre>${expected}</pre>`;
+    }
+
     const Decorator = story.decorator ? story.decorator : DefaultDecorator;
     return (
       <Decorator>
         {snapshot && (
           <div className={story.cssClassName}>
-            {snapshot.expected !== snapshot.current ? (
+            {snapshot.expected && snapshot.expected !== snapshot.current ? (
               <div className={frameHolder}>
-                <div className={leftFrame + '  leftPanel'} dangerouslySetInnerHTML={{ __html: snapshot.current }} />
-                <div className={rightFrame + '  rightPanel'} dangerouslySetInnerHTML={{ __html: snapshot.expected }} />
+                <div className={leftFrame + '  leftPanel'} dangerouslySetInnerHTML={{ __html: current }} />
+                <div className={rightFrame + '  rightPanel'} dangerouslySetInnerHTML={{ __html: expected || 'No saved snapshot' }} />
               </div>
             ) : (
               <div className={frameHolder}>
-                <div className={fullFrame} dangerouslySetInnerHTML={{ __html: snapshot.current }} />
+                <div className={fullFrame} dangerouslySetInnerHTML={{ __html: current }} />
               </div>
             )}
             <div style={{ clear: 'both' }} />

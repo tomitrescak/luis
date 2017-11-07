@@ -41,7 +41,7 @@ export class TestGroupView extends React.Component<Props> {
 
     const isList = state.config.storyView === 'list';
     const name = isList ? group.path : group.name;
-
+    
     return (
       <div>
         <Accordion.Title
@@ -80,6 +80,9 @@ export class TestGroupView extends React.Component<Props> {
 export const StoryList = observer(({ state }: Props) => {
   const isList = state.config.storyView === 'list';
   let version = state.liveRoot.version;
+  if (state.liveRoot.groups.length === 0) {
+    return <div>There are no tests</div>
+  }
   return (
     <Accordion className={pane()}>
       {isList

@@ -22,9 +22,9 @@ type CallbackParams = {
 
 function queueThrottledUpdate(options: CallbackParams) {
   // ignore json files
-  if (options.path.substring(options.path.length - 5) === '.json') {
-    return true;
-  }
+  // if (options.path.substring(options.path.length - 5) === '.json') {
+  //   return true;
+  // }
 
   if (throttleTimer) {
     clearTimeout(throttleTimer);
