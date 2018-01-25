@@ -8,5 +8,7 @@ require('ts-node/register');
 require('chai-match-snapshot/mocha').setupMocha();
 
 // setup app
-setup();
+setup({
+  snapshotMode: 'tcp'
+});
 setupJsxControls();

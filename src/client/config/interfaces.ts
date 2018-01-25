@@ -43,6 +43,7 @@ declare global {
     componentWithData? (...props: any[]): JSX.Element | {
       [index: string]: any;
       component: JSX.Element;
+      documentRoot?: HTMLElement;
       afterMount?(wrapper: ReactWrapper): void;
     }
   }

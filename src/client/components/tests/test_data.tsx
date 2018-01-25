@@ -1,8 +1,11 @@
+import * as React from 'react';
+
 import { StateModel } from '../../models/state_model';
 import { ViewState } from '../../models/state_view_model';
 import { TestGroup } from '../../models/test_group_model';
 import { Test } from '../../models/test_model';
 import { Snapshot } from '../../models/snapshot_model';
+import { Story } from '../../models/story_model';
 
 export const create = {
   state(stateOverride?: Partial<StateModel>, viewStateOverride?: Partial<ViewState>) {
@@ -19,8 +22,18 @@ export const create = {
     }
     return model;
   },
+  stateWithTests() {
+    let state = create.state({ liveRoot: create.someTests() });
+    state.viewState.selectedStory = state.liveRoot.groups[0] as Story;
+    return state;
+  },
   group(name: string, parent: TestGroup = null) {
     return new TestGroup(parent, name);
+  },
+  story(name: string, parent: TestGroup = null) {
+    return new Story(parent, name, {
+      component: <div>Component</div>
+    });
   },
   test(name: string, parent: TestGroup, error: any = null, duration: number = 0, snapshots: Snapshot[] = []) {
     let date = Date.now();

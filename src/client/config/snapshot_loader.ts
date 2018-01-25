@@ -5,7 +5,7 @@ const snapshots: { [index: string]: object } = {};
 
 export function loadSnapshots() {
   if (global.FuseBox) {
-    const snapshotsRaw = FuseBox.import('~/tests/snapshots/*.json');
+    const snapshotsRaw = FuseBox.import('~/tests/snapshots/*.js');
     
     for (let key of Object.getOwnPropertyNames(snapshotsRaw)) {
       let parts = key.split('/');

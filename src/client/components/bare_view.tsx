@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { content } from './component_styles';
-import { TopPanelSingle } from './top_panel';
+import { TopPanelSingle } from './top_panel_bare';
 import { StoryView } from './story_view';
 
 //@ts-ignore

@@ -21,12 +21,6 @@ describe('Left Pane', function() {
     data => {
       itMountsAnd('renders empty', () => data.componentWithData(), function({ wrapper }) {
         wrapper.should.matchSnapshot();
-
-        const e = {
-          tomi: 'qq',
-          momo: 22,
-        };
-        e.should.matchSnapshot();
       });
 
       itMountsAnd('renders with tests', () => data.componentWithData(stateWithTests), function({ wrapper }) {
