@@ -1,19 +1,22 @@
 import { ReactElement } from "react";
-import { ReactWrapper } from 'enzyme';
 
-declare module 'enzyme' {
-  interface ReactWrapper {
-    change(value: string): void;
-    select(value: number): void;
-    click(): void;
-  }
-}
+// import { ReactWrapper } from 'enzyme';
+
+export class ReactWrapper<P = {}, M = {}> {}
+
+// declare module 'enzyme' {
+//   interface ReactWrapper {
+//     change(value: string): void;
+//     select(value: number): void;
+//     click(): void;
+//   }
+// }
 
 declare global {
   function xit(name: string, implementation: () => void): void;
   function it(name: string, implementation: () => void): void;
   function describe(name: string, implementation: () => void): void;
-  function storyOf<T extends StoryConfig>(name: string, config: T, implementation: (params: T) => void): void;
+  function storyOf<T extends StoryConfig>(name: string, config: T, implementation?: (params: T) => void): void;
   function xdescribe(name: string, implementation: () => void): void;
   function before(implementation: () => void): void;
   function beforeAll(implementation: () => void): void;

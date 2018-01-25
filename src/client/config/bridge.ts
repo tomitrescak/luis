@@ -62,7 +62,9 @@ export function setupTestBridge(state: Luis.State, bridgeInterface: BridgeInterf
     state.currentGroup = group;
 
     try {
-      impl(props);
+      if (impl) {
+        impl(props);
+      }
     } finally {
       state.currentGroup = parent;
     }

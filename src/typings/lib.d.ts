@@ -15,3 +15,5 @@ interface String {
 }
 
 declare var System: any;
+
+declare var process: any;

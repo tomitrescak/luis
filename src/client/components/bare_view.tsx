@@ -8,7 +8,7 @@ import { StoryView } from './story_view';
 import { StateModel } from '../models/state_model';
 
 
-type ComponentProps = {
+export type ComponentProps = {
   state?: Luis.State;
 };
 

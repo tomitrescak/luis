@@ -114,7 +114,7 @@ export class TestView extends React.Component<TestProps> {
           {...(expanded ? { as: Segment, attached: 'top' } : {})}
         >
           <Icon name="dropdown" className={this.canExpand() ? 'normal' : hidden} />
-          <Icon {...test.icon} />
+          <Icon {...test.icon as any} />
 
           <a
             href={`${test.parent.id}/${test.urlName}/`}
