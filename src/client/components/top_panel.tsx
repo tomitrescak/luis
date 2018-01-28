@@ -5,8 +5,6 @@ import { observer } from 'mobx-react';
 import { style } from 'typestyle';
 import { observable } from 'mobx';
 
-const image = process.env.NODE_ENV == 'test' ? 'react.png' : require('./react.png');
-
 export type Props = {
   state: Luis.State;
 };
@@ -23,7 +21,6 @@ const menuImage = style({
 
 @observer
 export class TopPanel extends React.Component<Props> {
-  @observable updating = false;
 
   handleItemClick = (e: React.MouseEvent<any>) =>
     (this.props.state.viewState.snapshotView = e.currentTarget.getAttribute('data-name'));
@@ -38,10 +35,12 @@ export class TopPanel extends React.Component<Props> {
 
     // we need to do this asynchronously to get around batched updates of React fibers
     setTimeout(() => {
-      if (this.props.state.viewState.selectedStory) {
-        this.props.state.updatingSnapshots = true;
-        this.props.state.testQueue.canAddTest = true;
-        this.props.state.testQueue.add(this.props.state.viewState.selectedStory);
+      this.props.state.updatingSnapshots = true;
+      if (this.props.state.viewState.testName) {
+        this.props.state.packageConfig.bridge.updateSnapshots(this.props.state, this.props.state.viewState.selectedTest.simplePath);
+      }
+      else if (this.props.state.viewState.selectedStory) {
+        this.props.state.packageConfig.bridge.updateSnapshots(this.props.state, this.props.state.viewState.selectedStory.simplePath);
       }
     }, 10);
   };
@@ -99,23 +98,23 @@ export class TopPanel extends React.Component<Props> {
           <Icon name="image" />
         </Menu.Item>
         <Menu.Menu position="right">
-          {this.updating ? (
-            <Menu.Item title="Update test snapshots to reflect current changes and save snapshots on server.">
+          {this.props.state.updatingSnapshots ? (
+            <Menu.Item title="Snapshots updating ...">
               <Loader active inline size="mini" />
             </Menu.Item>
           ) : (
-            <Menu.Item onClick={this.updateClick}>
+            <Menu.Item onClick={this.updateClick} title="Update test snapshots to reflect current changes and save snapshots on server.">
               <Icon name="refresh" />
             </Menu.Item>
           )}
-          <Menu.Item
+          {/*<Menu.Item
             title="Auto-update test snapshots with each hot reload to reflect current changes and save snapshots on server."
             active={this.props.state.autoUpdateSnapshots}
             onClick={() =>
               (this.props.state.autoUpdateSnapshots = !this.props.state.autoUpdateSnapshots)}
           >
             <Icon name="lock" />
-          </Menu.Item>
+            </Menu.Item>*/}
         </Menu.Menu>
       </Menu>
     );

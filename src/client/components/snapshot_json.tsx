@@ -10,7 +10,7 @@ export interface SnapshotsProps {
 const requireConfig = {
   url: 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.1/require.min.js',
   paths: {
-    vsNew: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.10.0/min/vs/',
+    // vsNew: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.10.0/min/vs/',
     vs: 'https://unpkg.com/monaco-editor@0.10.1/min/vs/'
   }
 };

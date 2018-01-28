@@ -15,7 +15,7 @@ export type ComponentProps = {
 export const LeftMenu = observer(({ state }: ComponentProps) => (
   <Menu pointing secondary inverted color="blue" className={noMargin}>
     <Menu.Item name="home">
-      <Loader size="tiny" active={state.testQueue.running} />
+      <Loader size="tiny" active={state.running} />
     </Menu.Item>
     <Menu.Item active={state.showPassing} onClick={() => (state.showPassing = !state.showPassing)}>
       <Icon name="check" color="green" />

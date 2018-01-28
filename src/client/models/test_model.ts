@@ -8,6 +8,8 @@ import { Snapshot } from './snapshot_model';
 
 let uid = 0;
 export class Test extends TestItem  {
+  private _duration: number;
+
   parent: TestGroup;
   name: string;
 
@@ -15,7 +17,14 @@ export class Test extends TestItem  {
   @observable endTime: number = 0;
   
   @computed get duration() {
+    if (this._duration) {
+      return this._duration;
+    }
     return (this.endTime - this.startTime < 0) ? 0 : (this.endTime - this.startTime);
+  }
+
+  set duration(value: number) {
+    this._duration = value;
   }
 
   impl: () => void;
@@ -41,6 +50,10 @@ export class Test extends TestItem  {
       name: this.error ? 'remove' : 'check',
       color: this.error ? 'red' : 'green'
     }
+  }
+
+  get simplePath(): string {
+    return this.parent.simplePath + ' ' + this.name;
   }
 
   findSnapshotByUrlName(urlName: string) {

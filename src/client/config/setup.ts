@@ -51,7 +51,7 @@ function update() {
         window.location.reload();
       }
 
-      state.testQueue.hmr(path, content, dependants);
+      state.packageConfig.bridge.hmr(path, content, dependants as any);
 
       /** Patch the module at give path */
       FuseBox.dynamic(path, content);
@@ -108,7 +108,7 @@ export const addPlugin = ({ throttleTime = 0, testStateFulModule }: PluginOption
 export function setupHmr() {
   if (global.FuseBox) {
     addPlugin({
-      throttleTime: 10,
+      throttleTime: 50,
       testStateFulModule: (name: string) => {
         // Add the things you think are stateful:
         const result = /router/.test(name) || /state/.test(name);

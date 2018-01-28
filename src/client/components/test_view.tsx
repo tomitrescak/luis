@@ -15,7 +15,9 @@ export type TestProps = {
 
 export const errorMessage = style({
   padding: '3px 6px!important',
-  fontSize: '11px'
+  fontSize: '11px',
+  margin: '0px!important',
+  overflow: 'auto'
 });
 
 export const noPadding = style({
@@ -46,13 +48,12 @@ export const ErrorView = ({ test, single }: ErrorViewProps) => {
   const compareView =
     test.error &&
     test.error.message &&
-    test.error.message.indexOf('expected') >= 0 &&
-    (test.error.actual || test.error.expected);
+    (test.error.actual != null || test.error.expected != null);
 
   if (!compareView) {
     return (
       <Segment attached={single ? undefined: "bottom"} className={noPadding} inverted color="red">
-        <div className={errorMessage}>{test.error.message}</div>
+        <pre className={errorMessage}>{test.error.message}</pre>
       </Segment>
     );
   }
@@ -96,7 +97,8 @@ export class TestView extends React.Component<TestProps> {
 
   render(): any {
     const { test, state } = this.props;
-    const expanded = state.isExpanded(test).get();
+    const expanded = state.isExpanded(test).get() && (test.error != null || test.snapshots.length > 0);
+    
 
     if ((!state.showFailing && test.error) || (!state.showPassing && !test.error)) {
       return false;

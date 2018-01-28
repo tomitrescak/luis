@@ -4,10 +4,7 @@ import { lightTheme, ITheme } from '../config/themes';
 import { setupHmr } from '../config/setup';
 import { TestGroup } from './test_group_model';
 import { ViewState } from './state_view_model';
-import { TestQueue } from '../config/test_queue';
-import { TestRunner } from '../config/test_runner';
 import { AppConfig } from '../config/app_config';
-import { loadSnapshots } from '../config/snapshot_loader';
 import { setupRouter } from '../config/router';
 import { TestItem } from './test_item_model';
 import { Story } from './story_model';
@@ -24,7 +21,6 @@ setupHmr();
 // client.on('source-changed', function (data) {
 //   // console.log(data);
 //   console.log('445');
-
 // });
 
 declare global {
@@ -37,6 +33,24 @@ export type RenderOptions = {
   updateUrl?: string;
 };
 
+export interface Bridge {
+  onReconciled(state: StateModel): void;
+  updateSnapshots(state: StateModel, name: string): void;
+  hmr(path: string, content: string, dependants: { [name: string]: string[] }): void;
+}
+
+export interface Config {
+  bridge: Bridge;
+}
+
+export const config: Config = {
+  bridge: null
+}
+
+export function setupBridge(setup: (state: StateModel) => Bridge) {
+  config.bridge = setup(initState());
+}
+
 let id = 0;
 
 export class StateModel {
@@ -44,39 +58,36 @@ export class StateModel {
   @observable autoUpdateSnapshots = false;
   @observable showPassing = true;
   @observable showFailing = true;
+  @observable running = false;
+  @observable updatingSnapshots = false;
 
   expanded: { [index: string]: IObservableValue<boolean> } = {};
 
-  updatingSnapshots = false;
+  
   liveRoot: TestGroup;
   updateRoot: TestGroup;
   currentGroup: TestGroup;
   viewState: ViewState;
+  packageConfig: Config;
 
   timer: any;
   reconciled: boolean;
   resolveReconcile: Function;
   beforeHmr = true;
-  testQueue: TestQueue;
-  testRunner: TestRunner;
   renderOptions: RenderOptions;
 
   config: AppConfig;
   uid: number;
 
-  constructor(testRunner: TestRunner = null) {
+  constructor() {
     this.uid = id++;
-    // load snapshots
-    loadSnapshots();
 
-    this.testRunner = testRunner || new TestRunner(this);
     this.liveRoot = new TestGroup(null, 'root');
     this.updateRoot = new TestGroup(null, 'update');
     this.currentGroup = this.updateRoot;
-    this.testQueue = new TestQueue(this.testRunner);
-    this.testRunner = testRunner;
     this.viewState = new ViewState(this);
     this.config = new AppConfig(this);
+    this.packageConfig = config;
 
     // create new router
     setupRouter(this);
@@ -90,14 +101,16 @@ export class StateModel {
     return this.liveRoot.findGroup(g => g.id === id);
   }
 
-  createStory(name: string, props: StoryConfig) {
+  createStory(name: string, props: any) {
     return new Story(this.currentGroup, name, props)
   }
 
   @action
-  performReconciliation() {
+  performReconciliation(copyValues = true) {
     // copy values so that we remember
-    this.copyValues(this.liveRoot, this.updateRoot)
+    if (copyValues) {
+      this.copyValues(this.liveRoot, this.updateRoot);
+    }
 
     this.liveRoot.groups = [...this.updateRoot.groups];
 
@@ -106,7 +119,6 @@ export class StateModel {
       g.parent = this.liveRoot;
     });
 
-    
 
     // clear updates
     this.updateRoot.groups = [];
@@ -126,7 +138,7 @@ export class StateModel {
     this.config.loadTests();
 
     // start tests asynchronously
-    setTimeout(() => this.testQueue.start(), 10);
+    config.bridge.onReconciled(this);
   }
 
   @action copyValues(from: TestGroup, to: TestGroup) {
@@ -236,12 +248,12 @@ export class StateModel {
   //   }
   // }
 
-  reconciliate() {
+  reconciliate(copyValues = true) {
     this.reconciled = false;
     if (this.timer) {
       clearTimeout(this.timer);
     }
-    this.timer = setTimeout(() => this.performReconciliation(), 100);
+    this.timer = setTimeout(() => this.performReconciliation(copyValues), 100);
   }
 
   isReconciled() {

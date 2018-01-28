@@ -61,6 +61,13 @@ export class TestGroup extends TestItem {
     return (this.parent == null || this.parent.parent == null ? '' : (this.parent.path + ' > ')) + this.name;
   }
 
+  get simplePath(): string {
+    if (this.parent == null) {
+      return this.name;
+    }
+    return (this.parent == null || this.parent.parent == null ? '' : (this.parent.path + ' ')) + this.name;
+  }
+
   get isRoot() {
     return this.parent == null;
   }
@@ -170,6 +177,26 @@ export class TestGroup extends TestItem {
 
   findTestByUrlName(urlName: string) {
     return this.tests.find(t => t.urlName == urlName);
+  }
+
+  searchTest(test: (group: Test) => boolean): Test {
+    const queue: TestGroup[] = [this];
+    while (queue.length > 0) {
+      let current = queue.shift();
+      for (let currentTest of current.tests) {
+        if (test(currentTest)) {
+          return currentTest;
+        }
+      }
+      for (let group of current.groups) {
+        queue.push(group);
+      }
+    }
+    return null;
+  }
+
+  findTest(name: string, parent: string) {
+    return this.searchTest(t => t.name == name && t.parent.name === parent);
   }
 
   @action updateCounts() {

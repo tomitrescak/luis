@@ -65,7 +65,7 @@ export class ViewState {
     // open the path
     if (selected) {
       // check if selected story is a child
-      let parent: TestItem = selected;
+      let parent: TestItem = selected.parent;
       while (parent != null) {
         this.state.expanded[parent.id] = observable(true);
         parent = parent.parent;
