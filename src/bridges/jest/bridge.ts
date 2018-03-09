@@ -12,12 +12,19 @@ function clean(message: string) {
   return message;
 }
 
+let previousTestResults: jest.AggregatedResult = {} as any;
+
 function addTests(
   state: StateModel,
   group: TestGroup,
   testData: jest.AggregatedResult,
   snapshots: Snapshots
 ) {
+  // check if we have alreayd processed this group
+  if (group.tests && group.tests.length) {
+    return;
+  }
+
   // add info
   group.passingTests = 0;
   group.failingTests = 0;

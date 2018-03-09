@@ -5,3 +5,5 @@ declare module 'marked';
 declare module 'react-tabs';
 
 declare module 'path-match';
+
+declare module 'merge-json';

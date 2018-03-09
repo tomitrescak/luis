@@ -61,7 +61,7 @@ export class StateModel {
   @observable updatingSnapshots = false;
 
   expanded: { [index: string]: IObservableValue<boolean> } = {};
-
+  previousResults: any = null;
   
   liveRoot: TestGroup;
   updateRoot: TestGroup;
