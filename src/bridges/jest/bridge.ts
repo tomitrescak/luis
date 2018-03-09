@@ -25,6 +25,10 @@ function addTests(
   // browse all test results and find test belonging to this group
   const path = group.simplePath;
 
+  if (!testData.testResults) {
+    return;
+  }
+
   for (let suite of testData.testResults) {
     const suiteSnapshots = snapshots[suite.testFilePath] || {};
     const keys = Object.getOwnPropertyNames(suiteSnapshots);
@@ -73,14 +77,14 @@ function addTests(
           }
 
           // snapshot matcher
-          if (message.indexOf('expect(value).toMatchSnapshot()') > 0) {
+          if (message.indexOf('expect(value).toMatchSnapshot()') > 0 || message.indexOf('Snapshots do not match') > 0) {
             let lines = message.split('\n');
             expected = '';
             actual = '';
 
             let started = false;
             for (let line of lines) {
-              if (!started && line.indexOf('+ Received') >= 0) {
+              if (!started && (line.indexOf('+ Received') >= 0 || line.indexOf('+ expected') >= 0)) {
                 started = true;
                 continue;
               }
@@ -92,8 +96,9 @@ function addTests(
               }
 
               if (started) {
-                let d = line[0];
-                let rest = line.substring(1);
+                let m = line.match(/^\s*(\+|\-)/);
+                let d = m && m[1] || '';
+                let rest = line.replace(d, '');
 
                 if (d !== '+') {
                   expected += rest + '\n';
@@ -122,10 +127,10 @@ function addTests(
           let index = 1;
           t.snapshots.replace(
             matchingSnapshots.map(
-              m =>
+              (m, i) =>
                 new Snapshot({
                   current: suiteSnapshots[m],
-                  name: 'Snapshot ' + index++,
+                  name: (m.match(new RegExp(test.fullName + '\\s+\\d+')) ? `Snapshot ${index++}` : m.replace(test.fullName, '')).replace(/\b1$/, ''), // 'Snapshot ' + index++,
                   originalName: m,
                   matching: true,
                   test: t,
@@ -158,7 +163,10 @@ export function createBridge(
     state.currentGroup = group;
 
     try {
-      impl();
+      const story: any = impl();
+      if (story) {
+        state.currentGroup.initStory(story);
+      }
     } finally {
       state.currentGroup = parent;
     }
@@ -198,11 +206,26 @@ export function createBridge(
     state.reconciliate(false);
   };
 
+  require('proxyrequire').setGlobalStubs({
+    'wafl': {
+      it: function() {},
+      itMountsAnd: function() {},
+      itMountsContainerAnd: function() {},
+      story: function(props: StoryConfig) {
+        state.currentGroup.initStory(props);
+      }
+    }
+  });
+
   glob.xit = function() {};
 
   glob.xdescribe = function() {};
 
   glob.it = function(name: string, impl: Impl) {};
+
+  glob.itMountsAnd = function(name: string, impl: Impl) {};
+
+  glob.itMountsContainerAnd = function(name: string, impl: Impl) {};
 
   glob.before = function(impl: Impl) {};
 

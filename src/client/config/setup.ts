@@ -96,8 +96,8 @@ type PluginOptions = {
 * @param isStateful for a given moduleName returns true if the module is stateful
 */
 export const addPlugin = ({ throttleTime = 0, testStateFulModule }: PluginOptions = {}) => {
-  if (!global.alreadyRegistered) {
-    global.alreadyRegistered = true;
+  if (!(global as any).alreadyRegistered) {
+    (global as any).alreadyRegistered = true;
     throttle = throttleTime;
     FuseBox.addPlugin(customizedHMRPlugin);
   }
@@ -106,7 +106,7 @@ export const addPlugin = ({ throttleTime = 0, testStateFulModule }: PluginOption
 
 // Test it
 export function setupHmr() {
-  if (global.FuseBox) {
+  if ((global as any).FuseBox) {
     addPlugin({
       throttleTime: 50,
       testStateFulModule: (name: string) => {

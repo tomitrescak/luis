@@ -3,13 +3,13 @@ import * as React from 'react';
 import { observable, computed, action } from 'mobx';
 
 
-import { Story } from './story_model';
 import { Test } from './test_model';
 import { TestItem } from './test_item_model';
 //@ts-ignore
 import { Snapshot } from './snapshot_model';
+import { TestGroup } from './test_group_model';
 
-const missingStory = new Story(null, 'Missing', { component: <div>Story not found. Maybe you renamed it?</div>, info: 'Missing' });
+const missingStory = new TestGroup(null, 'Missing', { component: <div>Story not found. Maybe you renamed it?</div>, info: 'Missing' });
 
 export class ViewState {
   @observable storyPath = '';
@@ -17,7 +17,7 @@ export class ViewState {
   @observable snapshotName = '';
 
   @observable snapshotView = 'react';
-  @observable selectedStory: Story = null;
+  @observable selectedStory: TestGroup = null;
   @observable selectedTest: Test = null;
   
   state: Luis.State;
@@ -86,7 +86,7 @@ export class ViewState {
     this.testName = testName;
     this.snapshotName = snapshotName;
     
-    this.selectedStory = this.state.findStoryById(groupPath) as Story;
+    this.selectedStory = this.state.findStoryById(groupPath) as TestGroup;
     if (this.selectedStory && testName) {
       this.selectedTest = this.selectedStory.findTestByUrlName(testName);
     }

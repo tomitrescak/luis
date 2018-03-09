@@ -4,7 +4,6 @@ import { SemanticCOLORS } from 'semantic-ui-react';
 import { TestItem, Impl, toUrlName } from './test_item_model';
 import { Test } from './test_model';
 import { Snapshot } from './snapshot_model';
-import { Story } from './story_model';
 
 export class TestGroup extends TestItem {
   name: string;
@@ -27,7 +26,12 @@ export class TestGroup extends TestItem {
   @observable passingTests = 0;
   @observable failingTests = 0;
 
-  constructor(parent: TestGroup, name: string) {
+  component: JSX.Element;
+  decorator?: React.SFC;
+  cssClassName: string;
+  info: string;
+
+  constructor(parent: TestGroup, name: string, story?: StoryConfig) {
     super(name, parent);
     this.tests = [];
     this.groups = [];
@@ -37,6 +41,25 @@ export class TestGroup extends TestItem {
       parent.groups.push(this);
       parent.groups.sort((a, b) => a.name < b.name ? -1 : 1);
     }
+
+    if (story) {
+      this.initStory(story);
+    }
+  }
+
+  initStory(props: StoryConfig) {
+    this.component =
+      props.component ||
+      (props.componentWithData &&
+        ((props.componentWithData() as any).component || props.componentWithData()));
+    if (!this.component) {
+      throw new Error(
+        `Story "${name}" needs to either define a "get component()" or "componentWithData()"`
+      );
+    }
+    this.info = props.info;
+    this.decorator = props.decorator;
+    this.cssClassName = props.cssClassName;
   }
 
   @computed get duration() {
@@ -151,8 +174,8 @@ export class TestGroup extends TestItem {
     return possibleRoot ? possibleRoot : new TestGroup(state.currentGroup, name);
   }
 
-  getStory(name: string, props: StoryConfig, state: Luis.State): Story {
-    let possibleRoot = state.currentGroup.groups.find(g => g.name === name) as Story;
+  getStory(name: string, props: StoryConfig, state: Luis.State): TestGroup {
+    let possibleRoot = state.currentGroup.groups.find(g => g.name === name);
     return possibleRoot ? possibleRoot : state.createStory(name, props);
   }
 

@@ -3,7 +3,6 @@ import * as React from 'react';
 import { style } from 'typestyle';
 import { Menu, Icon, Loader, Dropdown, Popup } from 'semantic-ui-react';
 import { inject, observer } from 'mobx-react';
-import { observable } from 'mobx';
 
 import { ErrorView } from './test_view';
 import { Test } from '../models/test_model';

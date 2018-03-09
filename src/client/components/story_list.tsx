@@ -50,7 +50,7 @@ export class TestGroupView extends React.Component<Props> {
           onClick={e => state.toggleExpanded(e, group)}
         >
           { (group.groups.length || group.tests.length) ? <Icon name="dropdown" /> : false }
-          {group.constructor.name == 'Story' ? (
+          {group.component ? (
             <span>
               <a
                 href={`/stories/${group.id}`}

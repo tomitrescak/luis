@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Menu, Icon, Loader } from 'semantic-ui-react';
 import { observer } from 'mobx-react';
 import { style } from 'typestyle';
-import { observable } from 'mobx';
 
 export type Props = {
   state: Luis.State;

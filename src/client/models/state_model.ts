@@ -7,7 +7,6 @@ import { ViewState } from './state_view_model';
 import { AppConfig } from '../config/app_config';
 import { setupRouter } from '../config/router';
 import { TestItem } from './test_item_model';
-import { Story } from './story_model';
 
 setupHmr();
 
@@ -102,7 +101,7 @@ export class StateModel {
   }
 
   createStory(name: string, props: any) {
-    return new Story(this.currentGroup, name, props)
+    return new TestGroup(this.currentGroup, name, props)
   }
 
   @action
@@ -291,7 +290,7 @@ let state: StateModel;
 export function initState() {
   if (!state) {
     state = new StateModel();
-    global.__state = state;
+    (global as any).__state = state;
   }
   return state;
 }
