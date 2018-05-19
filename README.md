@@ -27,34 +27,122 @@ Luis is using well known technologies ([Mocha](https://mochajs.org), [React](htt
 
 To facilitate your component development, testing, and collaboration LUIS supports four different modes. Each mode is described in detail further below.
 
-# Table of Contents
+# Quick Start
 
-1. [**Web Application**](#web) - Luis comes pre-configured to run on its own so you can start working instantly
-2. [**API**](#api)
-    1. [**storyOf**](#storyOf)
-    2. [**itMountsAnd**](#itMountsAnd)
-    3. [**matchSnapshot**](#matchSnapshot)
-3. [**Adding new tests**](#addingTests)
-4. [**Working with Mocha, Jest and CI**](#wallaby)
-5. [**Working with Wallaby.js**](#wallaby)
-6. [**Adding Luis to your project as npm package**](#package) - With a little bit of configuration you can bring Luis to your application and run side by side with your project
-7. [**Visual Studio Code plugin**](#plugin) - Luis incorporates seamlessly into your (my) favourite editor, where it visualises your current snapshots and automatically reloads them as you type (with help of Wallaby.js or Mocha.js in watch mode)
-8. [**CI**](#ci) - Luis defines CI configurations so bringing your project to CI is a breeze.
-9. [**Stubbing components**]
+If you wish to run luis only as component catalogue, similar to StoryBook, all you need to do is:
+1. Define route for luis
+2. Import stories
+3. Return the luis component
 
-Pictures are worth thousand words, so let us introduce each mode and our API with many examples.
+Following are the code examples to set this uf in the application with react-router.
 
-# Web Application <a name="web"></a>
+```ts
+// router
+import { LuisView } from '../modules/luis';
 
-Web application mode runs directly from the source of of Luis package. To run it, clone the repository into any directory and run following (depending on your choice of package manager):
-
-```
-git clone https://github.com/tomitrescak/luis
-yarn // or npm install
-yarn run luis // or npm run luis
+...
+<Route exact={true} path="/luis" component={LuisApp()} />
+...
 ```
 
-Luis now runs on `http://localhost:9001`. Open this url in your browser and you should see a screen, similar to following:
+And now the `LuisView` component, where we import all our stories
+
+```ts
+// LuisView.tsx
+import * as React from 'react';
+
+import { Luis, setupTestBridge } from 'luis';
+
+// this allows us to read storyOf commands
+setupTestBridge();
+
+// function makes sure the content hot-reloads
+export function LuisApp() {
+  // import all your stories
+  require('../home/tests/home_view.test');
+
+  return Luis;
+}
+```
+
+And here is an example story:
+
+```ts
+import * as React from 'react';
+
+storyOf('Component With Test', {
+  get component() {
+    return <div>My Component</div>;
+  }
+});
+```
+
+If you want to know the full API os storyOf command, go to the [#API](API section).
+
+# Adding Tests
+
+In this example, we will be working with jest. Note that Luis also works flawlwessly with mocha with related reporter. To allow Luis to display test results, we will export a test report after each test run. Therefore, in your `jest.config.js` add:
+
+```js
+module.exports = {
+    testResultsProcessor: 'luis/dist/bridges/jest/reporter',
+    ...
+}
+```
+
+The processor will save a test report after each test run and save it in your `<project_root>/src/` folder. Both, summary (e.g. summary.json) and a list of detected snapshots (snapshots.js) is saved. If you want to enable snapshots and test reports in luis, you need to tell FuseBox to pack them into your bundle. This is done via SnapshotPlugin and JSONPlugin. Therefore, in your `fuse.js`:
+
+```js
+// fuse.js
+const { FuseBox, ..., JSONPlugin } = require('fuse-box');
+const { SnapshotPlugin } = require('luis/dist/bridges/jest/snapshot_plugin');
+
+const fuse = FuseBox.init({
+  ...
+  plugins: [
+    JSONPlugin(),
+    SnapshotPlugin()
+  ],
+  sourceMaps: true
+});
+```
+
+Now, we need to tell FuseBox, to pack them into our bundle. A good space for this is in the `LuisView.tsx` file:
+
+```js
+// LuisView.tsx (see above)
+
+// replace setupTestBridge() with
+const summary = require('../../../summary.json');
+const snapshots = require('../../../snapshots');
+setupTestBridge(summary, snapshots);
+```
+
+
+Now you are ready to visualise your tests in Luis. Make sure you run jest on server in watch mode. Yet, there he problem is, that Jest does not recognise `storyOf` command. Therefore we create a new file `jest.setup.js` and then modify the `jest.config.js` to execute this file before each test run:
+
+```js
+// jest.setup.js
+global.storyOf = function(name, props, impl) {
+  describe(name, () => impl && impl(props));
+}
+```
+
+and
+
+```js
+// jest.config.js
+module.exports = {
+    ...
+    "setupTestFrameworkScriptFile": "<rootDir>/jest.setup.js",
+}
+```
+
+If you are using wallaby, make sure to run `jest.setup.js` as well
+
+THAT'S IT! ENJOY!
+
+# Luis Interface <a name="web"></a>
 
 ![luis-ui](https://user-images.githubusercontent.com/2682705/31363176-58b63068-ada8-11e7-8e1c-1c8349814de3.png)
 
