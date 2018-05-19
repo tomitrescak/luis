@@ -119,7 +119,7 @@ setupTestBridge(summary, snapshots);
 ```
 
 
-Now you are ready to visualise your tests in Luis. Make sure you run jest on server in watch mode. Yet, there he problem is, that Jest does not recognise `storyOf` command. Therefore we create a new file `jest.setup.js` and then modify the `jest.config.js` to execute this file before each test run:
+Now you are ready to visualise your tests in Luis. Make sure you run jest on server in watch mode. Yet, there he problem is, that Jest does not recognise `storyOf` command. Therefore we create a new file `jest.setup.js` and then modify the `jest.config.js` to execute this file before each test run. Also, we need to tell jest to ignore the jest generated files.
 
 ```js
 // jest.setup.js
@@ -135,6 +135,7 @@ and
 module.exports = {
     ...
     "setupTestFrameworkScriptFile": "<rootDir>/jest.setup.js",
+    "watchPathIgnorePatterns": ['<rootDir>/src/summary.json', '<rootDir>/src/snapshots.js'],
 }
 ```
 
