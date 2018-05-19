@@ -281,7 +281,7 @@ This allows you to prepare data for your wrapped component and then pass this da
 
 ## matchSnapshot <a name="matchSnapshot"></a>
 
-This matcher compares a current version of the object with snapshot that has been saved to disk. It operates differently from the Jest snapshot and its performance has been tuned for use with front and back-end. The main differences are:
+This sinon matcher compares a current version of the object with snapshot that has been saved to disk. It operates differently from the Jest snapshot and its performance has been tuned for use with front and back-end. The main differences are:
 
 - All snapshots saved into the same directory and named by the test name. This directory is by default `/src/tests/snapshots` but this can be configured (more on this later)
 - Enzyme wrapper saves `html` representation of the component
@@ -312,33 +312,6 @@ const decorator = (html: string) => `<div style={margin: 20px, color: black}>${h
 wrapper.should.matchSnapshot('button click increases number', { decorator });
 ```
 
-### Snapshot Configuration <a name="snapshotConfiguration"></a>
-
-The snapshots can be easily configured modifying the default config of `chai-match-snapshot` package. Following is the signature of the config:
-
-```typescript
-export type Config = {
-  /** directory where snapshots are stored relative to the project directory */
-  snapshotDir: string;
-  /* you can choose following snapshot mode
-   * - tcp: updated snapshots are sent to VS Code extension over TCP. 
-   *        [!!! IMPORTANT] Make sure the extension is enabled before running
-   * - drive: updated snapshots are automatically saved to your drive
-   * - both: snapshots are sent to VS Code extension AND saved to drive
-   * - test: standard mode during running your tests, when snapshots are NOT updated but compared
-   */
-  snapshotMode: 'test' | 'tcp' | 'drive' | 'both';
-  /** custom serializer */
-  serializer: (obj: any) => string;
-  /** custom replacer for JSON.stringify */
-  replacer: (key: string, value: any) => any;
-};
-
-// example
-import { config } from 'chai-match-snapshot';
-config.snapshotDir = '/my/custom/dir';
-``` 
-
 # Adding Test Files  <a name="addingTests"></a>
 
 If you add a new test file, you need to import to `src/example/luis`. This is the start file of Luis project. This can be changed in `fuse.js` file.
@@ -352,78 +325,6 @@ import './tests/boo.test';
 
 renderLuis();
 ```
-
-# Working with Mocha, Jest and CI
-
-It is fairly easy to configure your testing environment to work with Luis. Once again, `wafl` does all the heavy lifting for you. Please see following examples of run scripts for Mocha (check out ):
-
-```json
-"scripts": {
-  "test": "mocha --require ./mocha.js --ui snapshots 'src/example/**/*.test.ts*' -P",
-  "testWatch": "mocha --require ./mocha.js --ui snapshots --watch --watch-extensions ts,tsx 'src/example/**/*.test.ts*' -P",
-  "us": "mocha --require ./us.js --ui snapshots --watch --watch-extensions ts,tsx 'src/example/**/*.test.ts*' -P",
-  "usWatch": "mocha --require ./us.js --ui snapshots 'src/example/**/*.test.ts*' -P"
-},
-```
-
-The `test` executes all tests from the example folder. The `testWatch` executed tests in watch mode (it will stay active and watch for your changes). The `us` and `usWatch`execute tests and update snapshots. The configuration of mocha tests is performed in `[mocha.js](https://github.com/tomitrescak/luis/blob/master/mocha.js)` and `[us.js](https://github.com/tomitrescak/luis/blob/master/us.js)` files. 
-
-```js
-// mocha.js
-const { setup } = require('wafl');
-
-// setup compiler
-process.env.TS_NODE_FAST = true;
-require('ts-node/register');
-
-// setup snapshots for mocha
-require('chai-match-snapshot/mocha').setupMocha();
-
-// setup app
-setup();
-```
-
-The `us.js` sets the snapshot mode to update snapshots and save them to their location:
-
-```js
-// us.js
-require('./mocha');
-
-const config = require('chai-match-snapshot').config;
-config.snapshotMode = 'drive';
-```
-
-# Working with Wallaby.js
-
-In our team we :heart: [Wallaby.js](https://wallabyjs.com). It is THE best test runner in the world, making writing tests FUN. Luis :heart: wallabies more then any other animal in the world (closely followed by [Wombats](https://www.youtube.com/watch?v=OiuQ_rVM-WE)). As a result, Luis (or in this case `wafl`) comes with a set of configurations to enable insanely fast snapshot testing and its integration in VS Code. All you need to do is to modify [wallaby.js](https://github.com/tomitrescak/luis/blob/master/wallaby.js) file and add following setting in the `setup` function:
-
-```js
-...
-setup: function(wallaby) {
-  const path = require('path');
-  const snapshotDir= path.join(wallaby.localProjectDir, 'src', 'tests', 'snapshots');
-  
-  require('wafl').setup({ 
-    wallaby, 
-    // if you want wallaby to save snapshots, you need to specify absolute path to their location 
-    snapshotDir, 
-    // see matchSnapshot configuration for options: 'tcp' | 'drive' | 'both' | 'test'
-    snapshotMode: 'tcp' 
-  });
-}
-```
-
-# Package Mode
-
-It is relatively simple to add Luis to your existing project. What it requires is to setup following:
-
-1. Install Luis with `yarn add luis --dev` or `npm install luis --save-dev`
-2. Add a `fuse.js`, you can reuse the one from the package, just make sure to configure your source directory and entry points, both for the main bundle and vendor bundle
-3. Add a client and server entry point for luis (e.g. `src/client/luis.ts` and `src/client.server.ts`). Again, you can reuse the ones from the luis package (src/example/luis.ts fro client and src/example/server.ts for server).
-4. Import all your test files from main entry file for client (e.g. src/client/luis.ts)
-5. Set up your package.json script to run luis as `node fuse.js`.
-
-DONE! Pure joy.
 
 # Visual Studio Extension: Luis
 
