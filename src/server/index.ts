@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -22,6 +24,7 @@ export interface Config {
 }
 
 export function start({ luisPath = `public/`, serverConfig = [] }: Config = {}) {
+  // overwrite the full version with temp version
   try {
     // fs.statSync(path.join(path.resolve(luisPath), 'luis.html'));
 

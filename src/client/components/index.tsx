@@ -9,10 +9,19 @@ const state = initState();
 
 export function renderLuis(options: RenderOptions = {}) {
   state.renderOptions = options;
-   ReactDOM.render(
+  ReactDOM.render(
     <Provider state={state}>
       <Layout localStorage={localStorage} />
     </Provider>,
     document.querySelector(options.root || '#react-root')
   );
 }
+
+export const Luis = ({ options = {} }) => {
+  state.renderOptions = options;
+  return (
+    <Provider state={state}>
+      <Layout localStorage={localStorage} />
+    </Provider>
+  );
+};

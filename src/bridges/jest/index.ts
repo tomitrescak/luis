@@ -1,10 +1,8 @@
-import { merge } from 'merge-json';
-
 import { createBridge, Snapshots } from './bridge';
 import { Bridge, setupBridge } from '../../client/index';
 
 export const bridge: Bridge = {
-  onReconciled(state) {},
+  onReconciled(_state) {},
   async updateSnapshots(state, name) {
     if (name) {
       state.updatingSnapshots = true;
@@ -12,10 +10,13 @@ export const bridge: Bridge = {
       state.updatingSnapshots = false;
     }
   },
-  hmr(path, content, dependants) {}
+  hmr(_path, _content, _dependants) {}
 };
 
-export function setupJestBridge(testData: jest.AggregatedResult, snapshots: Snapshots) {
+export function setupJestBridge(
+  testData: jest.AggregatedResult = {} as any,
+  snapshots: Snapshots = {}
+) {
   setupBridge(state => {
     // // merge data
     // let previousResult = state.previousResults;
@@ -45,3 +46,5 @@ export function setupJestBridge(testData: jest.AggregatedResult, snapshots: Snap
     return bridge;
   });
 }
+
+export const setupTestBridge = setupJestBridge;

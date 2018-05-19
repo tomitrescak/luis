@@ -72,7 +72,6 @@ function addTests(
           // disect equality
           let message = clean(test.failureMessages[0]);
 
-
           let expected = null;
           let actual = null;
 
@@ -84,14 +83,20 @@ function addTests(
           }
 
           // snapshot matcher
-          if (message.indexOf('expect(value).toMatchSnapshot()') > 0 || message.indexOf('Snapshots do not match') > 0) {
+          if (
+            message.indexOf('expect(value).toMatchSnapshot()') > 0 ||
+            message.indexOf('Snapshots do not match') > 0
+          ) {
             let lines = message.split('\n');
             expected = '';
             actual = '';
 
             let started = false;
             for (let line of lines) {
-              if (!started && (line.indexOf('+ Received') >= 0 || line.indexOf('+ expected') >= 0)) {
+              if (
+                !started &&
+                (line.indexOf('+ Received') >= 0 || line.indexOf('+ expected') >= 0)
+              ) {
                 started = true;
                 continue;
               }
@@ -104,7 +109,7 @@ function addTests(
 
               if (started) {
                 let m = line.match(/^\s*(\+|\-)/);
-                let d = m && m[1] || '';
+                let d = (m && m[1]) || '';
                 let rest = line.replace(d, '');
 
                 if (d !== '+') {
@@ -137,7 +142,10 @@ function addTests(
               (m, i) =>
                 new Snapshot({
                   current: suiteSnapshots[m],
-                  name: (m.match(new RegExp(test.fullName + '\\s+\\d+')) ? `Snapshot ${index++}` : m.replace(test.fullName, '')).replace(/\b1$/, ''), // 'Snapshot ' + index++,
+                  name: (m.match(new RegExp(test.fullName + '\\s+\\d+'))
+                    ? `Snapshot ${index++}`
+                    : m.replace(test.fullName, '')
+                  ).replace(/\b1$/, ''), // 'Snapshot ' + index++,
                   originalName: m,
                   matching: true,
                   test: t,
@@ -164,13 +172,13 @@ export function createBridge(
   state.liveRoot.passingTests = testData.numPassedTests;
   state.liveRoot.failingTests = testData.numFailedTests;
 
-  glob.describe = function(name: string, impl: Impl) {
+  glob.describe = function(name: string, _impl: Impl) {
     const group = state.currentGroup.getGroup(name, state);
     const parent = group.parent;
     state.currentGroup = group;
 
     try {
-      const story: any = impl();
+      const story: any = _impl();
       if (story) {
         state.currentGroup.initStory(story);
       }
@@ -184,7 +192,7 @@ export function createBridge(
     state.reconciliate(false);
   };
 
-  glob.storyOf = function(name: string, props: StoryConfig, impl: (props: any) => void) {
+  glob.storyOf = function(name: string, props: StoryConfig, _impl: (props: any) => void) {
     // config can also be a single function
     if (props instanceof Function) {
       const component = (props as any)();
@@ -200,8 +208,8 @@ export function createBridge(
     state.currentGroup = group;
 
     try {
-      if (impl) {
-        impl(props);
+      if (_impl) {
+        _impl(props);
       }
     } finally {
       state.currentGroup = parent;
@@ -213,38 +221,38 @@ export function createBridge(
     state.reconciliate(false);
   };
 
-  require('proxyrequire').setGlobalStubs({
-    'wafl': {
-      it: function() {},
-      itMountsAnd: function() {},
-      itMountsContainerAnd: function() {},
-      story: function(props: StoryConfig) {
-        state.currentGroup.initStory(props);
-      }
-    }
-  });
+  // require('proxyrequire').setGlobalStubs({
+  //   wafl: {
+  //     it: function() {},
+  //     itMountsAnd: function() {},
+  //     itMountsContainerAnd: function() {},
+  //     story: function(props: StoryConfig) {
+  //       state.currentGroup.initStory(props);
+  //     }
+  //   }
+  // });
 
   glob.xit = function() {};
 
   glob.xdescribe = function() {};
 
-  glob.it = function(name: string, impl: Impl) {};
+  glob.it = function(_name: string, _impl: Impl) {};
 
-  glob.itMountsAnd = function(name: string, impl: Impl) {};
+  glob.itMountsAnd = function(_name: string, _impl: Impl) {};
 
-  glob.itMountsContainerAnd = function(name: string, impl: Impl) {};
+  glob.itMountsContainerAnd = function(_name: string, _impl: Impl) {};
 
-  glob.before = function(impl: Impl) {};
+  glob.before = function(_impl: Impl) {};
 
-  glob.beforeAll = function(impl: Impl) {};
+  glob.beforeAll = function(_impl: Impl) {};
 
-  glob.beforeEach = function(impl: Impl) {};
+  glob.beforeEach = function(_impl: Impl) {};
 
-  glob.after = function(impl: Impl) {};
+  glob.after = function(_impl: Impl) {};
 
-  glob.afterAll = function(impl: Impl) {};
+  glob.afterAll = function(_impl: Impl) {};
 
-  glob.afterEach = function(impl: Impl) {};
+  glob.afterEach = function(_impl: Impl) {};
 }
 
 declare global {
