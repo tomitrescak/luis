@@ -41,7 +41,7 @@ export class TestGroupView extends React.Component<Props> {
 
     const isList = state.config.storyView === 'list';
     const name = isList ? group.path : group.name;
-    
+
     return (
       <div>
         <Accordion.Title
@@ -49,11 +49,11 @@ export class TestGroupView extends React.Component<Props> {
           active={state.isExpanded(group).get()}
           onClick={e => state.toggleExpanded(e, group)}
         >
-          { (group.groups.length || group.tests.length) ? <Icon name="dropdown" /> : false }
+          {group.groups.length || group.tests.length ? <Icon name="dropdown" /> : false}
           {group.component ? (
             <span>
               <a
-                href={`/stories/${group.id}`}
+                href={`?stories=${group.id}`}
                 onClick={e => state.viewState.openStoryFromList(e, group.id)}
               >
                 {name}
@@ -67,8 +67,8 @@ export class TestGroupView extends React.Component<Props> {
         </Accordion.Title>
         <Accordion.Content active={state.isExpanded(group).get()} className={content}>
           {!isList &&
-            group.groups.map((g) => <TestGroupView state={state} group={g} key={g.fileName} />)}
-          {group.tests.map((t) => <TestView state={state} test={t} key={t.name} />)}
+            group.groups.map(g => <TestGroupView state={state} group={g} key={g.fileName} />)}
+          {group.tests.map(t => <TestView state={state} test={t} key={t.name} />)}
         </Accordion.Content>
       </div>
     );
@@ -81,15 +81,15 @@ export const StoryList = observer(({ state }: Props) => {
   const isList = state.config.storyView === 'list';
   let version = state.liveRoot.version;
   if (state.liveRoot.groups.length === 0) {
-    return <div>There are no tests</div>
+    return <div>There are no tests</div>;
   }
   return (
     <Accordion className={pane()}>
       {isList
-        ? state.liveRoot.nestedGroupsWithTests.map((g) => (
-            <TestGroupView state={state} group={g} key={g.fileName + version } />
+        ? state.liveRoot.nestedGroupsWithTests.map(g => (
+            <TestGroupView state={state} group={g} key={g.fileName + version} />
           ))
-        : state.liveRoot.groups.map((g) => (
+        : state.liveRoot.groups.map(g => (
             <TestGroupView state={state} group={g} key={g.fileName + version} />
           ))}
     </Accordion>

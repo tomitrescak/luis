@@ -2,14 +2,16 @@ import * as React from 'react';
 
 import { observable, computed, action } from 'mobx';
 
-
 import { Test } from './test_model';
 import { TestItem } from './test_item_model';
 //@ts-ignore
 import { Snapshot } from './snapshot_model';
 import { TestGroup } from './test_group_model';
 
-const missingStory = new TestGroup(null, 'Missing', { component: <div>Story not found. Maybe you renamed it?</div>, info: 'Missing' });
+const missingStory = new TestGroup(null, 'Missing', {
+  component: <div>Story not found. Maybe you renamed it?</div>,
+  info: 'Missing'
+});
 
 export class ViewState {
   @observable storyPath = '';
@@ -19,28 +21,26 @@ export class ViewState {
   @observable snapshotView = 'react';
   @observable selectedStory: TestGroup = null;
   @observable selectedTest: Test = null;
-  
+
   state: Luis.State;
   bare: boolean;
 
-  constructor (state: Luis.State) {
+  constructor(state: Luis.State) {
     this.state = state;
   }
 
   @computed
   get currentUrl() {
-    const prefix = this.bare ? '/story' : '/stories';
+    const prefix = this.bare ? '?story' : '?stories';
     if (this.snapshotName) {
       return (
-        prefix + '/' + this.storyPath + '/' + this.testName + '/' + this.snapshotName
+        prefix + '=' + this.storyPath + '&test=' + this.testName + '&snapshot=' + this.snapshotName
       );
     }
     if (this.testName) {
-      return (
-        prefix + '/' + this.storyPath + '/' + this.testName
-      );
+      return prefix + '=' + this.storyPath + '&test=' + this.testName;
     }
-    return prefix + '/' + this.storyPath;
+    return prefix + '=' + this.storyPath;
   }
 
   get selectedSnapshot() {
@@ -50,7 +50,12 @@ export class ViewState {
     return null;
   }
 
-  openStoryFromList(e: React.SyntheticEvent<HTMLAnchorElement>, storyPath: string = '', testName: string = '', snapshotName = '') {
+  openStoryFromList(
+    e: React.SyntheticEvent<HTMLAnchorElement>,
+    storyPath: string = '',
+    testName: string = '',
+    snapshotName = ''
+  ) {
     e.preventDefault();
     e.bubbles = false;
     this.openStory(storyPath, testName, snapshotName);
@@ -81,11 +86,10 @@ export class ViewState {
 
   @action
   openStory(groupPath: string = '', testName: string = '', snapshotName = '') {
-    
     this.storyPath = groupPath;
     this.testName = testName;
     this.snapshotName = snapshotName;
-    
+
     this.selectedStory = this.state.findStoryById(groupPath) as TestGroup;
     if (this.selectedStory && testName) {
       this.selectedTest = this.selectedStory.findTestByUrlName(testName);

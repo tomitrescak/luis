@@ -46,13 +46,11 @@ type ErrorViewProps = {
 
 export const ErrorView = ({ test, single }: ErrorViewProps) => {
   const compareView =
-    test.error &&
-    test.error.message &&
-    (test.error.actual != null || test.error.expected != null);
+    test.error && test.error.message && (test.error.actual != null || test.error.expected != null);
 
   if (!compareView) {
     return (
-      <Segment attached={single ? undefined: "bottom"} className={noPadding} inverted color="red">
+      <Segment attached={single ? undefined : 'bottom'} className={noPadding} inverted color="red">
         <pre className={errorMessage}>{test.error.message}</pre>
       </Segment>
     );
@@ -97,15 +95,15 @@ export class TestView extends React.Component<TestProps> {
 
   render(): any {
     const { test, state } = this.props;
-    const expanded = state.isExpanded(test).get() && (test.error != null || test.snapshots.length > 0);
-    
+    const expanded =
+      state.isExpanded(test).get() && (test.error != null || test.snapshots.length > 0);
 
     if ((!state.showFailing && test.error) || (!state.showPassing && !test.error)) {
       return false;
     }
 
     // console.log('Rendering: ' + test.name + '[' + test.uid + ']');
-    const prefix = state.viewState.bare ? '/story' : '/stories';
+    const prefix = state.viewState.bare ? '?story' : '?stories';
 
     return (
       <div>
@@ -119,7 +117,7 @@ export class TestView extends React.Component<TestProps> {
           <Icon {...test.icon as any} />
 
           <a
-            href={`${test.parent.id}/${test.urlName}/`}
+            href={`${prefix}=${test.parent.id}&test=${test.urlName}/`}
             data-path={`${test.parent.id}/${test.urlName}/`}
             onClick={this.openSnapshot}
           >
@@ -131,11 +129,11 @@ export class TestView extends React.Component<TestProps> {
           {test.snapshots.length > 0 && (
             <Segment attached={test.error ? true : 'bottom'} secondary>
               <List className={snapshotMenu}>
-                {test.snapshots.map((s) => (
+                {test.snapshots.map(s => (
                   <List.Item
                     as="a"
                     data-path={`${test.parent.id}/${test.urlName}/${s.url}`}
-                    href={`${prefix}/${test.parent.id}/${test.urlName}/${s.url}`}
+                    href={`${prefix}=${test.parent.id}&test=${test.urlName}&snapshot=${s.url}`}
                     onClick={this.openSnapshot}
                     icon="image"
                     key={s.name}
