@@ -14,8 +14,6 @@ If you prefer video to text, check out this 3 minute video showing off all capab
 - Integration with VS Code and Wallaby.js
 ... and much more!
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/_EhiLLOhVis" frameborder="0" allowfullscreen></iframe>
-
 # Introduction
 
 LUIS (**L**ist of **U**ser **I**nterface**s**) is framework for collaborative building and testing React web components. It harnesses the power of [FuseBox](https://github.com/fuse-box/fuse-box) for **fastest** bundling, hot reloads, and out-of-the-box Typescript support. Following are stats for application with 976 typescript sources and 56 imported packages:
