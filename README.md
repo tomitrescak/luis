@@ -27,34 +27,123 @@ Luis is using well known technologies ([Mocha](https://mochajs.org), [React](htt
 
 To facilitate your component development, testing, and collaboration LUIS supports four different modes. Each mode is described in detail further below.
 
-# Table of Contents
+# Quick Start
 
-1. [**Web Application**](#web) - Luis comes pre-configured to run on its own so you can start working instantly
-2. [**API**](#api)
-    1. [**storyOf**](#storyOf)
-    2. [**itMountsAnd**](#itMountsAnd)
-    3. [**matchSnapshot**](#matchSnapshot)
-3. [**Adding new tests**](#addingTests)
-4. [**Working with Mocha, Jest and CI**](#wallaby)
-5. [**Working with Wallaby.js**](#wallaby)
-6. [**Adding Luis to your project as npm package**](#package) - With a little bit of configuration you can bring Luis to your application and run side by side with your project
-7. [**Visual Studio Code plugin**](#plugin) - Luis incorporates seamlessly into your (my) favourite editor, where it visualises your current snapshots and automatically reloads them as you type (with help of Wallaby.js or Mocha.js in watch mode)
-8. [**CI**](#ci) - Luis defines CI configurations so bringing your project to CI is a breeze.
-9. [**Stubbing components**]
+If you wish to run luis only as component catalogue, similar to StoryBook, all you need to do is:
+1. Define route for luis
+2. Import stories
+3. Return the luis component
 
-Pictures are worth thousand words, so let us introduce each mode and our API with many examples.
+Following are the code examples to set this uf in the application with react-router.
 
-# Web Application <a name="web"></a>
+```ts
+// router
+import { LuisView } from '../modules/luis';
 
-Web application mode runs directly from the source of of Luis package. To run it, clone the repository into any directory and run following (depending on your choice of package manager):
-
-```
-git clone https://github.com/tomitrescak/luis
-yarn // or npm install
-yarn run luis // or npm run luis
+...
+<Route exact={true} path="/luis" component={LuisApp()} />
+...
 ```
 
-Luis now runs on `http://localhost:9001`. Open this url in your browser and you should see a screen, similar to following:
+And now the `LuisView` component, where we import all our stories
+
+```ts
+// LuisView.tsx
+import * as React from 'react';
+
+import { Luis, setupTestBridge } from 'luis';
+
+// this allows us to read storyOf commands
+setupTestBridge();
+
+// function makes sure the content hot-reloads
+export function LuisApp() {
+  // import all your stories
+  require('../home/tests/home_view.test');
+
+  return Luis;
+}
+```
+
+And here is an example story:
+
+```ts
+import * as React from 'react';
+
+storyOf('Component With Test', {
+  get component() {
+    return <div>My Component</div>;
+  }
+});
+```
+
+If you want to know the full API os storyOf command, go to the [#API](API section).
+
+# Adding Tests
+
+In this example, we will be working with jest. Note that Luis also works flawlwessly with mocha with related reporter. To allow Luis to display test results, we will export a test report after each test run. Therefore, in your `jest.config.js` add:
+
+```js
+module.exports = {
+    testResultsProcessor: 'luis/dist/bridges/jest/reporter',
+    ...
+}
+```
+
+The processor will save a test report after each test run and save it in your `<project_root>/src/` folder. Both, summary (e.g. summary.json) and a list of detected snapshots (snapshots.js) is saved. If you want to enable snapshots and test reports in luis, you need to tell FuseBox to pack them into your bundle. This is done via SnapshotPlugin and JSONPlugin. Therefore, in your `fuse.js`:
+
+```js
+// fuse.js
+const { FuseBox, ..., JSONPlugin } = require('fuse-box');
+const { SnapshotPlugin } = require('luis/dist/bridges/jest/snapshot_plugin');
+
+const fuse = FuseBox.init({
+  ...
+  plugins: [
+    JSONPlugin(),
+    SnapshotPlugin()
+  ],
+  sourceMaps: true
+});
+```
+
+Now, we need to tell FuseBox, to pack them into our bundle. A good space for this is in the `LuisView.tsx` file:
+
+```js
+// LuisView.tsx (see above)
+
+// replace setupTestBridge() with
+const summary = require('../../../summary.json');
+const snapshots = require('../../../snapshots');
+setupTestBridge(summary, snapshots);
+```
+
+
+Now you are ready to visualise your tests in Luis. Make sure you run jest on server in watch mode. Yet, there he problem is, that Jest does not recognise `storyOf` command. Therefore we create a new file `jest.setup.js` and then modify the `jest.config.js` to execute this file before each test run. Also, we need to tell jest to ignore the jest generated files.
+
+```js
+// jest.setup.js
+global.storyOf = function(name, props, impl) {
+  describe(name, () => impl && impl(props));
+}
+```
+
+and
+
+```js
+// jest.config.js
+module.exports = {
+    ...
+    "setupTestFrameworkScriptFile": "<rootDir>/jest.setup.js",
+    "watchPathIgnorePatterns": ['<rootDir>/src/summary.json', '<rootDir>/src/snapshots.js'],
+}
+```
+
+If you are using wallaby, make sure to run `jest.setup.js` as well
+
+THAT'S IT! ENJOY!
+
+# Luis Interface <a name="web"></a>
 
 ![luis-ui](https://user-images.githubusercontent.com/2682705/31363176-58b63068-ada8-11e7-8e1c-1c8349814de3.png)
 
@@ -193,7 +282,7 @@ This allows you to prepare data for your wrapped component and then pass this da
 
 ## matchSnapshot <a name="matchSnapshot"></a>
 
-This matcher compares a current version of the object with snapshot that has been saved to disk. It operates differently from the Jest snapshot and its performance has been tuned for use with front and back-end. The main differences are:
+This sinon matcher compares a current version of the object with snapshot that has been saved to disk. It operates differently from the Jest snapshot and its performance has been tuned for use with front and back-end. The main differences are:
 
 - All snapshots saved into the same directory and named by the test name. This directory is by default `/src/tests/snapshots` but this can be configured (more on this later)
 - Enzyme wrapper saves `html` representation of the component
@@ -224,33 +313,6 @@ const decorator = (html: string) => `<div style={margin: 20px, color: black}>${h
 wrapper.should.matchSnapshot('button click increases number', { decorator });
 ```
 
-### Snapshot Configuration <a name="snapshotConfiguration"></a>
-
-The snapshots can be easily configured modifying the default config of `chai-match-snapshot` package. Following is the signature of the config:
-
-```typescript
-export type Config = {
-  /** directory where snapshots are stored relative to the project directory */
-  snapshotDir: string;
-  /* you can choose following snapshot mode
-   * - tcp: updated snapshots are sent to VS Code extension over TCP. 
-   *        [!!! IMPORTANT] Make sure the extension is enabled before running
-   * - drive: updated snapshots are automatically saved to your drive
-   * - both: snapshots are sent to VS Code extension AND saved to drive
-   * - test: standard mode during running your tests, when snapshots are NOT updated but compared
-   */
-  snapshotMode: 'test' | 'tcp' | 'drive' | 'both';
-  /** custom serializer */
-  serializer: (obj: any) => string;
-  /** custom replacer for JSON.stringify */
-  replacer: (key: string, value: any) => any;
-};
-
-// example
-import { config } from 'chai-match-snapshot';
-config.snapshotDir = '/my/custom/dir';
-``` 
-
 # Adding Test Files  <a name="addingTests"></a>
 
 If you add a new test file, you need to import to `src/example/luis`. This is the start file of Luis project. This can be changed in `fuse.js` file.
@@ -264,78 +326,6 @@ import './tests/boo.test';
 
 renderLuis();
 ```
-
-# Working with Mocha, Jest and CI
-
-It is fairly easy to configure your testing environment to work with Luis. Once again, `wafl` does all the heavy lifting for you. Please see following examples of run scripts for Mocha (check out ):
-
-```json
-"scripts": {
-  "test": "mocha --require ./mocha.js --ui snapshots 'src/example/**/*.test.ts*' -P",
-  "testWatch": "mocha --require ./mocha.js --ui snapshots --watch --watch-extensions ts,tsx 'src/example/**/*.test.ts*' -P",
-  "us": "mocha --require ./us.js --ui snapshots --watch --watch-extensions ts,tsx 'src/example/**/*.test.ts*' -P",
-  "usWatch": "mocha --require ./us.js --ui snapshots 'src/example/**/*.test.ts*' -P"
-},
-```
-
-The `test` executes all tests from the example folder. The `testWatch` executed tests in watch mode (it will stay active and watch for your changes). The `us` and `usWatch`execute tests and update snapshots. The configuration of mocha tests is performed in `[mocha.js](https://github.com/tomitrescak/luis/blob/master/mocha.js)` and `[us.js](https://github.com/tomitrescak/luis/blob/master/us.js)` files. 
-
-```js
-// mocha.js
-const { setup } = require('wafl');
-
-// setup compiler
-process.env.TS_NODE_FAST = true;
-require('ts-node/register');
-
-// setup snapshots for mocha
-require('chai-match-snapshot/mocha').setupMocha();
-
-// setup app
-setup();
-```
-
-The `us.js` sets the snapshot mode to update snapshots and save them to their location:
-
-```js
-// us.js
-require('./mocha');
-
-const config = require('chai-match-snapshot').config;
-config.snapshotMode = 'drive';
-```
-
-# Working with Wallaby.js
-
-In our team we :heart: [Wallaby.js](https://wallabyjs.com). It is THE best test runner in the world, making writing tests FUN. Luis :heart: wallabies more then any other animal in the world (closely followed by [Wombats](https://www.youtube.com/watch?v=OiuQ_rVM-WE)). As a result, Luis (or in this case `wafl`) comes with a set of configurations to enable insanely fast snapshot testing and its integration in VS Code. All you need to do is to modify [wallaby.js](https://github.com/tomitrescak/luis/blob/master/wallaby.js) file and add following setting in the `setup` function:
-
-```js
-...
-setup: function(wallaby) {
-  const path = require('path');
-  const snapshotDir= path.join(wallaby.localProjectDir, 'src', 'tests', 'snapshots');
-  
-  require('wafl').setup({ 
-    wallaby, 
-    // if you want wallaby to save snapshots, you need to specify absolute path to their location 
-    snapshotDir, 
-    // see matchSnapshot configuration for options: 'tcp' | 'drive' | 'both' | 'test'
-    snapshotMode: 'tcp' 
-  });
-}
-```
-
-# Package Mode
-
-It is relatively simple to add Luis to your existing project. What it requires is to setup following:
-
-1. Install Luis with `yarn add luis --dev` or `npm install luis --save-dev`
-2. Add a `fuse.js`, you can reuse the one from the package, just make sure to configure your source directory and entry points, both for the main bundle and vendor bundle
-3. Add a client and server entry point for luis (e.g. `src/client/luis.ts` and `src/client.server.ts`). Again, you can reuse the ones from the luis package (src/example/luis.ts fro client and src/example/server.ts for server).
-4. Import all your test files from main entry file for client (e.g. src/client/luis.ts)
-5. Set up your package.json script to run luis as `node fuse.js`.
-
-DONE! Pure joy.
 
 # Visual Studio Extension: Luis
 
