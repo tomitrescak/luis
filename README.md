@@ -23,17 +23,17 @@ LUIS (**L**ist of **U**ser **I**nterface**s**) is framework for collaborative bu
 * **StoryBook** — Start `36 seconds`, Hot Module Reload with sourcemaps `9 seconds`.
 * **LUIS** — Start `400 ms`, Hot Module Reload with sourcemaps `750 ms`. Now that's what I call a significant difference.
 
-Luis is using well known technologies ([Mocha](https://mochajs.org), [React](https://reactjs.org), optionally [Wallaby](https://wallabyjs.com)) and methodologies (TDD, BDD, Snapshot testing), so there is almost nothing new to learn (apart from two new functions, **storyOf** and **itMountsAnd**). Luis, takes away the complex configuration, using [wafl](https://github.com/tomitrescak/wafl) package to set-up your testing environment.
+Luis is using well known technologies ([Jest](https://facebook.github.io/jest/), [Mocha](https://mochajs.org), [React](https://reactjs.org), optionally [Wallaby](https://wallabyjs.com)) and methodologies (TDD, BDD, Snapshot testing), so there is almost nothing new to learn (apart from two new functions, **storyOf** and **itMountsAnd**).
 
 To facilitate your component development, testing, and collaboration LUIS supports four different modes. Each mode is described in detail further below.
 
 # Quick Start
 
-If you wish to run luis only as component catalogue, similar to StoryBook, all you need to do is:
+If you wish to run Luis only as component catalogue, similar to StoryBook, all you need to do is:
 
 1.  Import package
 2.  Import stories
-3.  Return the luis component
+3.  Render Luis UI
 
 Start with the standard:
 
@@ -60,7 +60,7 @@ import { renderLuis, setupTestBridge } from 'luis';
 
 // this needs to be there to set up custom global function that luis uses
 // such as: storyOf
-setupTestBridge(summary, snapshots);
+setupTestBridge();
 
 // import all your stories and tests
 import './client/modules/home/tests/example.test';
@@ -81,15 +81,15 @@ storyOf('Component With Test', {
 });
 ```
 
-If you want to know the full API os storyOf command, go to the [#API](API section).
+If you want to know the full API os storyOf command, go to the [API section](#API).
 
 ## Custom FuseBox Configuration
 
-If you need a custom FuseBox config to package Luis, all you need to do is to define a `luis.fuse.js` in your project root. **WARNING**: You need to define your project root with '../../' prefix (e.g. ../../src). I could not figure out how to convince `require` to change root and start from a different directory. **PRs welcome!**.
+If you need a custom FuseBox config to package Luis, all you need to do is to define a `luis.fuse.js` in your project root. **WARNING**: You need to define your `homeDir` in fuse config with `'../../'` prefix (e.g.`homeDir: ../../src`. *I could not figure out how to convince `require` to change root and start from a different directory. **PRs welcome!***.
 
 ## Importing Luis to an existing application
 
-Following are the code examples to set this uf in the application with react-router.
+You can easily use Luis in your exisiting application under its own route (e.g. `/louis`). Following is the tutorial to set this in the application with react-router.
 
 ```ts
 // router
@@ -122,7 +122,7 @@ export function LuisApp() {
 
 # Adding Tests
 
-In this example, we will be working with jest. Note that Luis also works flawlwessly with mocha with related reporter. To allow Luis to display test results, we will export a test report after each test run. Therefore, in your `jest.config.js` add:
+Luis iworks also as a sophisticated test result viewer. In this example, we will be working with Jest. Note that Luis also works with mocha with a [related reporter](https://github.com/tomitrescak/luis-mocha-reporter). To allow Luis to display test results, we will export a test report after each test run. Therefore, in your `jest.config.js` add:
 
 ```js
 module.exports = {
