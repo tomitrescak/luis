@@ -1,28 +1,30 @@
 {
   "name": "luis",
-  "version": "2.4.4",
+  "version": "2.5.1",
   "description": "List-of-uis book and testing of uis",
   "main": "dist/client/index.js",
   "types": "dist/client/index.d.ts",
   "scripts": {
     "luis": "node fuse.js luis",
     "test": "mocha --require ./mocha.js  --ui snapshots 'src/client/**/*.test.ts*' -P",
-    "testWatch": "mocha --require ./mocha.js --ui snapshots --watch --watch-extensions ts,tsx 'src/client/**/*.test.ts*' -P",
+    "testWatch":
+      "mocha --require ./mocha.js --ui snapshots --watch --watch-extensions ts,tsx 'src/client/**/*.test.ts*' -P",
     "us": "mocha --require ./us.js --ui snapshots 'src/example/**/*.test.ts*' -P",
-    "usWatch": "mocha --require ./us.js --ui snapshots --watch --watch-extensions ts,tsx 'src/example/**/*.test.ts*' -P"
+    "usWatch":
+      "mocha --require ./us.js --ui snapshots --watch --watch-extensions ts,tsx 'src/example/**/*.test.ts*' -P"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tomitrescak/louis.git"
   },
-  "keywords": [
-    "ui",
-    "react"
-  ],
+  "keywords": ["ui", "react"],
   "author": "tomi.trescak@gmail.com",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/tomitrescak/louis/issues"
+  },
+  "bin": {
+    "luis": "./luis.js"
   },
   "homepage": "https://github.com/tomitrescak/louis#readme",
   "dependencies": {
