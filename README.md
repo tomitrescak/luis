@@ -5,7 +5,7 @@
 
 # TL; DR;
 
-If you prefer video to text, check out this 3 minute video showing off all capabilities of Luis:
+Luis brings:
 
 * React component development
 * Seamless snapshot-based testing
@@ -14,7 +14,7 @@ If you prefer video to text, check out this 3 minute video showing off all capab
 * Integration with VS Code and Wallaby.js
   ... and much more!
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/_EhiLLOhVis" frameborder="0" allowfullscreen></iframe>
+![luis_introduction](https://user-images.githubusercontent.com/2682705/31411377-29cb8298-ae5d-11e7-9817-6b1368af5954.gif)
 
 # Introduction
 
@@ -377,9 +377,9 @@ import './tests/boo.test';
 renderLuis();
 ```
 
-# Visual Studio Extension: Luis
+# [Visual Studio Extension: Luis](https://marketplace.visualstudio.com/items?itemName=Tomas.luis-snapshot-preview)
 
-The Extension for Visual Studio Code comes with two awesome functionalities:
+[The Extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=Tomas.luis-snapshot-preview) comes with two awesome functionalities:
 
 1.  You can visualise current snapshot directly in Code environment. Just press `CMD + P` and search from `Luis: Snapshot Preview`. The snapshot will automatically load snapshots from the current test. This functionality works really well with automated test runner such as _wallabyjs_, or _mocha_ or _jest_ in watch test mode, and with snapshot delivery over TCP, since snapshots automatically change as you type.
 
