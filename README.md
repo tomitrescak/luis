@@ -7,12 +7,12 @@
 
 If you prefer video to text, check out this 3 minute video showing off all capabilities of Luis:
 
-- React component development
-- Seamless snapshot-based testing
-- Snapshot management
-- Web component catalogue
-- Integration with VS Code and Wallaby.js
-... and much more!
+* React component development
+* Seamless snapshot-based testing
+* Snapshot management
+* Web component catalogue
+* Integration with VS Code and Wallaby.js
+  ... and much more!
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/_EhiLLOhVis" frameborder="0" allowfullscreen></iframe>
 
@@ -23,16 +23,71 @@ LUIS (**L**ist of **U**ser **I**nterface**s**) is framework for collaborative bu
 * **StoryBook** — Start `36 seconds`, Hot Module Reload with sourcemaps `9 seconds`.
 * **LUIS** — Start `400 ms`, Hot Module Reload with sourcemaps `750 ms`. Now that's what I call a significant difference.
 
-Luis is using well known technologies ([Mocha](https://mochajs.org), [React](https://reactjs.org), optionally [Wallaby](https://wallabyjs.com)) and methodologies (TDD, BDD, Snapshot testing), so there is almost nothing new to learn (apart from two new functions, **storyOf** and **itMountsAnd**). Luis, takes away the complex configuration, using [wafl](https://github.com/tomitrescak/wafl) package to set-up your testing environment. 
+Luis is using well known technologies ([Mocha](https://mochajs.org), [React](https://reactjs.org), optionally [Wallaby](https://wallabyjs.com)) and methodologies (TDD, BDD, Snapshot testing), so there is almost nothing new to learn (apart from two new functions, **storyOf** and **itMountsAnd**). Luis, takes away the complex configuration, using [wafl](https://github.com/tomitrescak/wafl) package to set-up your testing environment.
 
 To facilitate your component development, testing, and collaboration LUIS supports four different modes. Each mode is described in detail further below.
 
 # Quick Start
 
 If you wish to run luis only as component catalogue, similar to StoryBook, all you need to do is:
-1. Define route for luis
-2. Import stories
-3. Return the luis component
+
+1.  Import package
+2.  Import stories
+3.  Return the luis component
+
+Start with the standard:
+
+```
+yarn add luis --dev
+```
+
+Next add your luis in package.json. You can either use only a `luis` command that estimates your config file be located at `acr/luis.ts`, or you can provide your `root` and `path/to/luis.ts` as your parameters.
+
+```json
+{
+  "scripts": {
+    "luis": "luis",
+    "luis-custom-root-path": "luis root path/to/luis.ts"
+  }
+}
+```
+
+If you are ok with a [standard luis config](https://github.com/tomitrescak/luis/blob/master/luis.fuse.js) all you need to do is to set up Luis and import all your stories.
+
+```ts
+// luis.ts
+import { renderLuis, setupTestBridge } from 'luis';
+
+// this needs to be there to set up custom global function that luis uses
+// such as: storyOf
+setupTestBridge(summary, snapshots);
+
+// import all your stories and tests
+import './client/modules/home/tests/example.test';
+
+// render luis ui to '#react-root'
+renderLuis();
+```
+
+And here is an example story:
+
+```ts
+import * as React from 'react';
+
+storyOf('Component With Test', {
+  get component() {
+    return <div>My Component</div>;
+  }
+});
+```
+
+If you want to know the full API os storyOf command, go to the [#API](API section).
+
+## Custom FuseBox Configuration
+
+If you need a custom FuseBox config to package Luis, all you need to do is to define a `luis.fuse.js` in your project root. **WARNING**: You need to define your project root with '../../' prefix (e.g. ../../src). I could not figure out how to convince `require` to change root and start from a different directory. **PRs welcome!**.
+
+## Importing Luis to an existing application
 
 Following are the code examples to set this uf in the application with react-router.
 
@@ -64,20 +119,6 @@ export function LuisApp() {
   return Luis;
 }
 ```
-
-And here is an example story:
-
-```ts
-import * as React from 'react';
-
-storyOf('Component With Test', {
-  get component() {
-    return <div>My Component</div>;
-  }
-});
-```
-
-If you want to know the full API os storyOf command, go to the [#API](API section).
 
 # Adding Tests
 
@@ -118,14 +159,13 @@ const snapshots = require('../../../snapshots');
 setupTestBridge(summary, snapshots);
 ```
 
-
 Now you are ready to visualise your tests in Luis. Make sure you run jest on server in watch mode. Yet, there he problem is, that Jest does not recognise `storyOf` command. Therefore we create a new file `jest.setup.js` and then modify the `jest.config.js` to execute this file before each test run. Also, we need to tell jest to ignore the jest generated files.
 
 ```js
 // jest.setup.js
 global.storyOf = function(name, props, impl) {
   describe(name, () => impl && impl(props));
-}
+};
 ```
 
 and
@@ -149,19 +189,19 @@ THAT'S IT! ENJOY!
 
 The main buttons of Luis interface perform following actions:
 
-1. Tree mode / flat mode changes the way the list of tests are displayed
-2. Configuration allows you to enable / disable specific tests and more
-3. Update button updates current snapshot to the new version and saves it on your drive
-4. Auto-update toggle allows to update snapshot automatically when tests are run. This is very useful during component development and writing of tests.
+1.  Tree mode / flat mode changes the way the list of tests are displayed
+2.  Configuration allows you to enable / disable specific tests and more
+3.  Update button updates current snapshot to the new version and saves it on your drive
+4.  Auto-update toggle allows to update snapshot automatically when tests are run. This is very useful during component development and writing of tests.
 
 Luis has four view modes:
 
-1. *React*: Displays a "live" React components, used mostly during component development
-2. *Html*: Displays a HTML version of the snapshot and shows side-by-side comparison if snapshots differ.
-3. *Json*: Displays *raw* source of the snapshot and compares the differences
-4. *Snapshots*: Show all saved snapshots for a current test 
+1.  _React_: Displays a "live" React components, used mostly during component development
+2.  _Html_: Displays a HTML version of the snapshot and shows side-by-side comparison if snapshots differ.
+3.  _Json_: Displays _raw_ source of the snapshot and compares the differences
+4.  _Snapshots_: Show all saved snapshots for a current test
 
-*Tree view* shows all tests and snapshots. It also shows all test results, and if possible, it shows side-by-side comparison of actual vs. expected value. The number next to the test item represent the execution time of the test. When number is:
+_Tree view_ shows all tests and snapshots. It also shows all test results, and if possible, it shows side-by-side comparison of actual vs. expected value. The number next to the test item represent the execution time of the test. When number is:
 
 * Green - all tests pass
 * Orange - some tests pass
@@ -187,37 +227,45 @@ interface StoryConfig {
   component: JSX.Element;
   info?: string;
   cssClassName?: string;
-  componentWithData?(...props: any[]): JSX.Element | {
-    [index: string]: any;
-    component: JSX.Element;
-    afterMount?(wrapper: ReactWrapper): void;
-  }
+  componentWithData?(
+    ...props: any[]
+  ):
+    | JSX.Element
+    | {
+        [index: string]: any;
+        component: JSX.Element;
+        afterMount?(wrapper: ReactWrapper): void;
+      };
 }
 
-function storyOf<T extends StoryConfig>(name: string, config: T, implementation: (params: T) => void): void;
+function storyOf<T extends StoryConfig>(
+  name: string,
+  config: T,
+  implementation: (params: T) => void
+): void;
 ```
 
 The only compulsory parameter of the `config` part of the `storyOf` is `component`, which needs to return a `JSX.Element`, for example `<div>Luis</div>`. The `info` stores the description of the story, and `cssClassName` adds a css class to the element which will wrap your rendered React component. `componentWithData` is a very versatile function that allows you to define variations of your component (examples below) and modify the component after it has been mounted. Following is an example of the `storyOf` function:
 
 ```jsx
 storyOf(
-  'My Component', 
+  'My Component',
   {
     someData: 1,
     get component() {
-      return <div>My component</div>
+      return <div>My component</div>;
     }
   },
-  function({ someData, component }) { 
-    it ('mounts component', function() {
+  function({ someData, component }) {
+    it('mounts component', function() {
       const wrapper = mount(component); // now do some tests
     });
 
-    it ('tests', function() {
+    it('tests', function() {
       expect(someData).toEqual('1');
     });
   }
-)
+);
 ```
 
 ## itMountsAnd <a name="itMountsAnd"></a>
@@ -225,7 +273,6 @@ storyOf(
 This funstion is an extension of a classic `it` function. The difference to the original `it` is that it uses `enzyme` to mount a provided component and then unmount once the test is finished. This is important in the browser, since all mounted components would stay mounted forever, until page refresh. Following is the definition of the `itMountsAnd` function:
 
 ```typescript
-
 import { ReactElement } from 'react';
 import { ReactWrapper } from 'enzyme';
 
@@ -239,17 +286,17 @@ function itMountsAnd<P>(
 ): void;
 
 type WrappedComponent<P, W> = W & { component: ReactElement<P> };
-type AdvancedFunctionInitialiser<P, W> = () => WrappedComponent<P, W>
+type AdvancedFunctionInitialiser<P, W> = () => WrappedComponent<P, W>;
 type Wrapper<P, S, W> = W & { wrapper: ReactWrapper<P, S> };
 
 function itMountsAnd<P, S, W>(
   name: string,
   component: AdvancedFunctionInitialiser<P, W>,
-  test: (data: Wrapper<P, S, W> ) => void
+  test: (data: Wrapper<P, S, W>) => void
 ): void;
 ```
 
-While this may look mighty confusing, it is actually **DEAD SIMPLE**. The it mounts and exists in two versions. The simple version expects a React component as its parameter, and it feeds a *mounted enzyme wrapper* to the test function. Following is an example:
+While this may look mighty confusing, it is actually **DEAD SIMPLE**. The it mounts and exists in two versions. The simple version expects a React component as its parameter, and it feeds a _mounted enzyme wrapper_ to the test function. Following is an example:
 
 ```typescript
 const Foo = () => <div>foo</div>;
@@ -265,17 +312,20 @@ The second version of the `itMountsAnd` function is more versatile. It allows to
 ```jsx
 const Foo = ({ some }) => <div>{some.param}</div>;
 
-itMountsAnd('tests description', () => {
+itMountsAnd(
+  'tests description',
+  () => {
     const cls = new SomeClass();
     return {
       cls,
-      component: <Foo some={cls} />, // this is compulsory !!!
-    }
-  }, function({ wrapper, cls }) {
-
-  // do whatever you need to do with wrapper
-  wrapper.should.matchSnapshot();
-});
+      component: <Foo some={cls} /> // this is compulsory !!!
+    };
+  },
+  function({ wrapper, cls }) {
+    // do whatever you need to do with wrapper
+    wrapper.should.matchSnapshot();
+  }
+);
 ```
 
 This allows you to prepare data for your wrapped component and then pass this data to the component. Please check out the [tests](https://github.com/tomitrescak/luis/tree/2.0/src/example/tests) directory for more examples.
@@ -284,9 +334,9 @@ This allows you to prepare data for your wrapped component and then pass this da
 
 This sinon matcher compares a current version of the object with snapshot that has been saved to disk. It operates differently from the Jest snapshot and its performance has been tuned for use with front and back-end. The main differences are:
 
-- All snapshots saved into the same directory and named by the test name. This directory is by default `/src/tests/snapshots` but this can be configured (more on this later)
-- Enzyme wrapper saves `html` representation of the component
-- All other objects save circular-free json stringified representation
+* All snapshots saved into the same directory and named by the test name. This directory is by default `/src/tests/snapshots` but this can be configured (more on this later)
+* Enzyme wrapper saves `html` representation of the component
+* All other objects save circular-free json stringified representation
 
 `matchSnapshot` has a following signature:
 
@@ -313,7 +363,7 @@ const decorator = (html: string) => `<div style={margin: 20px, color: black}>${h
 wrapper.should.matchSnapshot('button click increases number', { decorator });
 ```
 
-# Adding Test Files  <a name="addingTests"></a>
+# Adding Test Files <a name="addingTests"></a>
 
 If you add a new test file, you need to import to `src/example/luis`. This is the start file of Luis project. This can be changed in `fuse.js` file.
 
@@ -331,11 +381,12 @@ renderLuis();
 
 The Extension for Visual Studio Code comes with two awesome functionalities:
 
-1. You can visualise current snapshot directly in Code environment. Just press `CMD + P` and search from `Luis: Snapshot Preview`. The snapshot will automatically load snapshots from the current test. This functionality works really well with automated test runner such as *wallabyjs*, or *mocha* or *jest* in watch test mode, and with snapshot delivery over TCP, since snapshots automatically change as you type. 
+1.  You can visualise current snapshot directly in Code environment. Just press `CMD + P` and search from `Luis: Snapshot Preview`. The snapshot will automatically load snapshots from the current test. This functionality works really well with automated test runner such as _wallabyjs_, or _mocha_ or _jest_ in watch test mode, and with snapshot delivery over TCP, since snapshots automatically change as you type.
 
     ![luis](https://user-images.githubusercontent.com/2682705/32410567-ad66cb80-c217-11e7-9514-19232830aadd.gif)
 
-2. You can work directly with a React component which is hot reloaded into your envirnment. Just press `CMD + P` and search from `Luis: Component Preview`. For this to work, you need to first run Luis (`npm start luis`). If you need to access the development console of the previewed component press `CMD + P` and search for `Luis: Show Componnt Dev Tools`. The previewed component automatically changes based on your selected test. The simplified interface provides following functionality:
+2.  You can work directly with a React component which is hot reloaded into your envirnment. Just press `CMD + P` and search from `Luis: Component Preview`. For this to work, you need to first run Luis (`npm start luis`). If you need to access the development console of the previewed component press `CMD + P` and search for `Luis: Show Componnt Dev Tools`. The previewed component automatically changes based on your selected test. The simplified interface provides following functionality:
+
     * See test result and test run time
     * Visualise the React component and manually test its functionality (great for development)
     * Visualise the difference between current component state and saved snapshot
@@ -344,7 +395,6 @@ The Extension for Visual Studio Code comes with two awesome functionalities:
     * Set automatic snapshot update with each hot reload
 
     ![luiscomponent](https://user-images.githubusercontent.com/2682705/32410656-5783c544-c21a-11e7-9b42-332705282ffa.gif)
-
 
 # Troubleshooting
 

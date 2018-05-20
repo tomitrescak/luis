@@ -19,7 +19,7 @@ module.exports = function(root, entry) {
   });
   const historyAPIFallback = require('connect-history-api-fallback');
 
-  fuse.dev({ port: 3000 }, server => {
+  fuse.dev({ port: 9001 }, server => {
     const app = server.httpServer.app;
     app.use(historyAPIFallback());
   });
