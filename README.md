@@ -41,13 +41,13 @@ Start with the standard:
 yarn add luis --dev
 ```
 
-Next add your luis in package.json. You can either use only a `luis` command that estimates your config file be located at `acr/luis.ts`, or you can provide your `root` and `path/to/luis.ts` as your parameters.
+Next add your luis in package.json. You can either use only a `luis` command that estimates your config file be located at `src/luis.ts`, or you can provide your `root` and `path/to/luis.ts` as your parameters.
 
 ```json
 {
   "scripts": {
     "luis": "luis",
-    "luis-custom-root-path": "luis root path/to/luis.ts"
+    "luis-custom-path": "luis root-dir path/to/luis.ts"
   }
 }
 ```
