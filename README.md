@@ -327,9 +327,9 @@ import './tests/boo.test';
 renderLuis();
 ```
 
-# Visual Studio Extension: Luis
+# [Visual Studio Extension: Luis](https://marketplace.visualstudio.com/items?itemName=Tomas.luis-snapshot-preview)
 
-The Extension for Visual Studio Code comes with two awesome functionalities:
+[The Extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=Tomas.luis-snapshot-preview) comes with two awesome functionalities:
 
 1. You can visualise current snapshot directly in Code environment. Just press `CMD + P` and search from `Luis: Snapshot Preview`. The snapshot will automatically load snapshots from the current test. This functionality works really well with automated test runner such as *wallabyjs*, or *mocha* or *jest* in watch test mode, and with snapshot delivery over TCP, since snapshots automatically change as you type. 
 
