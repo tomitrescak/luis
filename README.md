@@ -5,7 +5,7 @@
 
 # TL; DR;
 
-If you prefer video to text, check out this 3 minute video showing off all capabilities of Luis:
+Luis brings:
 
 - React component development
 - Seamless snapshot-based testing
