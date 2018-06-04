@@ -35,12 +35,12 @@ function runServer() {
     // launch and restart express
     .completed(proc => proc.start());
 
-    serverFuse.run();
+  serverFuse.run();
 }
 
 Sparky.task('luis', () => {
   const luisFuse = FuseBox.init({
-    emitHMRDependencies : true,
+    emitHMRDependencies: true,
     homeDir: 'src',
     output: 'public/$name.js',
     plugins: [
@@ -53,10 +53,9 @@ Sparky.task('luis', () => {
         outFile: `public/styles/luis.css`,
         inject: false
       }),
-      WebIndexPlugin({ template: 'src/client/luis.html', target: 'luis.html' }),
+      WebIndexPlugin({ template: 'index.html', target: 'index.html' })
     ],
     shim: {
-      
       stream: {
         exports: '{ Writable: function() {}, Readable: function() {}, Transform: function() {} }'
       }
@@ -85,12 +84,11 @@ Sparky.task('luis', () => {
     .hmr()
     .target('browser')
     .sourceMaps(true)
-    .instructions(' !> [client/luis.ts] + **/**.json')
+    .instructions(' !> [client/luis.ts] + proxyrequire')
     .globals({
       proxyrequire: '*'
     })
     .completed(() => runServer());
-    
+
   luisFuse.run();
 });
-

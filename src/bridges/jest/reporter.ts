@@ -4,7 +4,7 @@ import * as path from 'path';
 const rootDir = 'src';
 
 function checkSaveFile(savePath: string, saveContent: string) {
-  console.log(savePath)
+  console.log(savePath);
   try {
     fs.accessSync(savePath);
     let savedContent = fs.readFileSync(savePath, { encoding: 'utf-8' });
@@ -23,32 +23,33 @@ module.exports = function(testData: jest.AggregatedResult) {
   }
 
   let savePath = path.join(process.env.JEST_ROOT_OUTPUT_PATH || rootDir, 'summary.json');
-  let clone = {...testData};
+  let clone = { ...testData };
 
-  delete(clone.startTime);
-  clone.testResults.forEach(t => delete(t.perfStats));
+  delete clone.startTime;
+  clone.testResults.forEach(t => delete t.perfStats);
 
   let saveContent = JSON.stringify(clone, null, 2);
 
   // find the file and check if there are any changes
   checkSaveFile(savePath, saveContent);
-  
+
   let imports: any = 'module.exports = {\n';
   let root = path.resolve(process.env.JEST_ROOT_OUTPUT_PATH || rootDir);
-  console.log(root)
-  testData.testResults.forEach((suite) => {
+  console.log(root);
+  testData.testResults.forEach(suite => {
     let suitePath = path.dirname(suite.testFilePath);
     let snapshotPath = path.join(suitePath, '__snapshots__');
 
     try {
       fs.accessSync(snapshotPath);
       let files = fs.readdirSync(snapshotPath);
-      
 
       for (let file of files) {
-        let fullFile = path.join(snapshotPath, file);
-        let partFile = fullFile.replace(root, '');
-        imports += `    '${suite.testFilePath}':  require('.${partFile}')\n`;
+        if (file.match(/\.snap/)) {
+          let fullFile = path.join(snapshotPath, file);
+          let partFile = fullFile.replace(root, '');
+          imports += `    '${suite.testFilePath}':  require('.${partFile}')\n`;
+        }
       }
     } catch (e) {
       console.log(e);
@@ -75,7 +76,7 @@ module.exports = function(testData: jest.AggregatedResult) {
 
   // // Loop through each test suite
   // testData.testResults.forEach((suite) => {
-    
+
   //   // create directory if it does not exist
   //   let suitePath = path.dirname(suite.testFilePath);
   //   let resultPath = path.join(suitePath, '__snapshots__');
@@ -88,7 +89,7 @@ module.exports = function(testData: jest.AggregatedResult) {
   //   }
 
   //   let file = path.basename(suite.testFilePath, path.extname(suite.testFilePath)) + '.result.js';
-    
+
   //   let suiteResult: any = {};
 
   // 	// if (!suite.testResults || suite.testResults.length <= 0) { return; }
@@ -121,4 +122,4 @@ module.exports = function(testData: jest.AggregatedResult) {
   // });
 
   return testData;
-}
+};

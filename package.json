@@ -1,23 +1,24 @@
 {
   "name": "luis",
-  "version": "2.5.3",
+  "version": "2.5.4",
   "description": "List-of-uis book and testing of uis",
   "main": "dist/client/index.js",
   "types": "dist/client/index.d.ts",
   "scripts": {
-    "luis": "node fuse.js luis",
+    "start": "node fuse.js luis",
     "test": "mocha --require ./mocha.js  --ui snapshots 'src/client/**/*.test.ts*' -P",
-    "testWatch":
-      "mocha --require ./mocha.js --ui snapshots --watch --watch-extensions ts,tsx 'src/client/**/*.test.ts*' -P",
+    "testWatch": "mocha --require ./mocha.js --ui snapshots --watch --watch-extensions ts,tsx 'src/client/**/*.test.ts*' -P",
     "us": "mocha --require ./us.js --ui snapshots 'src/example/**/*.test.ts*' -P",
-    "usWatch":
-      "mocha --require ./us.js --ui snapshots --watch --watch-extensions ts,tsx 'src/example/**/*.test.ts*' -P"
+    "usWatch": "mocha --require ./us.js --ui snapshots --watch --watch-extensions ts,tsx 'src/example/**/*.test.ts*' -P"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tomitrescak/louis.git"
   },
-  "keywords": ["ui", "react"],
+  "keywords": [
+    "ui",
+    "react"
+  ],
   "author": "tomi.trescak@gmail.com",
   "license": "MIT",
   "bugs": {
@@ -34,13 +35,13 @@
     "diff-view": "^1.0.12",
     "express": "^4.16.2",
     "marked": "^0.3.12",
-    "mobx": "^3.4.1",
-    "mobx-react": "^4.3.5",
+    "mobx": "^4.3.0",
+    "mobx-react": "^5.1.2",
     "path-match": "^1.2.4",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-split-pane": "^0.1.74",
-    "semantic-ui-react": "^0.77.2",
+    "semantic-ui-react": "^0.81.0",
     "tslib": "^1.9.0",
     "tslint": "^5.9.1",
     "typestyle": "^1.6.0"
@@ -50,6 +51,7 @@
     "@types/node": "^9.4.0",
     "@types/react": "^16.0.35",
     "fuse-box": "3.0.2",
+    "proxyrequire": "^1.0.21",
     "typescript": "^2.6.2"
   }
 }

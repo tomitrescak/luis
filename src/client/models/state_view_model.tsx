@@ -72,7 +72,7 @@ export class ViewState {
       // check if selected story is a child
       let parent: TestItem = selected.parent;
       while (parent != null) {
-        this.state.expanded[parent.id] = observable(true);
+        this.state.expanded[parent.id] = observable.box(true);
         parent = parent.parent;
       }
     }

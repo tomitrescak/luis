@@ -44,7 +44,7 @@ export interface Config {
 
 export const config: Config = {
   bridge: null
-}
+};
 
 export function setupBridge(setup: (state: StateModel) => Bridge) {
   config.bridge = setup(initState());
@@ -62,7 +62,7 @@ export class StateModel {
 
   expanded: { [index: string]: IObservableValue<boolean> } = {};
   previousResults: any = null;
-  
+
   liveRoot: TestGroup;
   updateRoot: TestGroup;
   currentGroup: TestGroup;
@@ -101,7 +101,7 @@ export class StateModel {
   }
 
   createStory(name: string, props: any) {
-    return new TestGroup(this.currentGroup, name, props)
+    return new TestGroup(this.currentGroup, name, props);
   }
 
   @action
@@ -117,7 +117,6 @@ export class StateModel {
     this.liveRoot.groups.forEach(g => {
       g.parent = this.liveRoot;
     });
-
 
     // clear updates
     this.updateRoot.groups = [];
@@ -140,10 +139,11 @@ export class StateModel {
     config.bridge.onReconciled(this);
   }
 
-  @action copyValues(from: TestGroup, to: TestGroup) {
+  @action
+  copyValues(from: TestGroup, to: TestGroup) {
     to.passingTests = from.passingTests;
     to.failingTests = from.failingTests;
-    
+
     for (let test of to.tests) {
       var fromTest = from.tests.find(t => t.name === test.name);
       if (fromTest) {
@@ -268,7 +268,7 @@ export class StateModel {
   isExpanded(group: TestItem) {
     const path = group.id;
     if (this.expanded[path] == null) {
-      this.expanded[path] = observable(false);
+      this.expanded[path] = observable.box(false);
     }
     return this.expanded[path];
   }
