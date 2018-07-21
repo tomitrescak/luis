@@ -1,6 +1,6 @@
 {
   "name": "luis",
-  "version": "2.5.4",
+  "version": "2.5.11",
   "description": "List-of-uis book and testing of uis",
   "main": "dist/client/index.js",
   "types": "dist/client/index.d.ts",
@@ -35,15 +35,9 @@
     "diff-view": "^1.0.12",
     "express": "^4.16.2",
     "marked": "^0.3.12",
-    "mobx": "^4.3.0",
-    "mobx-react": "^5.1.2",
     "path-match": "^1.2.4",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
     "react-split-pane": "^0.1.74",
-    "semantic-ui-react": "^0.81.0",
     "tslib": "^1.9.0",
-    "tslint": "^5.9.1",
     "typestyle": "^1.6.0"
   },
   "devDependencies": {
@@ -52,6 +46,14 @@
     "@types/react": "^16.0.35",
     "fuse-box": "3.0.2",
     "proxyrequire": "^1.0.21",
-    "typescript": "^2.6.2"
+    "typescript": "^2.6.2",
+    "tslint": "^5.9.1"
+  },
+  "peerDependencies": {
+    "mobx": "^5.0.0",
+    "mobx-react": "^5.1.2",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "semantic-ui-react": "^0.82.0"
   }
 }

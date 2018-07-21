@@ -105,11 +105,16 @@ export class TestView extends React.Component<TestProps> {
     // console.log('Rendering: ' + test.name + '[' + test.uid + ']');
     const prefix = state.viewState.bare ? '?story' : '?stories';
 
+    const bump = style({
+      marginLeft: '-22px'
+    });
+
     return (
       <div>
         <Accordion.Title
           key={test.urlName}
           active={expanded}
+          className={bump}
           onClick={e => this.canExpand() && state.toggleExpanded(e, test)}
           {...(expanded ? { as: Segment, attached: 'top' } : {})}
         >

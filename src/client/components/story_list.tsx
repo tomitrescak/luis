@@ -13,12 +13,26 @@ const pane = () =>
       '& .title': {
         padding: '3px!important'
       }
-    }
+    },
+    paddingLeft: '20px'
   });
 
 const content = style({
   paddingLeft: '12px!important',
   paddingTop: '0px!important'
+});
+
+//const innerContent = style({
+//   paddingLeft: '24px!important',
+//   paddingTop: '0px!important'
+// });
+
+const bump = style({
+  marginLeft: '-22px'
+});
+
+const bumpTitleSmall = style({
+  marginLeft: '5px'
 });
 
 export type Props = {
@@ -47,9 +61,14 @@ export class TestGroupView extends React.Component<Props> {
         <Accordion.Title
           key={group.name}
           active={state.isExpanded(group).get()}
+          className={group.groups.length || group.tests.length ? bump : ''}
           onClick={e => state.toggleExpanded(e, group)}
         >
-          {group.groups.length || group.tests.length ? <Icon name="dropdown" /> : false}
+          {group.groups.length || group.tests.length ? (
+            <Icon name="dropdown" className={bumpTitleSmall} />
+          ) : (
+            false
+          )}
           {group.component ? (
             <span>
               <a

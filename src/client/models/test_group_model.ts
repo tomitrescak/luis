@@ -5,6 +5,15 @@ import { TestItem, Impl, toUrlName } from './test_item_model';
 import { Test } from './test_model';
 import { Snapshot } from './snapshot_model';
 
+const sortGroups = (a: TestGroup, b: TestGroup) =>
+  a.groups.length == 0 && a.tests.length == 0 && (b.groups.length != 0 || b.tests.length != 0)
+    ? 1
+    : (a.groups.length != 0 || a.tests.length != 0) && b.groups.length == 0 && b.tests.length == 0
+      ? -1
+      : a.path < b.path
+        ? -1
+        : 1;
+
 export class TestGroup extends TestItem {
   name: string;
   urlName: string;
@@ -13,7 +22,7 @@ export class TestGroup extends TestItem {
 
   groups: TestGroup[];
   tests: Test[];
-  
+
   beforeAll: Impl;
   before: Impl;
   beforeEach: Impl;
@@ -39,7 +48,7 @@ export class TestGroup extends TestItem {
     this.pathName = toUrlName(name, false).replace(/-/g, '');
     if (parent) {
       parent.groups.push(this);
-      parent.groups.sort((a, b) => a.name < b.name ? -1 : 1);
+      parent.groups.sort(sortGroups);
     }
 
     if (story) {
@@ -62,44 +71,53 @@ export class TestGroup extends TestItem {
     this.cssClassName = props.cssClassName;
   }
 
-  @computed get duration() {
+  @computed
+  get duration() {
     let tests = this.allTests;
     return tests.reduce((prev, next) => prev + next.duration, 0);
   }
 
   get nestedGroupsWithTests() {
-    const groups = this.findGroups(g => g.tests.length > 0);
-    groups.sort((a, b) => a.path < b.path ? -1 : 1);
+    const groups = this.findGroups(g => g.component != null || g.tests.length > 0);
+    groups.sort(sortGroups);
     return groups;
   }
 
   get fileName(): string {
-    return (this.parent == null || this.parent.parent == null ? '' : (this.parent.fileName + '_')) + this.pathName;
+    return (
+      (this.parent == null || this.parent.parent == null ? '' : this.parent.fileName + '_') +
+      this.pathName
+    );
   }
 
   get path(): string {
     if (this.parent == null) {
       return '';
     }
-    return (this.parent == null || this.parent.parent == null ? '' : (this.parent.path + ' > ')) + this.name;
+    return (
+      (this.parent == null || this.parent.parent == null ? '' : this.parent.path + ' > ') +
+      this.name
+    );
   }
 
   get simplePath(): string {
     if (this.parent == null) {
       return this.name;
     }
-    return (this.parent == null || this.parent.parent == null ? '' : (this.parent.path + ' ')) + this.name;
+    return (
+      (this.parent == null || this.parent.parent == null ? '' : this.parent.path + ' ') + this.name
+    );
   }
 
   get isRoot() {
     return this.parent == null;
   }
 
-  get icon(): { name: string, color: SemanticCOLORS } {
+  get icon(): { name: string; color: SemanticCOLORS } {
     return {
       name: 'check',
       color: 'green'
-    }
+    };
   }
 
   get color() {
@@ -113,8 +131,8 @@ export class TestGroup extends TestItem {
   }
 
   get snapshots() {
-    let snapshots: {[index: string]: string} = {};
-    this.tests.forEach(t => t.snapshots.forEach(s => snapshots[s.originalName] = s.current ));
+    let snapshots: { [index: string]: string } = {};
+    this.tests.forEach(t => t.snapshots.forEach(s => (snapshots[s.originalName] = s.current)));
     return snapshots;
   }
 
@@ -126,7 +144,7 @@ export class TestGroup extends TestItem {
 
   get allTests() {
     let tests: Test[] = [...this.tests];
-    this.groups.forEach(g => tests = tests.concat(g.allTests));
+    this.groups.forEach(g => (tests = tests.concat(g.allTests)));
     return tests;
   }
 
@@ -163,10 +181,10 @@ export class TestGroup extends TestItem {
    * Decides where in the update tree the new group will be put
    * If it is the top level group it depends whether it is a completely new group
    * or one that is being updated
-   * 
-   * @param {string} groupName 
-   * @param {Luis.State} state 
-   * @returns 
+   *
+   * @param {string} groupName
+   * @param {Luis.State} state
+   * @returns
    * @memberof TestGroup
    */
   getGroup(name: string, state: Luis.State) {
@@ -186,9 +204,9 @@ export class TestGroup extends TestItem {
       let current = queue.shift();
       for (let test of current.tests) {
         if (passing && test.error == null) {
-          count ++;
+          count++;
         } else if (!passing && test.error != null) {
-          count ++;
+          count++;
         }
       }
       for (let group of current.groups) {
@@ -222,7 +240,8 @@ export class TestGroup extends TestItem {
     return this.searchTest(t => t.name == name && t.parent.name === parent);
   }
 
-  @action updateCounts() {
+  @action
+  updateCounts() {
     this.passingTests = this.countTests(true);
     this.failingTests = this.countTests(false);
   }
