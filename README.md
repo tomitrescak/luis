@@ -96,7 +96,7 @@ You can easily use Luis in your exisiting application under its own route (e.g. 
 import { LuisView } from '../modules/luis';
 
 ...
-<Route exact={true} path="/luis" component={LuisApp()} />
+<Route exact={true} path="/luis" component={LuisView()} />
 ...
 ```
 
@@ -112,7 +112,7 @@ import { Luis, setupTestBridge } from 'luis';
 setupTestBridge();
 
 // function makes sure the content hot-reloads
-export function LuisApp() {
+export function LuisView() {
   // import all your stories
   require('../home/tests/home_view.test');
 
@@ -122,7 +122,7 @@ export function LuisApp() {
 
 # Adding Tests
 
-Luis iworks also as a sophisticated test result viewer. In this example, we will be working with Jest. Note that Luis also works with mocha with a [related reporter](https://github.com/tomitrescak/luis-mocha-reporter). To allow Luis to display test results, we will export a test report after each test run. Therefore, in your `jest.config.js` add:
+Luis works also as a sophisticated test result viewer. In this example, we will be working with Jest. Note that Luis also works with mocha with a [related reporter](https://github.com/tomitrescak/luis-mocha-reporter). To allow Luis to display test results, we will export a test report after each test run. Therefore, in your `jest.config.js` add:
 
 ```js
 module.exports = {
@@ -153,7 +153,7 @@ Now, we need to tell FuseBox, to pack them into our bundle. A good space for thi
 ```js
 // LuisView.tsx (see above)
 
-// replace setupTestBridge() with
+// adjust paths as necessary
 const summary = require('../../../summary.json');
 const snapshots = require('../../../snapshots');
 setupTestBridge(summary, snapshots);
@@ -266,101 +266,6 @@ storyOf(
     });
   }
 );
-```
-
-## itMountsAnd <a name="itMountsAnd"></a>
-
-This funstion is an extension of a classic `it` function. The difference to the original `it` is that it uses `enzyme` to mount a provided component and then unmount once the test is finished. This is important in the browser, since all mounted components would stay mounted forever, until page refresh. Following is the definition of the `itMountsAnd` function:
-
-```typescript
-import { ReactElement } from 'react';
-import { ReactWrapper } from 'enzyme';
-
-type FunctionInitialiser<P> = () => ReactElement<P>;
-
-function itMountsAnd<P>(
-  name: string,
-  component: FunctionInitialiser<P>,
-  test: (wrapper: ReactWrapper<P, any>) => void,
-  breakTest?: boolean
-): void;
-
-type WrappedComponent<P, W> = W & { component: ReactElement<P> };
-type AdvancedFunctionInitialiser<P, W> = () => WrappedComponent<P, W>;
-type Wrapper<P, S, W> = W & { wrapper: ReactWrapper<P, S> };
-
-function itMountsAnd<P, S, W>(
-  name: string,
-  component: AdvancedFunctionInitialiser<P, W>,
-  test: (data: Wrapper<P, S, W>) => void
-): void;
-```
-
-While this may look mighty confusing, it is actually **DEAD SIMPLE**. The it mounts and exists in two versions. The simple version expects a React component as its parameter, and it feeds a _mounted enzyme wrapper_ to the test function. Following is an example:
-
-```typescript
-const Foo = () => <div>foo</div>;
-
-itMountsAnd('tests description', () => <Foo />, function(wrapper) {
-  // do whatever you need to do with wrapper
-  wrapper.should.matchSnapshot();
-});
-```
-
-The second version of the `itMountsAnd` function is more versatile. It allows to pass an object as a parameter. If this is the case, the object needs to contain at least a `component` property. The test function then obtains the object itself and a wrapped React component in the `wrapper parameter`. Here is an example:
-
-```jsx
-const Foo = ({ some }) => <div>{some.param}</div>;
-
-itMountsAnd(
-  'tests description',
-  () => {
-    const cls = new SomeClass();
-    return {
-      cls,
-      component: <Foo some={cls} /> // this is compulsory !!!
-    };
-  },
-  function({ wrapper, cls }) {
-    // do whatever you need to do with wrapper
-    wrapper.should.matchSnapshot();
-  }
-);
-```
-
-This allows you to prepare data for your wrapped component and then pass this data to the component. Please check out the [tests](https://github.com/tomitrescak/luis/tree/2.0/src/example/tests) directory for more examples.
-
-## matchSnapshot <a name="matchSnapshot"></a>
-
-This sinon matcher compares a current version of the object with snapshot that has been saved to disk. It operates differently from the Jest snapshot and its performance has been tuned for use with front and back-end. The main differences are:
-
-* All snapshots saved into the same directory and named by the test name. This directory is by default `/src/tests/snapshots` but this can be configured (more on this later)
-* Enzyme wrapper saves `html` representation of the component
-* All other objects save circular-free json stringified representation
-
-`matchSnapshot` has a following signature:
-
-```typescript
-type MatchOptions = {
-  decorator?: (source: string) => string;
-};
-
-matchSnapshot(name?: string, options: MatchOptions): Assertion
-```
-
-If `name` is specified, snapshot is saved under this name and it is visualised in LUIS accordingly. This is a fundamental difference to `Storybook` approach, where one component has many stories. In our approach, one component is represented by one story, which contains chapters (tests), each having several bookmarks (snapshots). Decorator can add additional HTML code to your snapshot, for example if you need to wrap your component in some extra code. Check out following examples:
-
-```typescript
-// snapshot will be named by the test name
-wrapper.should.matchSnapshot();
-
-// snapshot will have its own name
-wrapper.should.matchSnapshot('button click increases number');
-
-// we will wrap snapshot with margin and add background color
-// this is particularly useful, when used with VS Code extension
-const decorator = (html: string) => `<div style={margin: 20px, color: black}>${html}</div>`;
-wrapper.should.matchSnapshot('button click increases number', { decorator });
 ```
 
 # Adding Test Files <a name="addingTests"></a>
