@@ -21,7 +21,7 @@ const menuImage = style({
 @observer
 export class TopPanel extends React.Component<Props> {
   handleItemClick = (e: React.MouseEvent<any>) =>
-    (this.props.state.viewState.snapshotView = e.currentTarget.getAttribute('data-name'));
+    this.props.state.viewState.setSnapshotView(e.currentTarget.getAttribute('data-name'));
 
   updateClick = async (_e: any) => {
     // this.updating = true;
@@ -49,7 +49,7 @@ export class TopPanel extends React.Component<Props> {
   };
 
   render() {
-    const view = this.props.state.viewState.snapshotView;
+    const view = this.props.state.viewState.sView;
     const story = this.props.state.viewState.selectedStory || { passingTests: 0, failingTests: 0 };
 
     return (
@@ -98,10 +98,19 @@ export class TopPanel extends React.Component<Props> {
         />
         <Menu.Item
           data-name="snapshots"
+          content="Snapshots"
           active={view === 'snapshots'}
           icon="image"
           onClick={this.handleItemClick}
           title="View all snapshots of a currently selected test or story"
+        />
+        <Menu.Item
+          data-name="live"
+          content="Live"
+          active={view === 'live'}
+          icon="rss"
+          onClick={this.handleItemClick}
+          title="View live preview of snapshots as they are created by jest. Requires 'jest-spy-serialiser' to be registered."
         />
         <Menu.Menu position="right">
           {this.props.state.updatingSnapshots ? (

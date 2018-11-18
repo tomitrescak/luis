@@ -82,12 +82,17 @@ export class TestGroupView extends React.Component<Props> {
             <span>{name}</span>
           )}
 
-          <div className={timing(group.color)}>{group.duration.toString()}ms</div>
+          <div className={timing(group.color)}>
+            {group.duration.toString()}
+            ms
+          </div>
         </Accordion.Title>
         <Accordion.Content active={state.isExpanded(group).get()} className={content}>
           {!isList &&
             group.groups.map(g => <TestGroupView state={state} group={g} key={g.fileName} />)}
-          {group.tests.map(t => <TestView state={state} test={t} key={t.name} />)}
+          {group.tests.map(t => (
+            <TestView state={state} test={t} key={t.name} />
+          ))}
         </Accordion.Content>
       </div>
     );

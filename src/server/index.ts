@@ -1,14 +1,16 @@
 import * as fs from 'fs';
+import { liveApi } from './api/live_handler';
 
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 
 const app = express();
+app.get('/live-snapshots', liveApi);
+
 const historyAPIFallback = require('connect-history-api-fallback');
 
 // import { handler } from './api/snapshot_handler';
-
 app.use(bodyParser.json());
 // app.post('/tests', handler);
 
@@ -34,7 +36,7 @@ export function start({ luisPath = `public/`, serverConfig = [] }: Config = {}) 
 
     app.use(historyAPIFallback());
     app.use(express.static(path.resolve(luisPath), { index: false }));
-        
+
     // app.use((_req: any, res: any) => res.sendFile(`${path.resolve(luisPath)}/luis.html`));
 
     app.listen(9001, function() {

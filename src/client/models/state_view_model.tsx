@@ -18,7 +18,7 @@ export class ViewState {
   @observable testName = '';
   @observable snapshotName = '';
 
-  @observable snapshotView = 'react';
+  @observable sView = localStorage.getItem('Luis.snapshotView') || 'react';
   @observable selectedStory: TestGroup = null;
   @observable selectedTest: Test = null;
 
@@ -27,6 +27,11 @@ export class ViewState {
 
   constructor(state: Luis.State) {
     this.state = state;
+  }
+
+  setSnapshotView(view: string) {
+    localStorage.setItem('Luis.snapshotView', view);
+    this.sView = view;
   }
 
   @computed
@@ -100,10 +105,11 @@ export class ViewState {
       this.selectedStory = missingStory;
     }
 
-    if (this.snapshotName) {
-      this.snapshotView = this.snapshotView == 'react' ? 'html' : this.snapshotView;
-    } else if (!this.testName && this.snapshotView != 'snapshots') {
-      this.snapshotView = 'react';
+    if (this.sView === 'live') {
+    } else if (this.snapshotName) {
+      this.sView = this.sView == 'react' ? 'html' : this.sView;
+    } else if (!this.testName && this.sView != 'snapshots') {
+      this.sView = 'react';
     }
   }
 }

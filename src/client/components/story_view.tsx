@@ -19,29 +19,29 @@ type ComponentProps = {
 
 export const StoryView = observer(({ state }: ComponentProps) => (
   <div className={full}>
-    {state.viewState.snapshotView === 'react' && (
+    {state.viewState.sView === 'react' && (
       <div className={pane}>
         <ErrorBoundary>
           <StoryComponent state={state} />
         </ErrorBoundary>
       </div>
     )}
-    {state.viewState.snapshotView === 'html' && (
+    {state.viewState.sView === 'html' && (
       <div>
         <SnapshotHtml state={state} />
       </div>
     )}
-    {state.viewState.snapshotView === 'json' && (
+    {state.viewState.sView === 'json' && (
       <div className={full}>
         <SnapshotJson state={state} />
       </div>
     )}
-    {state.viewState.snapshotView === 'snapshots' && (
+    {state.viewState.sView === 'snapshots' && (
       <div className={pane}>
         <SnapshotsView state={state} />
       </div>
     )}
-    {state.viewState.snapshotView === 'config' && (
+    {state.viewState.sView === 'config' && (
       <div className={pane}>
         <StoryConfig state={state} />
       </div>

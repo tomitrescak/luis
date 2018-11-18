@@ -48,7 +48,7 @@ module.exports = function(testData: jest.AggregatedResult) {
         if (file.match(/\.snap/)) {
           let fullFile = path.join(snapshotPath, file);
           let partFile = fullFile.replace(root, '');
-          imports += `    '${suite.testFilePath}':  require('.${partFile}')\n`;
+          imports += `    '${suite.testFilePath}':  require('.${partFile}'),\n`;
         }
       }
     } catch (e) {

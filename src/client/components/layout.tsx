@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as SplitPane from 'react-split-pane';
+import SplitPane from 'react-split-pane';
 
 import { style } from 'typestyle';
 import { ITheme } from '../config/themes';
@@ -12,6 +12,7 @@ import { content } from './component_styles';
 //@ts-ignore
 import { StateModel } from '../config/state';
 import { BareView } from './bare_view';
+import { LiveSnapshots } from './snapshot_live';
 
 const split = (theme: ITheme) =>
   style({
@@ -74,7 +75,10 @@ export type ComponentProps = {
 };
 
 export const Layout = inject('state')(
-  observer(({ state, localStorage }: ComponentProps) => {    
+  observer(({ state, localStorage }: ComponentProps) => {
+    if (state.viewState.sView === 'live') {
+      return <LiveSnapshots appState={state} />;
+    }
     if (state.viewState.bare) {
       return (
         <div className={styles}>
@@ -89,7 +93,7 @@ export const Layout = inject('state')(
             className={split(state.theme)}
             split="vertical"
             minSize={100}
-            defaultSize={parseInt(localStorage.getItem('luis-v-splitPos') || "280px", 10)}
+            defaultSize={parseInt(localStorage.getItem('luis-v-splitPos') || '280px', 10)}
             onChange={(size: string) => localStorage.setItem('luis-v-splitPos', size)}
           >
             <LeftPanel state={state} />
