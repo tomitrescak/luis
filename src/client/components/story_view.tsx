@@ -20,7 +20,7 @@ type ComponentProps = {
 export const StoryView = observer(({ state }: ComponentProps) => (
   <div className={full}>
     {state.viewState.sView === 'react' && (
-      <div className={pane}>
+      <div className={pane(state.hideTestMenus)}>
         <ErrorBoundary>
           <StoryComponent state={state} />
         </ErrorBoundary>
@@ -37,12 +37,12 @@ export const StoryView = observer(({ state }: ComponentProps) => (
       </div>
     )}
     {state.viewState.sView === 'snapshots' && (
-      <div className={pane}>
+      <div className={pane(state.hideTestMenus)}>
         <SnapshotsView state={state} />
       </div>
     )}
     {state.viewState.sView === 'config' && (
-      <div className={pane}>
+      <div className={pane(state.hideTestMenus)}>
         <StoryConfig state={state} />
       </div>
     )}

@@ -23,7 +23,9 @@ setupHmr();
 // });
 
 declare global {
-  namespace Luis { export type State = StateModel; }
+  namespace Luis {
+    export type State = StateModel;
+  }
 }
 
 export type RenderOptions = {
@@ -59,6 +61,7 @@ export class StateModel {
   @observable showFailing = true;
   @observable running = false;
   @observable updatingSnapshots = false;
+  @observable hideTestMenus = localStorage.getItem('LUIS.showTestMenus') === 'true';
 
   expanded: { [index: string]: IObservableValue<boolean> } = {};
   previousResults: any = null;
@@ -102,6 +105,11 @@ export class StateModel {
 
   createStory(name: string, props: any) {
     return new TestGroup(this.currentGroup, name, props);
+  }
+
+  hideMenus(value?: boolean) {
+    this.hideTestMenus = value;
+    localStorage.setItem('LUIS.showTestMenus', this.hideTestMenus ? 'true' : 'false');
   }
 
   @action

@@ -77,15 +77,16 @@ export const full = style({
   height: '100%'
 });
 
-export const pane = style({
-  padding: '6px',
-  position: 'absolute',
-  overflow: 'auto',
-  top: 42,
-  bottom: 0,
-  left: 0,
-  right: 0
-});
+export const pane = (hideMenus: boolean) =>
+  style({
+    padding: '6px',
+    position: 'absolute',
+    overflow: 'auto',
+    top: hideMenus ? 0 : 42,
+    bottom: 0,
+    left: 0,
+    right: 0
+  });
 
 export const timing = (color: string) =>
   style({

@@ -12,8 +12,8 @@ export type ComponentProps = {
 
 export const LeftPanel = observer(({ state }) => (
   <div>
-    <LeftMenu state={state} />
-    <div className={pane}>
+    {!state.hideTestMenus && <LeftMenu state={state} />}
+    <div style={{ backgroundColor: '#f0f0f1' }} className={pane(state.hideTestMenus)}>
       <StoryList state={state} />
     </div>
   </div>

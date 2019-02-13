@@ -125,6 +125,9 @@ export class TopPanel extends React.Component<Props> {
               <Icon name="refresh" />
             </Menu.Item>
           )}
+          <Menu.Item onClick={this.updateClick} title="Hide Test Menu">
+            <Icon name="bars" />
+          </Menu.Item>
           {/*<Menu.Item
             title="Auto-update test snapshots with each hot reload to reflect current changes and save snapshots on server."
             active={this.props.state.autoUpdateSnapshots}

@@ -10,7 +10,7 @@ export type ComponentProps = {
 
 export const RightPanel = ({ state }: ComponentProps) => (
   <div className={full}>
-    <TopPanel state={state} />
+    {!state.hideTestMenus && <TopPanel state={state} />}
     <StoryView state={state} />
   </div>
 );

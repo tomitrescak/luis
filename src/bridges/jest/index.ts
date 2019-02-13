@@ -18,13 +18,17 @@ export function setupJestBridge(
   snapshots: Snapshots = {}
 ) {
   setupBridge(state => {
+    if (!Array.isArray(testData.testResults) || testData.testResults.length === 0) {
+      state.hideMenus(true);
+    }
+
     // // merge data
     // let previousResult = state.previousResults;
     // testData = merge(previousResult, testData);
     // state.previousResults = testData;
     if (!state.previousResults) {
       state.previousResults = testData;
-    } else {
+    } else if (Array.isArray(testData.testResults)) {
       let merged: jest.AggregatedResult = state.previousResults;
       merged.numFailedTests = testData.numFailedTests;
       merged.numPassedTests = testData.numPassedTests;

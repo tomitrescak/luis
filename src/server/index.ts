@@ -1,4 +1,3 @@
-import * as fs from 'fs';
 import { liveApi } from './api/live_handler';
 
 const express = require('express');
