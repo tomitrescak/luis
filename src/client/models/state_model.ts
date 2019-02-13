@@ -4,7 +4,6 @@ import { lightTheme, ITheme } from '../config/themes';
 import { TestGroup } from './test_group_model';
 import { ViewState } from './state_view_model';
 import { AppConfig } from '../config/app_config';
-import { setupRouter } from '../config/router';
 import { TestItem } from './test_item_model';
 
 // // var Client = require('fusebox-websocket').SocketClient
@@ -43,6 +42,8 @@ export type RenderOptions = {
   root?: string;
   extraUpdateProps?: string;
   updateUrl?: string;
+  tests?: () => any;
+  testResults?: any;
 };
 
 let id = 0;
@@ -77,7 +78,7 @@ export class StateModel {
     this.config = new AppConfig(this);
 
     // create new router
-    setupRouter(this);
+    // setupRouter(this);
   }
 
   findStoryByFileName(fileName: string) {
@@ -124,10 +125,13 @@ export function initState() {
   if (!state) {
     state = new StateModel();
     (global as any).__state = state;
+  } else {
+    state.liveRoot.groups = []; //.clear();
+    state.currentGroup = state.liveRoot;
   }
-  // else {
-  //   state.liveRoot = new TestGroup(null, 'root');
-  //   state.currentGroup = state.liveRoot;
-  // }
+  return state;
+}
+
+export function getState() {
   return state;
 }

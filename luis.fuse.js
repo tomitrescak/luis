@@ -1,35 +1,57 @@
-const { FuseBox, WebIndexPlugin, ImageBase64Plugin, JSONPlugin } = require('fuse-box');
-const JsxControlsPlugin = require('jsx-controls-loader').fuseBoxPlugin;
+const {
+  Sparky,
+  FuseBox,
+  JSONPlugin,
+  CSSPlugin,
+  CSSResourcePlugin,
+  ImageBase64Plugin,
+  EnvPlugin,
+  WebIndexPlugin,
+  UglifyJSPlugin,
+  QuantumPlugin
+} = require('fuse-box');
 
-const { SnapshotPlugin } = require('luis/dist/bridges/jest/snapshot_plugin');
+const StubPlugin = require('proxyrequire').FuseBoxStubPlugin(/\.tsx?/);
+
+console.log(require('path').resolve('src'));
+const home = require('path').resolve('src');
 
 module.exports = function(root, entry) {
-  const fuse = FuseBox.init({
-    homeDir: root,
-    target: 'browser@es6',
-    output: '../../luis/$name.js',
+  const luisFuse = FuseBox.init({
+    homeDir: home,
+    output: 'public/$name.js',
+    target: 'browser',
+    sourceMaps: true,
     plugins: [
-      WebIndexPlugin({ template: 'index.html', target: 'index.html' }),
-      JsxControlsPlugin,
+      // StubPlugin,
       ImageBase64Plugin(),
       JSONPlugin(),
-      SnapshotPlugin()
-    ],
-    sourceMaps: true
+      EnvPlugin({ NODE_ENV: 'test' }),
+      CSSPlugin({
+        group: 'luis.css',
+        outFile: `public/styles/luis.css`,
+        inject: false
+      }),
+      WebIndexPlugin({ template: 'index.html', target: 'index.html' })
+    ]
   });
 
-  fuse.dev({ port: 9001, fallback: true });
+  luisFuse.dev({
+    fallback: 'index.html',
+    port: 9001
+  });
 
-  fuse
-    .bundle('vendor')
-    // Watching (to add dependencies) it's damn fast anyway
-    // first bundle will get HMR related code injected
-    .instructions(` ~ ${entry}`); // nothing has changed here
+  luisFuse.bundle('luis-vendor').instructions(' ~ luis.ts'); // nothing has changed here
 
-  fuse
-    .bundle('app')
-    .instructions(` !> [${entry}]`)
+  luisFuse
+    .bundle('luis-client')
+    .watch() // watch only client related code
     .hmr()
-    .watch();
-  fuse.run();
+    .sourceMaps(true)
+    .instructions(' !> [luis.ts] + proxyrequire + **/*.test.* + **/__tests__/* + **/tests/*')
+    .globals({
+      proxyrequire: '*'
+    });
+
+  luisFuse.run();
 };

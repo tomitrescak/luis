@@ -1,4 +1,4 @@
-import { observable, computed, action } from 'mobx';
+import { observable, computed, action, IObservableArray } from 'mobx';
 import { SemanticCOLORS } from 'semantic-ui-react';
 
 import { TestItem, Impl, toUrlName } from './test_item_model';
@@ -9,10 +9,10 @@ const sortGroups = (a: TestGroup, b: TestGroup) =>
   a.groups.length == 0 && a.tests.length == 0 && (b.groups.length != 0 || b.tests.length != 0)
     ? 1
     : (a.groups.length != 0 || a.tests.length != 0) && b.groups.length == 0 && b.tests.length == 0
-      ? -1
-      : a.path < b.path
-        ? -1
-        : 1;
+    ? -1
+    : a.path < b.path
+    ? -1
+    : 1;
 
 export class TestGroup extends TestItem {
   name: string;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-debugger;
-describe('Component8', () => {
+console.log('Loading ...');
+describe('Component', () => {
   describe('Doo', function() {
     it('tests', function() {});
 

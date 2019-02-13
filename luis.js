@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 // check if custom config exists
 const fs = require('fs');
 try {

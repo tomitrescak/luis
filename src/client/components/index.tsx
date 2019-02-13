@@ -4,10 +4,16 @@ import { Provider } from 'mobx-react';
 
 import { Layout } from './layout';
 import { initState, RenderOptions } from '../models/state_model';
+import { setupRouter } from '../config/router';
+import { setupJestBridge } from '../../bridges/jest';
 
 const state = initState();
 
-export function renderLuis(options: RenderOptions = {}) {
+export async function renderLuis(options: RenderOptions = {}) {
+  setupJestBridge(options.testResults);
+
+  options.tests();
+
   let root = document.querySelector(options.root || '#react-root');
   if (!root) {
     root = document.createElement('div');
@@ -15,6 +21,10 @@ export function renderLuis(options: RenderOptions = {}) {
     document.body.appendChild(root);
   }
 
+  // create new router
+  setupRouter(state);
+
+  // render application
   ReactDOM.render(
     <Provider state={state}>
       <Layout localStorage={localStorage} />
