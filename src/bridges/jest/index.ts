@@ -1,46 +1,16 @@
 import { createBridge, Snapshots } from './bridge';
 import { Bridge, setupBridge } from '../../client/index';
 
-export const bridge: Bridge = {
-  onReconciled(_state) {},
-  async updateSnapshots(state, name) {
-    if (name) {
-      state.updatingSnapshots = true;
-      await fetch(`/tests?name=${name}`);
-      state.updatingSnapshots = false;
-    }
-  },
-  hmr(_path, _content, _dependants) {}
-};
+export const bridge: Bridge = {};
 
 export function setupJestBridge(
   testData: jest.AggregatedResult = {} as any,
   snapshots: Snapshots = {}
 ) {
   setupBridge(state => {
+    // hide top menus if we have no test results
     if (!Array.isArray(testData.testResults) || testData.testResults.length === 0) {
       state.hideMenus(true);
-    }
-
-    // // merge data
-    // let previousResult = state.previousResults;
-    // testData = merge(previousResult, testData);
-    // state.previousResults = testData;
-    if (!state.previousResults) {
-      state.previousResults = testData;
-    } else if (Array.isArray(testData.testResults)) {
-      let merged: jest.AggregatedResult = state.previousResults;
-      merged.numFailedTests = testData.numFailedTests;
-      merged.numPassedTests = testData.numPassedTests;
-
-      for (let result of testData.testResults) {
-        let p = merged.testResults.findIndex(f => f.testFilePath === result.testFilePath);
-        if (p >= 0) {
-          merged.testResults[p] = result;
-        }
-      }
-      state.previousResults = merged;
-      testData = merged;
     }
 
     // create new bridge

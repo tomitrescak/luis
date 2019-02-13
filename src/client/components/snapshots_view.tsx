@@ -25,7 +25,7 @@ export class SnapshotsView extends React.Component<Props> {
     this.props.state.viewState.bare
       ? this.props.state.viewState.openSingleStory(parts[0], parts[1], parts[2])
       : this.props.state.viewState.openStory(parts[0], parts[1], parts[2]);
-    this.props.state.viewState.snapshotView = 'html';
+    this.props.state.viewState.sView = 'html';
   };
 
   render() {

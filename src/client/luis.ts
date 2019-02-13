@@ -1,11 +1,10 @@
 import { renderLuis } from '../client/components/index';
-import { setupTestBridge } from '.';
+import { setupTestBridge } from './index';
 
-setupTestBridge();
+const testResults = FuseBox.import('~/test_results.json');
 
-// import './css/semantic.min.css';
-// import './css/fonts.css';
+setupTestBridge(testResults);
 
-import './components/tests';
+import '~/**/tests/**';
 
 renderLuis();

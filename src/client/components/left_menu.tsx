@@ -28,7 +28,7 @@ export const LeftMenu = observer(({ state }: ComponentProps) => (
     <Menu.Item id="listView" onClick={() => state.config.toggleStoryView()}>
       <Icon name={state.config.storyView === 'list' ? 'content' : 'indent'} />
     </Menu.Item>
-    <Menu.Item id="configView" onClick={() => (state.viewState.snapshotView = 'config')}>
+    <Menu.Item id="configView" onClick={() => (state.viewState.sView = 'config')}>
       <Icon name="cogs" />
     </Menu.Item>
   </Menu>

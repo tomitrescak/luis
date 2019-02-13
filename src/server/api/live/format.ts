@@ -5,7 +5,7 @@ const html = `<div style="background: transparent; background-image: none!import
 		</div>
 </div>`;
 
-function formatOne(text: string, publicPath: string) {
+function formatOne(text: string) {
   if (!text) {
     return text;
   }
@@ -27,7 +27,7 @@ export function formatSnapshot(ss: any) {
   let snapshots = '';
 
   if (typeof ss == 'string') {
-    let one = formatOne(ss, '');
+    let one = formatOne(ss);
     if (one) {
       return one;
     } else {
@@ -37,7 +37,7 @@ export function formatSnapshot(ss: any) {
     for (let key of Object.getOwnPropertyNames(ss)) {
       // remove snapshots that are not in this test
 
-      let text = formatOne(ss[key], '');
+      let text = formatOne(ss[key]);
 
       snapshots += `
           <div class="ui fluid label">${key.replace(/ 1$/, '')}</div>
@@ -75,13 +75,13 @@ export function formatSnapshot(ss: any) {
 let reg = /style=\{\n.*Object (\{[^\}]*\})\n.*\}/g;
 function toStyleTag(styleTag: string) {
   try {
-    let g = styleTag.replace(reg, function(m, n) {
+    let g = styleTag.replace(reg, function(_m, n) {
       // remove trailing comma
       n = n.replace(/,\n.*\}/, '}');
       let o = JSON.parse(n);
 
       let values = Object.keys(o).reduce(function(accumulator, currentValue) {
-        let m = currentValue.replace(/([A-Z])/g, (v, g) => '-' + g.toLowerCase());
+        let m = currentValue.replace(/([A-Z])/g, (_v, g) => '-' + g.toLowerCase());
         return accumulator + m + ': ' + o[currentValue] + '; ';
       }, '');
       return `style="${values}"`;

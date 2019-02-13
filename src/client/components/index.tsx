@@ -8,8 +8,6 @@ import { initState, RenderOptions } from '../models/state_model';
 const state = initState();
 
 export function renderLuis(options: RenderOptions = {}) {
-  state.renderOptions = options;
-
   let root = document.querySelector(options.root || '#react-root');
   if (!root) {
     root = document.createElement('div');

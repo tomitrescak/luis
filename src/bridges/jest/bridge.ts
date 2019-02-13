@@ -12,15 +12,13 @@ function clean(message: string) {
   return message;
 }
 
-let previousTestResults: jest.AggregatedResult = {} as any;
-
 function addTests(
   state: StateModel,
   group: TestGroup,
   testData: jest.AggregatedResult,
   snapshots: Snapshots
 ) {
-  // check if we have alreayd processed this group
+  // check if we have already processed this group
   if (group.tests && group.tests.length) {
     return;
   }
@@ -139,7 +137,7 @@ function addTests(
           let index = 1;
           t.snapshots.replace(
             matchingSnapshots.map(
-              (m, i) =>
+              m =>
                 new Snapshot({
                   current: suiteSnapshots[m],
                   name: (m.match(new RegExp(test.fullName + '\\s+\\d+'))
@@ -168,17 +166,17 @@ export function createBridge(
 ) {
   const glob: any = global;
 
-  state.updateRoot.groups = [];
+  state.liveRoot.groups = [];
   state.liveRoot.passingTests = testData.numPassedTests;
   state.liveRoot.failingTests = testData.numFailedTests;
 
-  glob.describe = function(name: string, _impl: Impl) {
+  glob.describe = function(name: string, impl: Impl) {
     const group = state.currentGroup.getGroup(name, state);
     const parent = group.parent;
     state.currentGroup = group;
 
     try {
-      const story: any = _impl();
+      const story: any = impl();
       if (story) {
         state.currentGroup.initStory(story);
       }
@@ -187,9 +185,6 @@ export function createBridge(
     }
 
     addTests(state, group, testData, snapshots);
-
-    // start reconciliation
-    state.reconciliate(false);
   };
 
   glob.storyOf = function(name: string, props: StoryConfig, _impl: (props: any) => void) {
@@ -216,21 +211,7 @@ export function createBridge(
     }
 
     addTests(state, group, testData, snapshots);
-
-    // start reconciliation
-    state.reconciliate(false);
   };
-
-  // require('proxyrequire').setGlobalStubs({
-  //   wafl: {
-  //     it: function() {},
-  //     itMountsAnd: function() {},
-  //     itMountsContainerAnd: function() {},
-  //     story: function(props: StoryConfig) {
-  //       state.currentGroup.initStory(props);
-  //     }
-  //   }
-  // });
 
   glob.xit = function() {};
 

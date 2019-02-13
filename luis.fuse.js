@@ -1,5 +1,5 @@
 const { FuseBox, WebIndexPlugin, ImageBase64Plugin, JSONPlugin } = require('fuse-box');
-const JsxControlsPugin = require('jsx-controls-loader').fuseBoxPlugin;
+const JsxControlsPlugin = require('jsx-controls-loader').fuseBoxPlugin;
 
 const { SnapshotPlugin } = require('luis/dist/bridges/jest/snapshot_plugin');
 
@@ -10,19 +10,15 @@ module.exports = function(root, entry) {
     output: '../../luis/$name.js',
     plugins: [
       WebIndexPlugin({ template: 'index.html', target: 'index.html' }),
-      JsxControlsPugin,
+      JsxControlsPlugin,
       ImageBase64Plugin(),
       JSONPlugin(),
       SnapshotPlugin()
     ],
     sourceMaps: true
   });
-  const historyAPIFallback = require('connect-history-api-fallback');
 
-  fuse.dev({ port: 9001 }, server => {
-    const app = server.httpServer.app;
-    app.use(historyAPIFallback());
-  });
+  fuse.dev({ port: 9001, fallback: true });
 
   fuse
     .bundle('vendor')

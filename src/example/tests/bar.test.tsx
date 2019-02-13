@@ -1,36 +1,24 @@
-// import * as React from 'react';
+import * as React from 'react';
 
-// describe('Component', () => {
-//   describe('Doo', function() {
-//     it ('tests', function() {
+debugger;
+describe('Component8', () => {
+  describe('Doo', function() {
+    it('tests', function() {});
 
-//     });
+    describe('Bar', () => {
+      function component() {
+        return <div>Bar Component 123</div>;
+      }
 
-//     storyOf(
-//       'Bar',
-//       {
-//         get component() {
-//           return <div>Bar Component</div>;
-//         },
-//         info: 'Bar'
-//       },
-//       data => {
-//         itMountsAnd(
-//           'renders correctly',
-//           () => data.component,
-//           wrapper => {
-//             wrapper.should.matchSnapshot('rendered');
-//           }
-//         );
+      it('Fails', function() {
+        throw new Error('Failed miserably');
+      });
 
-//         it('Fails', function() {
-//           throw new Error('Failed miserably');
-//         });
+      it('Passes', function() {});
 
-//         it('Passes', function() {
-//         });
-//       }
-//     );
-//   });
-// });
-
+      return {
+        component: component()
+      };
+    });
+  });
+});

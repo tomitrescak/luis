@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { StateModel } from '../../models/state_model';
 import { ViewState } from '../../models/state_view_model';
 import { TestGroup } from '../../models/test_group_model';
@@ -23,7 +21,7 @@ export const create = {
   },
   stateWithTests() {
     let state = create.state({ liveRoot: create.someTests() });
-    state.viewState.selectedStory = state.liveRoot.groups[0] as Story;
+    // state.viewState.selectedStory = state.liveRoot.groups[0] as Story;
     return state;
   },
   group(name: string, parent: TestGroup = null) {

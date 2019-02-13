@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { style } from 'typestyle';
-import { Menu, Icon, Loader, Dropdown, Popup } from 'semantic-ui-react';
+import { Menu, Icon, Dropdown, Popup } from 'semantic-ui-react';
 import { inject, observer } from 'mobx-react';
 
 import { ErrorView } from './test_view';
@@ -48,22 +48,7 @@ export const SnapshotTitle = ({ s }: { s: Snapshot }) => {
 @observer
 export class TopPanelSingle extends React.Component<Props> {
   handleItemClick = (e: React.MouseEvent<any>) =>
-    (this.props.state.viewState.snapshotView = e.currentTarget.getAttribute('data-name'));
-
-  updateClick = async (_e: any) => {
-    this.props.state.updatingSnapshots = true;
-    if (this.props.state.viewState.testName) {
-      this.props.state.packageConfig.bridge.updateSnapshots(
-        this.props.state,
-        this.props.state.viewState.selectedTest.simplePath
-      );
-    } else if (this.props.state.viewState.selectedStory) {
-      this.props.state.packageConfig.bridge.updateSnapshots(
-        this.props.state,
-        this.props.state.viewState.selectedStory.simplePath
-      );
-    }
-  };
+    (this.props.state.viewState.sView = e.currentTarget.getAttribute('data-name'));
 
   openSnapshot = (e: React.SyntheticEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -72,7 +57,7 @@ export class TopPanelSingle extends React.Component<Props> {
   };
 
   render() {
-    const view = this.props.state.viewState.snapshotView;
+    const view = this.props.state.viewState.sView;
     const test: Test = this.props.state.viewState.selectedTest;
     const viewState = this.props.state.viewState;
 
@@ -122,66 +107,41 @@ export class TopPanelSingle extends React.Component<Props> {
           >
             <Icon name="code" />
           </Menu.Item>
-          {test &&
-            test.snapshots && (
-              <Dropdown
-                title="View all snapshots of a currently selected test or story"
-                item
-                trigger={
-                  viewState.selectedSnapshot ? (
-                    <SnapshotTitle s={viewState.selectedSnapshot} />
-                  ) : (
-                    'Select Snapshot'
-                  )
-                }
-              >
-                <Dropdown.Menu>
-                  {test.snapshots.map((s, i) => (
-                    <a
-                      key={s.name + i}
-                      className="item"
-                      data-path={`${test.parent.id}/${test.urlName}/${s.url}`}
-                      href={`story/${test.parent.id}/${test.urlName}/${s.url}`}
-                      onClick={this.openSnapshot}
-                    >
-                      <SnapshotTitle s={s} />
-                    </a>
-                  ))}
-                  <Dropdown.Divider />
-                  <Dropdown.Item
-                    data-name="snapshots"
-                    content="All Snapshots"
-                    active={view === 'snapshots'}
-                    icon="object group"
-                    onClick={this.handleItemClick}
-                  />
-                </Dropdown.Menu>
-              </Dropdown>
-            )}
-
-          <Menu.Menu position="right">
-            {this.props.state.updatingSnapshots ? (
-              <Menu.Item>
-                <Loader active inline size="mini" />
-              </Menu.Item>
-            ) : (
-              <Menu.Item
-                onClick={this.updateClick}
-                title="Update test snapshots to reflect current changes and save snapshots on server."
-              >
-                <Icon name="refresh" />
-              </Menu.Item>
-            )}
-            {/*<Menu.Item
-              title="Auto-update test snapshots with each hot reload to reflect current changes and save snapshots on server."
-              active={this.props.state.autoUpdateSnapshots}
-              onClick={() =>
-                (this.props.state.autoUpdateSnapshots = !this.props.state.autoUpdateSnapshots)
+          {test && test.snapshots && (
+            <Dropdown
+              title="View all snapshots of a currently selected test or story"
+              item
+              trigger={
+                viewState.selectedSnapshot ? (
+                  <SnapshotTitle s={viewState.selectedSnapshot} />
+                ) : (
+                  'Select Snapshot'
+                )
               }
             >
-              <Icon name="lock" />
-            </Menu.Item>*/}
-          </Menu.Menu>
+              <Dropdown.Menu>
+                {test.snapshots.map((s, i) => (
+                  <a
+                    key={s.name + i}
+                    className="item"
+                    data-path={`${test.parent.id}/${test.urlName}/${s.url}`}
+                    href={`story/${test.parent.id}/${test.urlName}/${s.url}`}
+                    onClick={this.openSnapshot}
+                  >
+                    <SnapshotTitle s={s} />
+                  </a>
+                ))}
+                <Dropdown.Divider />
+                <Dropdown.Item
+                  data-name="snapshots"
+                  content="All Snapshots"
+                  active={view === 'snapshots'}
+                  icon="object group"
+                  onClick={this.handleItemClick}
+                />
+              </Dropdown.Menu>
+            </Dropdown>
+          )}
         </Menu>
       </div>
     );

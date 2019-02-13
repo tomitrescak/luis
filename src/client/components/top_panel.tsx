@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Menu, Icon, Loader } from 'semantic-ui-react';
+import { Menu, Icon } from 'semantic-ui-react';
 import { observer } from 'mobx-react';
 import { style } from 'typestyle';
 
@@ -30,22 +30,7 @@ export class TopPanel extends React.Component<Props> {
     //   await fetch(`/tests?name=${story.name.replace(/\s/g, '')}&extraParams=${this.props.state.renderOptions.extraUpdateProps}`);
     //   this.updating = false;
     // }
-
     // we need to do this asynchronously to get around batched updates of React fibers
-    setTimeout(() => {
-      this.props.state.updatingSnapshots = true;
-      if (this.props.state.viewState.testName) {
-        this.props.state.packageConfig.bridge.updateSnapshots(
-          this.props.state,
-          this.props.state.viewState.selectedTest.simplePath
-        );
-      } else if (this.props.state.viewState.selectedStory) {
-        this.props.state.packageConfig.bridge.updateSnapshots(
-          this.props.state,
-          this.props.state.viewState.selectedStory.simplePath
-        );
-      }
-    }, 10);
   };
 
   render() {
@@ -113,29 +98,9 @@ export class TopPanel extends React.Component<Props> {
           title="View live preview of snapshots as they are created by jest. Requires 'jest-spy-serialiser' to be registered."
         />
         <Menu.Menu position="right">
-          {this.props.state.updatingSnapshots ? (
-            <Menu.Item title="Snapshots updating ...">
-              <Loader active inline size="mini" />
-            </Menu.Item>
-          ) : (
-            <Menu.Item
-              onClick={this.updateClick}
-              title="Update test snapshots to reflect current changes and save snapshots on server."
-            >
-              <Icon name="refresh" />
-            </Menu.Item>
-          )}
           <Menu.Item onClick={this.updateClick} title="Hide Test Menu">
             <Icon name="bars" />
           </Menu.Item>
-          {/*<Menu.Item
-            title="Auto-update test snapshots with each hot reload to reflect current changes and save snapshots on server."
-            active={this.props.state.autoUpdateSnapshots}
-            onClick={() =>
-              (this.props.state.autoUpdateSnapshots = !this.props.state.autoUpdateSnapshots)}
-          >
-            <Icon name="lock" />
-            </Menu.Item>*/}
         </Menu.Menu>
       </Menu>
     );
