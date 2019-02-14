@@ -4,7 +4,7 @@ import * as path from 'path';
 const rootDir = 'src';
 
 function checkSaveFile(savePath: string, saveContent: string) {
-  console.log(savePath);
+  // console.log(savePath);
   try {
     fs.accessSync(savePath);
     let savedContent = fs.readFileSync(savePath, { encoding: 'utf-8' });
@@ -35,10 +35,15 @@ module.exports = function(testData: jest.AggregatedResult) {
 
   let imports: any = 'module.exports = {\n';
   let root = path.resolve(process.env.JEST_ROOT_OUTPUT_PATH || rootDir);
-  console.log(root);
+  let processed: string[] = [];
+  // console.log(root);
   testData.testResults.forEach(suite => {
     let suitePath = path.dirname(suite.testFilePath);
     let snapshotPath = path.join(suitePath, '__snapshots__');
+    // if (processed.includes(snapshotPath)) {
+    //   return;
+    // }
+    // processed.push(snapshotPath);
 
     try {
       fs.accessSync(snapshotPath);
@@ -63,6 +68,8 @@ module.exports = function(testData: jest.AggregatedResult) {
   saveContent = imports;
 
   checkSaveFile(savePath, saveContent);
+
+  // HERE END SNAPSHOTS
 
   // TODO: Possibly store results
 

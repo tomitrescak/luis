@@ -12,6 +12,7 @@ const {
 } = require('fuse-box');
 
 const StubPlugin = require('proxyrequire').FuseBoxStubPlugin(/\.tsx?/);
+const SnapshotPlugin = require('./dist/bridges/jest/snapshot_plugin').SnapshotPlugin;
 
 const luisFuse = FuseBox.init({
   homeDir: 'src',
@@ -19,7 +20,8 @@ const luisFuse = FuseBox.init({
   target: 'browser@esnext',
   sourceMaps: true,
   plugins: [
-    // StubPlugin,
+    SnapshotPlugin(),
+    StubPlugin,
     ImageBase64Plugin(),
     JSONPlugin(),
     EnvPlugin({ NODE_ENV: 'test' }),
@@ -44,7 +46,7 @@ luisFuse
   .watch() // watch only client related code
   .hmr()
   .sourceMaps(true)
-  .instructions(' !> [luis.ts] + proxyrequire + **/*.test.* + **/__tests__/* + **/tests/*')
+  .instructions(' !> [luis.ts] + proxyrequire + **/*.test.* + **/__tests__/* + **/**.snap')
   .globals({
     proxyrequire: '*'
   });

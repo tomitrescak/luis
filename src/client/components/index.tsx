@@ -10,7 +10,7 @@ import { setupJestBridge } from '../../bridges/jest';
 const state = initState();
 
 export async function renderLuis(options: RenderOptions = {}) {
-  setupJestBridge(options.testResults);
+  setupJestBridge(options.testResults, options.snapshots);
 
   options.tests();
 
@@ -23,6 +23,9 @@ export async function renderLuis(options: RenderOptions = {}) {
 
   // create new router
   setupRouter(state);
+
+  // make sure the left bar refreshes
+  state.liveRoot.version++;
 
   // render application
   ReactDOM.render(

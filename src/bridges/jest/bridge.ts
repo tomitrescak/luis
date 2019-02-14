@@ -19,9 +19,9 @@ function addTests(
   snapshots: Snapshots
 ) {
   // check if we have already processed this group
-  if (group.tests && group.tests.length) {
-    return;
-  }
+  // if (group.tests && group.tests.length) {
+  //   return;
+  // }
 
   // add info
   group.passingTests = 0;
@@ -179,32 +179,6 @@ export function createBridge(
       const story: any = impl();
       if (story) {
         state.currentGroup.initStory(story);
-      }
-    } finally {
-      state.currentGroup = parent;
-    }
-
-    addTests(state, group, testData, snapshots);
-  };
-
-  glob.storyOf = function(name: string, props: StoryConfig, _impl: (props: any) => void) {
-    // config can also be a single function
-    if (props instanceof Function) {
-      const component = (props as any)();
-      props = {
-        get component() {
-          return component;
-        }
-      };
-    }
-
-    const group = state.currentGroup.getStory(name, props, state);
-    const parent = group.parent;
-    state.currentGroup = group;
-
-    try {
-      if (_impl) {
-        _impl(props);
       }
     } finally {
       state.currentGroup = parent;

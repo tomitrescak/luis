@@ -1,6 +1,6 @@
 import * as React from 'react';
+import * as renderer from 'react-test-renderer';
 
-console.log('Loading ...');
 describe('Component', () => {
   describe('Doo', function() {
     it('tests', function() {});
@@ -10,11 +10,13 @@ describe('Component', () => {
         return <div>Bar Component 123</div>;
       }
 
-      it('Fails', function() {
+      it('fails', function() {
         throw new Error('Failed miserably');
       });
 
-      it('Passes', function() {});
+      it('renders', function() {
+        expect(renderer.create(component())).toMatchSnapshot();
+      });
 
       return {
         component: component()

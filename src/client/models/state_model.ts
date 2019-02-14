@@ -44,6 +44,7 @@ export type RenderOptions = {
   updateUrl?: string;
   tests?: () => any;
   testResults?: any;
+  snapshots?: any;
 };
 
 let id = 0;
@@ -54,7 +55,7 @@ export class StateModel {
   @observable showPassing = true;
   @observable showFailing = true;
   @observable running = false;
-  @observable hideTestMenus = localStorage.getItem('LUIS.showTestMenus') === 'true';
+  @observable hideTestMenus = false; // = localStorage.getItem('LUIS.showTestMenus') === 'true';
 
   expanded: { [index: string]: IObservableValue<boolean> } = {};
 

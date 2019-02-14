@@ -13,7 +13,7 @@ const {
 
 const StubPlugin = require('proxyrequire').FuseBoxStubPlugin(/\.tsx?/);
 
-console.log(require('path').resolve('src'));
+// console.log(require('path').resolve('src'));
 const home = require('path').resolve('src');
 
 module.exports = function(root, entry) {
@@ -23,7 +23,7 @@ module.exports = function(root, entry) {
     target: 'browser',
     sourceMaps: true,
     plugins: [
-      // StubPlugin,
+      StubPlugin,
       ImageBase64Plugin(),
       JSONPlugin(),
       EnvPlugin({ NODE_ENV: 'test' }),

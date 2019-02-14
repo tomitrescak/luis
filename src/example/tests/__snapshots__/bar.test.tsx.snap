@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component Doo Bar renders 1`] = `
+<div>
+  Bar Component
+</div>
+`;

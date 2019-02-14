@@ -105,7 +105,8 @@ export class TestGroup extends TestItem {
       return this.name;
     }
     return (
-      (this.parent == null || this.parent.parent == null ? '' : this.parent.path + ' ') + this.name
+      (this.parent == null || this.parent.parent == null ? '' : this.parent.simplePath + ' ') +
+      this.name
     );
   }
 

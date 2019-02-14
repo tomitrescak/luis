@@ -116,7 +116,6 @@ export class TestView extends React.Component<TestProps> {
           active={expanded}
           className={bump}
           onClick={e => this.canExpand() && state.toggleExpanded(e, test)}
-          {...(expanded ? { as: Segment, attached: 'top' } : {})}
         >
           <Icon name="dropdown" className={this.canExpand() ? 'normal' : hidden} />
           <Icon {...test.icon as any} />
@@ -132,7 +131,7 @@ export class TestView extends React.Component<TestProps> {
         </Accordion.Title>
         <Accordion.Content active={expanded} className={content}>
           {test.snapshots.length > 0 && (
-            <Segment attached={test.error ? true : 'bottom'} secondary>
+            <Segment attached secondary>
               <List className={snapshotMenu}>
                 {test.snapshots.map(s => (
                   <List.Item

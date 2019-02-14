@@ -1,10 +1,10 @@
 import { createBridge, Snapshots } from './bridge';
 import { Bridge, setupBridge } from '../../client/index';
-import { setupHmr } from '../../client/config/setup_hmr';
+// import { setupHmr } from '../../client/config/setup_hmr';
 
 export const bridge: Bridge = {};
 
-setupHmr();
+// setupHmr();
 
 export function setupJestBridge(
   testData: jest.AggregatedResult = {} as any,
@@ -17,6 +17,8 @@ export function setupJestBridge(
     if (!Array.isArray(testData.testResults) || testData.testResults.length === 0) {
       state.hideMenus(true);
     }
+
+    // const snapshots = require('~/**.snap');
 
     // create new bridge
     createBridge(state, testData, snapshots);
