@@ -5,8 +5,9 @@ import { DiffView } from 'diff-view';
 import { Accordion, Icon, List, Segment } from 'semantic-ui-react';
 import { style } from 'typestyle';
 
-import { diff, timing } from './component_styles';
+import { diff, timing, floatShots } from './component_styles';
 import { Test } from '../models/test_model';
+import { WorkFlowContext } from 'fuse-box';
 
 export type TestProps = {
   state: Luis.State;
@@ -27,17 +28,6 @@ export const noPadding = style({
 const snapshotMenu = style({
   marginTop: '0px!important',
   fontSize: '12px!important'
-});
-
-const snapshotHolder = style({
-  padding: '6px!important'
-  // marginRight: '-3px!important',
-  // $nest: {
-  //   '.segment': {
-  //     padding: '6px!important',
-  //     marginBottom: '0px!important'
-  //   }
-  // }
 });
 
 const hidden = style({
@@ -96,7 +86,7 @@ export class TestView extends React.Component<TestProps> {
   errorView: HTMLDivElement;
 
   canExpand() {
-    return this.props.test.error != null;
+    return this.props.test.snapshots.length > 0 || this.props.test.error != null;
   }
 
   openSnapshot = (e: React.SyntheticEvent<HTMLAnchorElement>) => {
@@ -104,7 +94,6 @@ export class TestView extends React.Component<TestProps> {
     e.stopPropagation();
     let parts = e.currentTarget.getAttribute('data-path').split('/');
     this.props.state.viewState.openStory(parts[0], parts[1], parts[2]);
-    return false;
   };
 
   render(): any {
@@ -123,18 +112,21 @@ export class TestView extends React.Component<TestProps> {
       marginLeft: '-22px',
       display: 'flex',
       $nest: {
-        '.iconHolder': {
+        i: {
           flex: '1 auto!important',
-          paddingTop: '10px!important'
+          minWidth: '15px'
         },
-        '.testTitle': {
-          flex: '1 100%!important'
+        a: {
+          whiteSpace: 'nowrap',
+          textOverflow: 'ellipsis',
+          overflow: 'hidden',
+          flex: '1 100%',
+          minWidth: '60px'
         },
-        '.list': {
-          marginTop: '10px!important'
-        },
-        '.noSegment': {
-          marginLeft: '6px'
+        div: {
+          whiteSpace: 'nowrap',
+          textOverflow: 'ellipsis',
+          overflow: 'hidden'
         }
       }
     });
@@ -147,50 +139,51 @@ export class TestView extends React.Component<TestProps> {
           className={bump}
           onClick={e => this.canExpand() && state.toggleExpanded(e, test)}
         >
-          <div className={test.snapshots.length ? 'iconHolder' : ''}>
-            <Icon name="dropdown" className={this.canExpand() ? 'normal' : hidden} />
-          </div>
+          <Icon name="dropdown" className={this.canExpand() ? 'normal' : hidden} />
+          <Icon {...test.icon as any} />
 
-          <div className={'testTitle'}>
-            <div
-              className={
-                test.snapshots.length
-                  ? snapshotHolder + ' ui secondary attached segment'
-                  : 'noSegment'
-              }
-            >
-              <Icon {...test.icon as any} />
+          <a
+            className="text"
+            href={`${prefix}=${test.parent.id}&test=${test.urlName}/`}
+            data-path={`${test.parent.id}/${test.urlName}/`}
+            onClick={this.openSnapshot}
+          >
+            {test.name}
+          </a>
 
+          <div className={floatShots}>
+            {test.snapshots.slice(0, 3).map(s => (
               <a
-                href={`${prefix}=${test.parent.id}&test=${test.urlName}/`}
-                data-path={`${test.parent.id}/${test.urlName}/`}
                 onClick={this.openSnapshot}
+                data-path={`${test.parent.id}/${test.urlName}/${s.url}`}
               >
-                {test.name}
+                &nbsp;
+                <Icon name="image" />
               </a>
-              <div className={timing(test.error ? 'red' : 'green')}>
-                {test.duration.toString()}ms
-              </div>
-
-              {test.snapshots.length > 0 && (
-                <List className={snapshotMenu}>
-                  {test.snapshots.map(s => (
-                    <List.Item
-                      as="a"
-                      data-path={`${test.parent.id}/${test.urlName}/${s.url}`}
-                      href={`${prefix}=${test.parent.id}&test=${test.urlName}&snapshot=${s.url}`}
-                      onClick={this.openSnapshot}
-                      icon="image"
-                      key={s.name}
-                      content={s.name}
-                    />
-                  ))}
-                </List>
-              )}
-            </div>
+            ))}
           </div>
+
+          <div className={timing(test.error ? 'red' : 'green')}>{test.duration.toString()}ms</div>
         </Accordion.Title>
         <Accordion.Content active={expanded} className={content}>
+          {test.snapshots.length > 0 && (
+            <Segment secondary attached={test.error ? 'top' : undefined}>
+              <List className={snapshotMenu}>
+                {test.snapshots.map(s => (
+                  <List.Item
+                    as="a"
+                    data-path={`${test.parent.id}/${test.urlName}/${s.url}`}
+                    href={`${prefix}=${test.parent.id}&test=${test.urlName}&snapshot=${s.url}`}
+                    onClick={this.openSnapshot}
+                    icon="image"
+                    key={s.name}
+                    content={s.name}
+                  />
+                ))}
+              </List>
+            </Segment>
+          )}
+
           {test.error && <ErrorView test={test} />}
         </Accordion.Content>
       </div>

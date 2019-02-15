@@ -5,3 +5,9 @@ exports[`Component Doo Bar renders 1`] = `
   Bar Component
 </div>
 `;
+
+exports[`Component Doo Bar renders1 with really long name there it is 1`] = `
+<div>
+  Bar Component
+</div>
+`;

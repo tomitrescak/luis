@@ -94,5 +94,13 @@ export const timing = (color: string) =>
   style({
     float: 'right',
     fontSize: '10px',
-    color
+    color,
+    minWidth: '40px',
+    textAlign: 'right'
   });
+
+export const floatShots = style({
+  minWidth: '35px',
+  textAlign: 'left',
+  marginLeft: '5px'
+});

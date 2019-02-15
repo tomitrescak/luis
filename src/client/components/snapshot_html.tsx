@@ -13,10 +13,10 @@ const frameHolder = style({
 });
 const leftFrame = style({
   position: 'absolute',
-  left: '0px',
+  left: '6px',
+  top: '6px',
   right: '50%',
   height: '100%',
-  margin: '3px',
   borderRight: '1px dashed #ddd'
 });
 const rightFrame = style({

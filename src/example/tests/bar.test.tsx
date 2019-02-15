@@ -7,7 +7,7 @@ describe('Component', () => {
 
     describe('Bar', () => {
       function component() {
-        return <div>Bar Component 123</div>;
+        return <div>Bar Component 567</div>;
       }
 
       it('fails', function() {
@@ -18,7 +18,7 @@ describe('Component', () => {
         expect(renderer.create(component())).toMatchSnapshot();
       });
 
-      it('renders1', function() {
+      it('renders1 with really long name there it is', function() {
         expect(renderer.create(component())).toMatchSnapshot();
       });
 

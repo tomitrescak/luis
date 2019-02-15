@@ -87,7 +87,7 @@ function addTests(
           ) {
             const matchingSnapshots = keys.filter(k => k.indexOf(test.fullName) >= 0);
             if (matchingSnapshots.length) {
-              let original = suiteSnapshots[matchingSnapshots[0]];
+              let original = suiteSnapshots[matchingSnapshots[0]].trim();
               let lines = message.split('\n');
 
               lines = lines.slice(lines.findIndex(l => !!l.match(/\+ Received/)) + 2);
@@ -148,18 +148,18 @@ function addTests(
           let index = 1;
           t.snapshots.replace(
             matchingSnapshots.map(m => {
-              let current = suiteSnapshots[m];
-              if (current) {
-                current = current.replace(/className=/g, 'class=');
-                current = current.replace(/<(\w+)([^>]+)\/>/gm, '<$1$2></$1>');
-              }
-              let expected = t.error ? t.error.actual : suiteSnapshots[m];
+              let expected = suiteSnapshots[m].trim();
               if (expected) {
                 expected = expected.replace(/className=/g, 'class=');
                 expected = expected.replace(/<(\w+)([^>]+)\/>/gm, '<$1$2></$1>');
               }
+              let actual = t.error ? t.error.actual : suiteSnapshots[m];
+              if (actual) {
+                actual = actual.replace(/className=/g, 'class=');
+                actual = actual.replace(/<(\w+)([^>]+)\/>/gm, '<$1$2></$1>');
+              }
               return new Snapshot({
-                current,
+                current: actual,
                 name: (m.match(new RegExp(test.fullName + '\\s+\\d+'))
                   ? `Snapshot ${index++}`
                   : m.replace(test.fullName, '')

@@ -27,9 +27,32 @@ const content = style({
 //   paddingTop: '0px!important'
 // });
 
-const bump = style({
-  marginLeft: '-22px'
-});
+const long: any = {
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+  overflow: 'hidden',
+  flex: '1 100%',
+  minWidth: '60px'
+};
+
+const bump = (bump: boolean) =>
+  style({
+    marginLeft: bump ? '-22px' : undefined,
+    display: 'flex',
+    $nest: {
+      i: {
+        flex: '1 auto!important',
+        minWidth: '15px'
+      },
+      span: { ...long },
+      a: { ...long },
+      div: {
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden'
+      }
+    }
+  });
 
 const bumpTitleSmall = style({
   marginLeft: '5px'
@@ -61,7 +84,7 @@ export class TestGroupView extends React.Component<Props> {
         <Accordion.Title
           key={group.name}
           active={state.isExpanded(group).get()}
-          className={group.groups.length || group.tests.length ? bump : ''}
+          className={group.groups.length || group.tests.length ? bump(true) : bump(false)}
           onClick={e => state.toggleExpanded(e, group)}
         >
           {group.groups.length || group.tests.length ? (
