@@ -1,4 +1,4 @@
-import { observable, computed, action, IObservableArray } from 'mobx';
+import { observable, computed, action } from 'mobx';
 import { SemanticCOLORS } from 'semantic-ui-react';
 
 import { TestItem, Impl, toUrlName } from './test_item_model';

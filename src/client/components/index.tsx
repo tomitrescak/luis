@@ -10,7 +10,7 @@ import { setupJestBridge } from '../../bridges/jest';
 const state = initState();
 
 export async function renderLuis(options: RenderOptions = {}) {
-  setupJestBridge(options.testResults, options.snapshots);
+  setupJestBridge(options.report, options.snapshots);
 
   options.tests();
 

@@ -12,6 +12,7 @@ const {
 } = require('fuse-box');
 
 const StubPlugin = require('proxyrequire').FuseBoxStubPlugin(/\.tsx?/);
+const SnapshotPlugin = require('./dist/bridges/jest/snapshot_plugin').SnapshotPlugin;
 
 // console.log(require('path').resolve('src'));
 const home = require('path').resolve('src');
@@ -23,6 +24,7 @@ module.exports = function(root, entry) {
     target: 'browser',
     sourceMaps: true,
     plugins: [
+      SnapshotPlugin(),
       StubPlugin,
       ImageBase64Plugin(),
       JSONPlugin(),

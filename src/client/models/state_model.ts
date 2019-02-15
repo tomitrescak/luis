@@ -43,7 +43,7 @@ export type RenderOptions = {
   extraUpdateProps?: string;
   updateUrl?: string;
   tests?: () => any;
-  testResults?: any;
+  report?: any;
   snapshots?: any;
 };
 

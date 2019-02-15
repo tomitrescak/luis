@@ -29,8 +29,20 @@ const snapshotMenu = style({
   fontSize: '12px!important'
 });
 
+const snapshotHolder = style({
+  padding: '6px!important'
+  // marginRight: '-3px!important',
+  // $nest: {
+  //   '.segment': {
+  //     padding: '6px!important',
+  //     marginBottom: '0px!important'
+  //   }
+  // }
+});
+
 const hidden = style({
-  color: 'white!important'
+  color: 'white!important',
+  visibility: 'hidden'
 });
 
 const content = style({
@@ -84,13 +96,15 @@ export class TestView extends React.Component<TestProps> {
   errorView: HTMLDivElement;
 
   canExpand() {
-    return this.props.test.snapshots.length > 0 || this.props.test.error != null;
+    return this.props.test.error != null;
   }
 
   openSnapshot = (e: React.SyntheticEvent<HTMLAnchorElement>) => {
     e.preventDefault();
+    e.stopPropagation();
     let parts = e.currentTarget.getAttribute('data-path').split('/');
     this.props.state.viewState.openStory(parts[0], parts[1], parts[2]);
+    return false;
   };
 
   render(): any {
@@ -106,7 +120,23 @@ export class TestView extends React.Component<TestProps> {
     const prefix = state.viewState.bare ? '?story' : '?stories';
 
     const bump = style({
-      marginLeft: '-22px'
+      marginLeft: '-22px',
+      display: 'flex',
+      $nest: {
+        '.iconHolder': {
+          flex: '1 auto!important',
+          paddingTop: '10px!important'
+        },
+        '.testTitle': {
+          flex: '1 100%!important'
+        },
+        '.list': {
+          marginTop: '10px!important'
+        },
+        '.noSegment': {
+          marginLeft: '6px'
+        }
+      }
     });
 
     return (
@@ -117,37 +147,50 @@ export class TestView extends React.Component<TestProps> {
           className={bump}
           onClick={e => this.canExpand() && state.toggleExpanded(e, test)}
         >
-          <Icon name="dropdown" className={this.canExpand() ? 'normal' : hidden} />
-          <Icon {...test.icon as any} />
+          <div className={test.snapshots.length ? 'iconHolder' : ''}>
+            <Icon name="dropdown" className={this.canExpand() ? 'normal' : hidden} />
+          </div>
 
-          <a
-            href={`${prefix}=${test.parent.id}&test=${test.urlName}/`}
-            data-path={`${test.parent.id}/${test.urlName}/`}
-            onClick={this.openSnapshot}
-          >
-            {test.name}
-          </a>
-          <div className={timing(test.error ? 'red' : 'green')}>{test.duration.toString()}ms</div>
+          <div className={'testTitle'}>
+            <div
+              className={
+                test.snapshots.length
+                  ? snapshotHolder + ' ui secondary attached segment'
+                  : 'noSegment'
+              }
+            >
+              <Icon {...test.icon as any} />
+
+              <a
+                href={`${prefix}=${test.parent.id}&test=${test.urlName}/`}
+                data-path={`${test.parent.id}/${test.urlName}/`}
+                onClick={this.openSnapshot}
+              >
+                {test.name}
+              </a>
+              <div className={timing(test.error ? 'red' : 'green')}>
+                {test.duration.toString()}ms
+              </div>
+
+              {test.snapshots.length > 0 && (
+                <List className={snapshotMenu}>
+                  {test.snapshots.map(s => (
+                    <List.Item
+                      as="a"
+                      data-path={`${test.parent.id}/${test.urlName}/${s.url}`}
+                      href={`${prefix}=${test.parent.id}&test=${test.urlName}&snapshot=${s.url}`}
+                      onClick={this.openSnapshot}
+                      icon="image"
+                      key={s.name}
+                      content={s.name}
+                    />
+                  ))}
+                </List>
+              )}
+            </div>
+          </div>
         </Accordion.Title>
         <Accordion.Content active={expanded} className={content}>
-          {test.snapshots.length > 0 && (
-            <Segment attached secondary>
-              <List className={snapshotMenu}>
-                {test.snapshots.map(s => (
-                  <List.Item
-                    as="a"
-                    data-path={`${test.parent.id}/${test.urlName}/${s.url}`}
-                    href={`${prefix}=${test.parent.id}&test=${test.urlName}&snapshot=${s.url}`}
-                    onClick={this.openSnapshot}
-                    icon="image"
-                    key={s.name}
-                    content={s.name}
-                  />
-                ))}
-              </List>
-            </Segment>
-          )}
-
           {test.error && <ErrorView test={test} />}
         </Accordion.Content>
       </div>

@@ -8,10 +8,24 @@ const frameHolder = style({
   left: '0px',
   right: '0px',
   top: '42px',
-  bottom: '0px'
+  bottom: '0px',
+  padding: '6px'
 });
-const leftFrame = style({ position: 'absolute', left: '0px', right: '50%', height: '100%', margin: '3px', borderRight: '1px dashed #ddd' });
-const rightFrame = style({ position: 'absolute', left: '50%', right: '0px', height: '100%', margin: '3px' });
+const leftFrame = style({
+  position: 'absolute',
+  left: '0px',
+  right: '50%',
+  height: '100%',
+  margin: '3px',
+  borderRight: '1px dashed #ddd'
+});
+const rightFrame = style({
+  position: 'absolute',
+  left: '50%',
+  right: '0px',
+  height: '100%',
+  margin: '0px'
+});
 const fullFrame = style({ position: 'absolute', width: '100%', height: '100%', margin: '3px' });
 
 export interface PreviewProps {
@@ -54,8 +68,14 @@ export class SnapshotHtml extends React.Component<PreviewProps> {
           <div className={story.cssClassName}>
             {snapshot.expected && snapshot.expected !== snapshot.current ? (
               <div className={frameHolder}>
-                <div className={leftFrame + '  leftPanel'} dangerouslySetInnerHTML={{ __html: current }} />
-                <div className={rightFrame + '  rightPanel'} dangerouslySetInnerHTML={{ __html: expected || 'No saved snapshot' }} />
+                <div
+                  className={leftFrame + '  leftPanel'}
+                  dangerouslySetInnerHTML={{ __html: current }}
+                />
+                <div
+                  className={rightFrame + '  rightPanel'}
+                  dangerouslySetInnerHTML={{ __html: expected || 'No saved snapshot' }}
+                />
               </div>
             ) : (
               <div className={frameHolder}>

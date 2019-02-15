@@ -1,6 +1,8 @@
 import { style } from 'typestyle';
 
 export const diff = style({
+  maxHeight: '200px',
+  overflow: 'auto',
   $nest: {
     '& table': {
       width: '100%',

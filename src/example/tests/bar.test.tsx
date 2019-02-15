@@ -18,6 +18,10 @@ describe('Component', () => {
         expect(renderer.create(component())).toMatchSnapshot();
       });
 
+      it('renders1', function() {
+        expect(renderer.create(component())).toMatchSnapshot();
+      });
+
       return {
         component: component()
       };

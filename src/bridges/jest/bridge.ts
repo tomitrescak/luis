@@ -85,42 +85,53 @@ function addTests(
             message.indexOf('expect(value).toMatchSnapshot()') > 0 ||
             message.indexOf('Snapshots do not match') > 0
           ) {
-            let lines = message.split('\n');
-            expected = '';
-            actual = '';
+            const matchingSnapshots = keys.filter(k => k.indexOf(test.fullName) >= 0);
+            if (matchingSnapshots.length) {
+              let original = suiteSnapshots[matchingSnapshots[0]];
+              let lines = message.split('\n');
 
-            let started = false;
-            for (let line of lines) {
-              if (
-                !started &&
-                (line.indexOf('+ Received') >= 0 || line.indexOf('+ expected') >= 0)
-              ) {
-                started = true;
-                continue;
-              }
+              lines = lines.slice(lines.findIndex(l => !!l.match(/\+ Received/)) + 2);
 
-              if (started && line.match('^    at')) {
-                // expected = expected.trim();
-                // actual = actual.trim();
-                break;
-              }
+              let originalLines = original.split('\n');
+              let current = [];
+              let index = 0;
 
-              if (started) {
+              // console.log(lines[0])
+
+              for (let line of lines) {
+                let both = line.match(/^@@ \-(\d+)/);
+
+                if (line.match('^    at')) {
+                  break;
+                }
+
+                if (both) {
+                  let end = parseInt(both[1]);
+                  // console.log(end);
+                  for (let i = index; i < end; i++) {
+                    current.push(originalLines[i]);
+                  }
+                  index = end;
+                  continue;
+                }
+
                 let m = line.match(/^\s*(\+|\-)/);
-                let d = (m && m[1]) || '';
-                let rest = line.replace(d, '');
 
-                if (d !== '+') {
-                  expected += rest + '\n';
-                }
-                if (d !== '-') {
-                  actual += rest + '\n';
+                if (m) {
+                  let d = (m && m[1]) || '';
+                  let rest = line.replace(d, '');
+                  if (d !== '+') {
+                    index++;
+                  } else {
+                    current.push(rest);
+                  }
+                } else {
+                  current.push(originalLines[index]);
+                  index++;
                 }
               }
-            }
-            if (expected === '') {
-              expected = null;
-              actual = null;
+              expected = original;
+              actual = current.join('\n');
             }
           }
 
@@ -136,20 +147,29 @@ function addTests(
         if (matchingSnapshots.length) {
           let index = 1;
           t.snapshots.replace(
-            matchingSnapshots.map(
-              m =>
-                new Snapshot({
-                  current: suiteSnapshots[m],
-                  name: (m.match(new RegExp(test.fullName + '\\s+\\d+'))
-                    ? `Snapshot ${index++}`
-                    : m.replace(test.fullName, '')
-                  ).replace(/\b1$/, ''), // 'Snapshot ' + index++,
-                  originalName: m,
-                  matching: true,
-                  test: t,
-                  expected: t.error ? t.error.actual : suiteSnapshots[m]
-                })
-            )
+            matchingSnapshots.map(m => {
+              let current = suiteSnapshots[m];
+              if (current) {
+                current = current.replace(/className=/g, 'class=');
+                current = current.replace(/<(\w+)([^>]+)\/>/gm, '<$1$2></$1>');
+              }
+              let expected = t.error ? t.error.actual : suiteSnapshots[m];
+              if (expected) {
+                expected = expected.replace(/className=/g, 'class=');
+                expected = expected.replace(/<(\w+)([^>]+)\/>/gm, '<$1$2></$1>');
+              }
+              return new Snapshot({
+                current,
+                name: (m.match(new RegExp(test.fullName + '\\s+\\d+'))
+                  ? `Snapshot ${index++}`
+                  : m.replace(test.fullName, '')
+                ).replace(/\b1$/, ''), // 'Snapshot ' + index++,
+                originalName: m,
+                matching: true,
+                test: t,
+                expected
+              });
+            })
           );
         }
 
@@ -185,6 +205,10 @@ export function createBridge(
     }
 
     addTests(state, group, testData, snapshots);
+
+    // sort
+    parent.groups.sort((a, b) => (a.name < b.name ? -1 : 1));
+    group.tests.sort((a, b) => (a.name < b.name ? -1 : 1));
   };
 
   glob.xit = function() {};
