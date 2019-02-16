@@ -24,18 +24,8 @@ declare global {
   }
 }
 
-export interface Bridge {}
-
-export interface Config {
-  bridge: Bridge;
-}
-
-export const config: Config = {
-  bridge: null
-};
-
-export function setupBridge(setup: (state: StateModel) => Bridge) {
-  config.bridge = setup(initState());
+export function mapBridgeToState(setup: (state: StateModel) => void) {
+  setup(initState());
 }
 
 export type RenderOptions = {

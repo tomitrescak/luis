@@ -1,10 +1,27 @@
-import { TestGroup, Test, Snapshot, StateModel } from '../../client/index';
+import { TestGroup, Test, Snapshot, StateModel, mapBridgeToState } from './index';
 
 export type Impl = () => void;
 
 export type Map<T> = { [name: string]: T };
 
 export type Snapshots = Map<Map<string>>;
+
+export function buildBridge(
+  testData: jest.AggregatedResult = {} as any,
+  snapshots: Snapshots = {}
+) {
+  (global as any).jest = { fn: () => {} };
+
+  mapBridgeToState(state => {
+    // hide top menus if we have no test results
+    if (!Array.isArray(testData.testResults) || testData.testResults.length === 0) {
+      state.hideMenus(true);
+    }
+
+    // create new bridge
+    createBridge(state, testData, snapshots);
+  });
+}
 
 function clean(message: string) {
   message = message.replace(/\u001b/g, '');

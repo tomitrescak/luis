@@ -152,7 +152,7 @@ function processResults(
 }
 
 // my-custom-reporter.js
-class LuisReporter {
+export class LuisReporter {
   savePath: string;
   merge: boolean;
 

@@ -1,6 +1,28 @@
 #!/usr/bin/env node
 // check if custom config exists
 const fs = require('fs');
+
+if (process.argv[0] && process.argv[0] == 'init') {
+  try {
+    let path = path.resolve(process.argv[1] || 'src/luis.js');
+    fs.statSync(path);
+    console.log('Luis config already exists');
+    return;
+  } catch (ex) {
+    console.log('Creating standard luis config');
+    fs.writeFileSync(
+      path,
+      `import { renderLuis } from 'luis';
+
+renderLuis({
+  ...require('./summary'),
+  tests: () => require('**.test')
+});`,
+      { encoding: 'utf-8' }
+    );
+  }
+}
+
 try {
   fs.statSync(require.resolve('../../luis.fuse.js'));
   console.log('Found custom luis config.');

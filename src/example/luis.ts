@@ -1,10 +1,8 @@
-import { renderLuis } from '../client/components/index';
+const { renderLuis } = require('./client/components/index');
+const { snapshots, report } = require('./summary');
 
-// import '../client/css/semantic.min.css';
-// import '../client/css/fonts.css';
-
-import './tests/foo.test';
-import './tests/bar.test';
-import './tests/boo.test';
-
-renderLuis();
+renderLuis({
+  snapshots,
+  report,
+  tests: () => require('~/**.test')
+});

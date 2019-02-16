@@ -1,4 +1,4 @@
-import { renderLuis } from './index';
+import { renderLuis } from '../index';
 
 import '**/**.test';
 

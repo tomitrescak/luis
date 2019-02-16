@@ -1,6 +1,6 @@
 {
   "name": "luis",
-  "version": "3.1.12",
+  "version": "3.1.14",
   "description": "List-of-uis book and testing of uis",
   "main": "dist/client/index.js",
   "types": "dist/client/index.d.ts",
