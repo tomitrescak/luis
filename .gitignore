@@ -3,3 +3,15 @@ dist
 .fusebox
 public
 *.json
+/client/
+/example/
+/fuse-box
+/server
+bridge.js
+bridge.d.ts
+index.js
+index.d.ts
+processor.js
+processor.d.ts
+reporter.js
+reporter.d.ts

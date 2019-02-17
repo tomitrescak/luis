@@ -7,7 +7,6 @@ import { style } from 'typestyle';
 
 import { diff, timing, floatShots } from './component_styles';
 import { Test } from '../models/test_model';
-import { WorkFlowContext } from 'fuse-box';
 
 export type TestProps = {
   state: Luis.State;
@@ -152,8 +151,9 @@ export class TestView extends React.Component<TestProps> {
           </a>
 
           <div className={floatShots}>
-            {test.snapshots.slice(0, 3).map(s => (
+            {test.snapshots.slice(0, 3).map((s, i) => (
               <a
+                key={i}
                 onClick={this.openSnapshot}
                 data-path={`${test.parent.id}/${test.urlName}/${s.url}`}
               >

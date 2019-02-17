@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-function noop() { }
+function noop() {}
 
 export interface Props {
   activeEditor?: string;
@@ -28,6 +28,8 @@ export class MonacoDiffEditor extends React.Component<Props> {
   containerElement: HTMLElement;
   editor: any;
 
+  monitorResize: any;
+
   constructor(props: Props) {
     super(props);
     this.containerElement = undefined;
@@ -41,8 +43,10 @@ export class MonacoDiffEditor extends React.Component<Props> {
 
   componentDidUpdate(prevProps: Props) {
     const context = this.props.context || window;
-    if (this.props.value !== this.__current_value ||
-      this.props.original !== this.__current_original) {
+    if (
+      this.props.value !== this.__current_value ||
+      this.props.original !== this.__current_original
+    ) {
       // Always refer to the latest value
       this.__current_value = this.props.value;
       this.__current_original = this.props.original;
@@ -122,7 +126,8 @@ export class MonacoDiffEditor extends React.Component<Props> {
       // We need to avoid loading multiple loader.js when there are multiple editors loading
       // concurrently, delay to call callbacks except the first one
       // eslint-disable-next-line max-len
-      context.__REACT_MONACO_EDITOR_LOADER_CALLBACKS__ = context.__REACT_MONACO_EDITOR_LOADER_CALLBACKS__ || [];
+      context.__REACT_MONACO_EDITOR_LOADER_CALLBACKS__ =
+        context.__REACT_MONACO_EDITOR_LOADER_CALLBACKS__ || [];
       context.__REACT_MONACO_EDITOR_LOADER_CALLBACKS__.push({
         context: this,
         fn: onGotAmdLoader
@@ -142,12 +147,12 @@ export class MonacoDiffEditor extends React.Component<Props> {
   updateModel(value: string, original: string) {
     const context = this.props.context || window;
     const { language } = this.props;
-    const originalModel = context.monaco.editor.createModel(original, language)
-    const modifiedModel = context.monaco.editor.createModel(value, language)
+    const originalModel = context.monaco.editor.createModel(original, language);
+    const modifiedModel = context.monaco.editor.createModel(value, language);
     this.editor.setModel({
       original: originalModel,
       modified: modifiedModel
-    })
+    });
   }
 
   initMonaco() {
@@ -159,10 +164,17 @@ export class MonacoDiffEditor extends React.Component<Props> {
       this.editorWillMount(context.monaco);
       this.editor = context.monaco.editor.createDiffEditor(this.containerElement, options);
       if (theme) {
-        context.monaco.editor.setTheme(theme)
+        context.monaco.editor.setTheme(theme);
       }
+
+      // monitor resize
+      this.monitorResize = () => {
+        this.editor.layout();
+      };
+      window.addEventListener('resize', this.monitorResize);
+
       // After initializing monaco editor
-      this.updateModel(value, original)
+      this.updateModel(value, original);
       this.editorDidMount(this.editor, context.monaco);
     }
   }
@@ -171,11 +183,13 @@ export class MonacoDiffEditor extends React.Component<Props> {
     if (typeof this.editor !== 'undefined') {
       this.editor.dispose();
     }
+
+    window.removeEventListener('resize', this.monitorResize);
   }
 
   assignRef = (component: HTMLElement) => {
     this.containerElement = component;
-  }
+  };
 
   render() {
     const { width, height } = this.props;
@@ -183,12 +197,10 @@ export class MonacoDiffEditor extends React.Component<Props> {
     const fixedHeight = height.toString().indexOf('%') !== -1 ? height : `${height}px`;
     const style = {
       width: fixedWidth,
-      height: fixedHeight,
+      height: fixedHeight
     };
 
-    return (
-      <div ref={this.assignRef} style={style} className="react-monaco-editor-container" />
-    )
+    return <div ref={this.assignRef} style={style} className="react-monaco-editor-container" />;
   }
 }
 
@@ -204,7 +216,7 @@ MonacoDiffEditor.defaultProps = {
   editorDidMount: noop,
   editorWillMount: noop,
   onChange: noop,
-  requireConfig: {},
+  requireConfig: {}
 };
 
 MonacoDiffEditor.displayName = 'MonacoDiffEditor';

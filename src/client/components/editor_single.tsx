@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-function noop() { }
+function noop() {}
 
 export interface Props {
   activeEditor?: string;
@@ -25,6 +25,8 @@ export class MonacoEditor extends React.Component<Props> {
   __prevent_trigger_change_event: boolean;
   containerElement: HTMLElement;
   editor: any;
+
+  monitorResize: any;
 
   constructor(props: Props) {
     super(props);
@@ -94,7 +96,7 @@ export class MonacoEditor extends React.Component<Props> {
       // Running in electron, need to deal with the difference between node require and AMDRequire
       // Save a reference to node's require to set back up later
       context.electronNodeRequire = context.require;
-      loaderUrl = '../node_modules/monaco-editor/min/vs/loader.js'
+      loaderUrl = '../node_modules/monaco-editor/min/vs/loader.js';
     }
 
     const onGotAmdLoader = () => {
@@ -145,14 +147,15 @@ export class MonacoEditor extends React.Component<Props> {
           }
         }
       }
-    }
+    };
 
     // Load AMD loader if necessary
     if (context.__REACT_MONACO_EDITOR_LOADER_ISPENDING__) {
       // We need to avoid loading multiple loader.js when there are multiple editors loading
       // concurrently, delay to call callbacks except the first one
       // eslint-disable-next-line max-len
-      context.__REACT_MONACO_EDITOR_LOADER_CALLBACKS__ = context.__REACT_MONACO_EDITOR_LOADER_CALLBACKS__ || [];
+      context.__REACT_MONACO_EDITOR_LOADER_CALLBACKS__ =
+        context.__REACT_MONACO_EDITOR_LOADER_CALLBACKS__ || [];
       context.__REACT_MONACO_EDITOR_LOADER_CALLBACKS__.push({
         context: this,
         fn: onGotAmdLoader
@@ -167,7 +170,7 @@ export class MonacoEditor extends React.Component<Props> {
     } else {
       onGotAmdLoader();
     }
-  }
+  };
 
   initMonaco() {
     const value = this.props.value !== null ? this.props.value : this.props.defaultValue;
@@ -179,11 +182,18 @@ export class MonacoEditor extends React.Component<Props> {
       this.editor = context.monaco.editor.create(this.containerElement, {
         value,
         language,
-        ...options,
+        ...options
       });
       if (theme) {
-        context.monaco.editor.setTheme(theme)
+        context.monaco.editor.setTheme(theme);
       }
+
+      // monitor resize
+      this.monitorResize = () => {
+        this.editor.layout();
+      };
+      window.addEventListener('resize', this.monitorResize);
+
       // After initializing monaco editor
       this.editorDidMount(this.editor, context.monaco);
     }
@@ -193,11 +203,12 @@ export class MonacoEditor extends React.Component<Props> {
     if (typeof this.editor !== 'undefined') {
       this.editor.dispose();
     }
+    window.removeEventListener('resize', this.monitorResize);
   }
 
   assignRef = (component: any) => {
     this.containerElement = component;
-  }
+  };
 
   render() {
     const { width, height } = this.props;
@@ -205,12 +216,10 @@ export class MonacoEditor extends React.Component<Props> {
     const fixedHeight = height.toString().indexOf('%') !== -1 ? height : `${height}px`;
     const style = {
       width: fixedWidth,
-      height: fixedHeight,
+      height: fixedHeight
     };
 
-    return (
-      <div ref={this.assignRef} style={style} className="react-monaco-editor-container" />
-    )
+    return <div ref={this.assignRef} style={style} className="react-monaco-editor-container" />;
   }
 }
 
@@ -225,7 +234,7 @@ MonacoEditor.defaultProps = {
   editorDidMount: noop,
   editorWillMount: noop,
   onChange: noop,
-  requireConfig: {},
+  requireConfig: {}
 };
 
-MonacoEditor.displayName = "MonacoEditor"
+MonacoEditor.displayName = 'MonacoEditor';

@@ -12,7 +12,7 @@ const {
 } = require('fuse-box');
 
 const StubPlugin = require('proxyrequire').FuseBoxStubPlugin(/\.tsx?/);
-const SnapshotPlugin = require('./dist/bridges/jest/snapshot_plugin').SnapshotPlugin;
+const SnapshotPlugin = require('./fuse-box/snapshot-plugin').SnapshotPlugin;
 
 const luisFuse = FuseBox.init({
   homeDir: 'src',
@@ -39,14 +39,14 @@ luisFuse.dev({
   port: 9001
 });
 
-luisFuse.bundle('luis-vendor').instructions(' ~ luis.ts'); // nothing has changed here
+luisFuse.bundle('luis-vendor').instructions(' ~ example/luis.ts'); // nothing has changed here
 
 luisFuse
   .bundle('luis-client')
   .watch() // watch only client related code
   .hmr()
   .sourceMaps(true)
-  .instructions(' !> [luis.ts] + proxyrequire + **/*.test.* + **/__tests__/* + **/**.snap')
+  .instructions(' !> [example/luis.ts] + proxyrequire + **/*.test.* + **/__tests__/* + **/**.snap')
   .globals({
     proxyrequire: '*'
   });

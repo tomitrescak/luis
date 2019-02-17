@@ -7,7 +7,7 @@ describe('Component', () => {
 
     describe('Bar', () => {
       function component() {
-        return <div>Bar Component 567</div>;
+        return <div>Bar Component 5</div>;
       }
 
       it('fails', function() {

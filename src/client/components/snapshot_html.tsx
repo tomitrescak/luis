@@ -46,12 +46,8 @@ export class SnapshotHtml extends React.Component<PreviewProps> {
       return <div>Please select the snapshot</div>;
     }
 
-    if (test.endTime == 0) {
-      return <div>Running test ...</div>;
-    }
-
     if (!snapshot) {
-      return <div>Snapshot does not exist ;(</div>;
+      return <div style={{ padding: '6px' }}>This test has no recorded snapshots.</div>;
     }
 
     // deal with json

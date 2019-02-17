@@ -1,12 +1,12 @@
 {
   "name": "luis",
-  "version": "3.1.14",
+  "version": "3.2.0",
   "description": "List-of-uis book and testing of uis",
-  "main": "dist/client/index.js",
-  "types": "dist/client/index.d.ts",
+  "main": "./index.js",
+  "types": "./index.d.ts",
   "scripts": {
     "start": "node fuse.js",
-    "test": "jest",
+    "test": "jest --runInBand --watch",
     "us": "mocha --require ./us.js --ui snapshots 'src/example/**/*.test.ts*' -P",
     "usWatch": "mocha --require ./us.js --ui snapshots --watch --watch-extensions ts,tsx 'src/example/**/*.test.ts*' -P"
   },
@@ -56,6 +56,7 @@
     "@types/react": "^16.8.2",
     "express": "^4.16.4",
     "fuse-box": "^4.0.0-next.6",
+    "jest-dot-reporter": "^1.0.7",
     "react-test-renderer": "^16.8.1",
     "ts-jest": "^23.10.5",
     "tslint": "^5.12.1",

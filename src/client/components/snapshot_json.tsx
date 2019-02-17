@@ -11,7 +11,7 @@ const requireConfig = {
   url: 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.1/require.min.js',
   paths: {
     // vsNew: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.10.0/min/vs/',
-    vs: 'https://unpkg.com/monaco-editor@0.10.1/min/vs/'
+    vs: 'https://unpkg.com/monaco-editor@0.15.6/min/vs/'
   }
 };
 
@@ -41,10 +41,14 @@ export class SnapshotJson extends React.Component<SnapshotsProps, {}> {
   // };
 
   render() {
-    const { selectedStory: story, selectedSnapshot: snapshot, selectedTest: test } = this.props.state.viewState;
+    const {
+      selectedStory: story,
+      selectedSnapshot: snapshot,
+      selectedTest: test
+    } = this.props.state.viewState;
 
     if (!story || !test) {
-      return <div>Please select your story</div>
+      return <div>Please select your story</div>;
     }
 
     if (story.duration == 0) {
@@ -52,40 +56,50 @@ export class SnapshotJson extends React.Component<SnapshotsProps, {}> {
     }
 
     if (test.snapshots.length == 0) {
-      return <div>Test has no snapshots ...</div>;
+      return <div style={{ padding: '6px' }}>This test has no recorded snapshots.</div>;
     }
 
     if (!snapshot) {
-      return <div style={{padding: '6px'}}>Snapshot does not exist ;(</div>
+      return (
+        <div style={{ padding: '6px' }}>
+          Sorry, we could not locate your snapshot: {this.props.state.viewState.selectedSnapshot}.
+        </div>
+      );
     }
 
     if (snapshot.current != snapshot.expected) {
-      console.log("Rendering diff")
-      return <MonacoDiffEditor
-        key="HistoryView"
-        theme="vs-light"
-        width="100%"
-        height="100%"
-        options={{minimap: {
-          enabled: false
-        }}}
-        value={snapshot.expected}
-        original={snapshot.current}
-        requireConfig={requireConfig}
-        language="html"
-      />
+      console.log('Rendering diff');
+      return (
+        <MonacoDiffEditor
+          key="HistoryView"
+          theme="vs-light"
+          width="100%"
+          height="100%"
+          options={{
+            minimap: {
+              enabled: false
+            }
+          }}
+          value={snapshot.expected}
+          original={snapshot.current}
+          requireConfig={requireConfig}
+          language="html"
+        />
+      );
     }
 
-    console.log("Rendering normela")
+    console.log('Rendering normela');
     return (
       <MonacoEditor
         key="HistoryView"
         theme="vs-light"
         width="100%"
         height="100%"
-        options={{minimap: {
-          enabled: false
-        }}}
+        options={{
+          minimap: {
+            enabled: false
+          }
+        }}
         value={snapshot.current}
         requireConfig={requireConfig}
         language="html"

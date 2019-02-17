@@ -5,14 +5,14 @@ import { Provider } from 'mobx-react';
 import { Layout } from './layout';
 import { initState, RenderOptions } from '../models/state_model';
 import { setupRouter } from '../config/router';
-import { setupJestBridge } from '../../bridges/jest';
+import { buildBridge } from '../../bridge';
 
 const state = initState();
 
 export async function renderLuis(options: RenderOptions = {}) {
-  setupJestBridge(options.report, options.snapshots);
+  buildBridge(options.report, options.snapshots);
 
-  options.tests();
+  options.loadTests();
 
   let root = document.querySelector(options.root || '#react-root');
   if (!root) {

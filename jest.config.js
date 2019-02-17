@@ -1,20 +1,20 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  //collectCoverage: true,
+  rootDir: 'src',
   verbose: false,
   reporters: [
-    // 'jest-dot-reporter',
+    'jest-dot-reporter',
     [
-      './dist/bridges/jest/reporter',
+      '../reporter',
       {
-        path: '/Users/tomi/Github/packages/luis/src/summary.ts',
+        path: 'src/example/summary.ts',
         merge: true
       }
     ]
   ],
   // testResultsProcessor: 'luis/dist/bridges/jest/reporter',
-  watchPathIgnorePatterns: ['<rootDir>/src/summary.ts'],
-  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
-  testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)']
+  watchPathIgnorePatterns: ['<rootDir>/example/summary.ts'],
+  // testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+  testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/example/**/?(*.)+(spec|test).[jt]s?(x)']
 };

@@ -166,15 +166,14 @@ export class LuisReporter {
 
   onRunComplete(_contexts: any, results: jest.AggregatedResult) {
     let previous = null;
-
+    const p = path.resolve(this.savePath);
     try {
-      const p = path.resolve(this.savePath);
       require.cache[p] = null;
       previous = require(p).report;
     } catch {}
 
     if (previous) {
-      console.log('Loaded previous report ...');
+      console.log('Loaded previous report from: ' + p);
     }
     processResults(results, previous, this.savePath, this.merge);
   }

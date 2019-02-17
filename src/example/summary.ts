@@ -1,77 +1,17 @@
 module.exports.report = {
-  "numFailedTests": 3,
-  "numPassedTests": 1,
-  "numTotalTests": 4,
+  "numFailedTests": 5,
+  "numPassedTests": 3,
+  "numTotalTests": 8,
   "testResults": [
     {
-      "testFilePath": "/Users/tomi/Github/packages/luis/.fusebox/cache/4.0.0-next.6/ZGXYRA-luis-client/static/tests%2Fbridge.test",
-      "testResults": [],
-      "numFailingTests": 0,
-      "numPassingTests": 0
-    },
-    {
-      "testFilePath": "/Users/tomi/Github/packages/luis/.fusebox/cache/4.0.0-next.6/ZGXYRA-luis-client/static/tests%2Ftest_runner.test",
-      "testResults": [],
-      "numFailingTests": 0,
-      "numPassingTests": 0
-    },
-    {
-      "testFilePath": "/client/components/tests/left_menu.test",
-      "testResults": [],
-      "numFailingTests": 0,
-      "numPassingTests": 0
-    },
-    {
-      "testFilePath": "/client/components/tests/bare_view.test",
-      "testResults": [],
-      "numFailingTests": 0,
-      "numPassingTests": 0
-    },
-    {
-      "testFilePath": "/client/components/tests/left_panel.test",
-      "testResults": [],
-      "numFailingTests": 0,
-      "numPassingTests": 0
-    },
-    {
-      "testFilePath": "/client/components/tests/story_list.test",
-      "testResults": [],
-      "numFailingTests": 0,
-      "numPassingTests": 0
-    },
-    {
-      "testFilePath": "/tests/test_runner.test",
-      "testResults": [],
-      "numFailingTests": 0,
-      "numPassingTests": 0
-    },
-    {
-      "testFilePath": "/tests/bridge.test",
-      "testResults": [],
-      "numFailingTests": 0,
-      "numPassingTests": 0
-    },
-    {
-      "testFilePath": "/example/tests/foo.test",
-      "testResults": [],
-      "numFailingTests": 0,
-      "numPassingTests": 0
-    },
-    {
-      "testFilePath": "/example/tests/boo.test",
-      "testResults": [],
-      "numFailingTests": 0,
-      "numPassingTests": 0
-    },
-    {
-      "testFilePath": "/example/tests/bar.test",
+      "testFilePath": "/tests/bar.test",
       "testResults": [
         {
           "ancestorTitles": [
             "Component",
             "Doo"
           ],
-          "duration": 4,
+          "duration": 0,
           "failureMessages": [],
           "fullName": "Component Doo tests",
           "location": null,
@@ -85,7 +25,7 @@ module.exports.report = {
             "Doo",
             "Bar"
           ],
-          "duration": 2,
+          "duration": 1,
           "failureMessages": [
             "Error: Failed miserably\n    at Object.<anonymous> (/Users/tomi/Github/packages/luis/src/example/tests/bar.test.tsx:14:15)\n    at Object.asyncJestTest (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:102:37)\n    at resolve (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:41:12)\n    at new Promise (<anonymous>)\n    at mapper (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:26:19)\n    at promise.then (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:71:41)\n    at processTicksAndRejections (internal/process/next_tick.js:81:5)"
           ],
@@ -101,9 +41,9 @@ module.exports.report = {
             "Doo",
             "Bar"
           ],
-          "duration": 15,
+          "duration": 2,
           "failureMessages": [
-            "Error: \u001b[2mexpect(\u001b[22m\u001b[31mvalue\u001b[39m\u001b[2m).toMatchSnapshot()\u001b[22m\n\n\u001b[31mReceived value\u001b[39m does not match \u001b[32mstored snapshot \"Component Doo Bar renders 1\"\u001b[39m.\n\n\u001b[32m- Snapshot\u001b[39m\n\u001b[31m+ Received\u001b[39m\n\n\u001b[2m  <div>\u001b[22m\n\u001b[32m-   Bar Component\u001b[39m\n\u001b[31m+   Bar Component 567\u001b[39m\n\u001b[2m  </div>\u001b[22m\n    at Object.<anonymous> (/Users/tomi/Github/packages/luis/src/example/tests/bar.test.tsx:18:46)\n    at Object.asyncJestTest (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:102:37)\n    at resolve (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:41:12)\n    at new Promise (<anonymous>)\n    at mapper (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:26:19)\n    at promise.then (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:71:41)\n    at processTicksAndRejections (internal/process/next_tick.js:81:5)"
+            "Error: expect(value).toMatchSnapshot()\n\nReceived value does not match stored snapshot \"Component Doo Bar renders 1\".\n\n- Snapshot\n+ Received\n\n  <div>\n-   Bar Component\n+   Bar Component 5\n  </div>\n    at Object.<anonymous> (/Users/tomi/Github/packages/luis/src/example/tests/bar.test.tsx:18:46)\n    at Object.asyncJestTest (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:102:37)\n    at resolve (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:41:12)\n    at new Promise (<anonymous>)\n    at mapper (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:26:19)\n    at promise.then (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:71:41)\n    at processTicksAndRejections (internal/process/next_tick.js:81:5)"
           ],
           "fullName": "Component Doo Bar renders",
           "location": null,
@@ -117,9 +57,9 @@ module.exports.report = {
             "Doo",
             "Bar"
           ],
-          "duration": 1,
+          "duration": 2,
           "failureMessages": [
-            "Error: \u001b[2mexpect(\u001b[22m\u001b[31mvalue\u001b[39m\u001b[2m).toMatchSnapshot()\u001b[22m\n\n\u001b[31mReceived value\u001b[39m does not match \u001b[32mstored snapshot \"Component Doo Bar renders1 with really long name there it is 1\"\u001b[39m.\n\n\u001b[32m- Snapshot\u001b[39m\n\u001b[31m+ Received\u001b[39m\n\n\u001b[2m  <div>\u001b[22m\n\u001b[32m-   Bar Component\u001b[39m\n\u001b[31m+   Bar Component 567\u001b[39m\n\u001b[2m  </div>\u001b[22m\n    at Object.<anonymous> (/Users/tomi/Github/packages/luis/src/example/tests/bar.test.tsx:22:46)\n    at Object.asyncJestTest (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:102:37)\n    at resolve (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:41:12)\n    at new Promise (<anonymous>)\n    at mapper (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:26:19)\n    at promise.then (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:71:41)\n    at processTicksAndRejections (internal/process/next_tick.js:81:5)"
+            "Error: expect(value).toMatchSnapshot()\n\nReceived value does not match stored snapshot \"Component Doo Bar renders1 with really long name there it is 1\".\n\n- Snapshot\n+ Received\n\n  <div>\n-   Bar Component\n+   Bar Component 5\n  </div>\n    at Object.<anonymous> (/Users/tomi/Github/packages/luis/src/example/tests/bar.test.tsx:22:46)\n    at Object.asyncJestTest (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:102:37)\n    at resolve (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:41:12)\n    at new Promise (<anonymous>)\n    at mapper (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:26:19)\n    at promise.then (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:71:41)\n    at processTicksAndRejections (internal/process/next_tick.js:81:5)"
           ],
           "fullName": "Component Doo Bar renders1 with really long name there it is",
           "location": null,
@@ -132,14 +72,80 @@ module.exports.report = {
       "numPassingTests": 1
     },
     {
-      "testFilePath": "/client/components/tests/layout.test",
-      "testResults": [],
+      "testFilePath": "/tests/foo.test",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "Component",
+            "Foo"
+          ],
+          "duration": 1,
+          "failureMessages": [],
+          "fullName": "Component Foo renders correctly",
+          "location": null,
+          "numPassingAsserts": 0,
+          "status": "passed",
+          "title": "renders correctly"
+        },
+        {
+          "ancestorTitles": [
+            "Component",
+            "Foo"
+          ],
+          "duration": 1,
+          "failureMessages": [
+            "Error: expect(received).toEqual(expected)\n\nDifference:\n\n- Expected\n+ Received\n\n- Expected Value\n+ Actual Value\n    at Object.<anonymous> (/Users/tomi/Github/packages/luis/src/example/tests/foo.test.tsx:18:30)\n    at Object.asyncJestTest (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:102:37)\n    at resolve (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:41:12)\n    at new Promise (<anonymous>)\n    at mapper (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:26:19)\n    at promise.then (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:71:41)"
+          ],
+          "fullName": "Component Foo shows difference",
+          "location": null,
+          "numPassingAsserts": 0,
+          "status": "failed",
+          "title": "shows difference"
+        },
+        {
+          "ancestorTitles": [
+            "Component",
+            "Foo"
+          ],
+          "duration": 1,
+          "failureMessages": [
+            "Error: expect(received).toEqual(expected)\n\nDifference:\n\n- Expected\n+ Received\n\n  Object {\n-   \"bobo\": \"2\",\n+   \"bobo\": \"3\",\n    \"dodo\": \"5\",\n-   \"lolo\": \"rer\",\n    \"tomi\": \"1\",\n  }\n    at Object.<anonymous> (/Users/tomi/Github/packages/luis/src/example/tests/foo.test.tsx:26:10)\n    at Object.asyncJestTest (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:102:37)\n    at resolve (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:41:12)\n    at new Promise (<anonymous>)\n    at mapper (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:26:19)\n    at promise.then (/Users/tomi/Github/packages/luis/node_modules/jest-jasmine2/build/queueRunner.js:71:41)"
+          ],
+          "fullName": "Component Foo shows multiline difference",
+          "location": null,
+          "numPassingAsserts": 0,
+          "status": "failed",
+          "title": "shows multiline difference"
+        }
+      ],
+      "numFailingTests": 2,
+      "numPassingTests": 1
+    },
+    {
+      "testFilePath": "/tests/boo.test",
+      "testResults": [
+        {
+          "ancestorTitles": [
+            "Boo",
+            "Boo View"
+          ],
+          "duration": 3,
+          "failureMessages": [],
+          "fullName": "Boo Boo View renders correctly",
+          "location": null,
+          "numPassingAsserts": 0,
+          "status": "passed",
+          "title": "renders correctly"
+        }
+      ],
       "numFailingTests": 0,
-      "numPassingTests": 0
+      "numPassingTests": 1
     }
   ]
 }
 
 module.exports.snapshots = {
-    '/example/tests/bar.test':  require('./example/tests/__snapshots__/bar.test.tsx.snap'),
+    '/tests/bar.test':  require('./tests/__snapshots__/bar.test.tsx.snap'),
+    '/tests/boo.test':  require('./tests/__snapshots__/boo.test.tsx.snap'),
+    '/tests/foo.test':  require('./tests/__snapshots__/foo.test.tsx.snap'),
 }

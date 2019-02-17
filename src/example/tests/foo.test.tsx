@@ -1,41 +1,34 @@
-// import * as React from 'react';
-// import { Foo } from '../components/foo';
+import * as React from 'react';
+import * as renderer from 'react-test-renderer';
 
-// describe('Component', () => {
-//   storyOf(
-//     'Foo',
-//     {
-//       get component() {
-//         return <Foo />;
-//       },
-//       info: 'Foo'
-//     },
-//     data => {
-//       itMountsAnd(
-//         'renders correctly',
-//         () => data.component,
-//         wrapper => {
-//           wrapper.should.matchSnapshot('rendered');
-//         }
-//       );
+import { Foo } from '../components/foo';
 
-//       it('shows difference', function() {
-//         'Actual'.should.equal('Expected');
-//       });
+describe('Component', () => {
+  describe('Foo', () => {
+    function componentWithData() {
+      return <Foo />;
+    }
 
-//       it('shows multiline difference', function() {
-//         const t = {
-//           tomi: '1',
-//           bobo: '3',
-//           dodo: '5'
-//         };
-//         t.should.deep.equal({
-//           tomi: '1',
-//           bobo: '2',
-//           dodo: '5',
-//           lolo: 'rer'
-//         });
-//       });
-//     }
-//   );
-// });
+    it('renders correctly', () => {
+      const wrapper = renderer.create(componentWithData());
+      expect(wrapper).toMatchSnapshot('rendered');
+    });
+
+    it('shows difference', function() {
+      expect('Actual Value').toEqual('Expected Value');
+    });
+
+    it('shows multiline difference', function() {
+      expect({
+        tomi: '1',
+        bobo: '3',
+        dodo: '5'
+      }).toEqual({
+        tomi: '1',
+        bobo: '2',
+        dodo: '5',
+        lolo: 'rer'
+      });
+    });
+  });
+});

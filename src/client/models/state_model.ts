@@ -32,7 +32,7 @@ export type RenderOptions = {
   root?: string;
   extraUpdateProps?: string;
   updateUrl?: string;
-  tests?: () => any;
+  loadTests?: () => any;
   report?: any;
   snapshots?: any;
 };

@@ -1,8 +1,9 @@
-const { renderLuis } = require('./client/components/index');
+import { renderLuis } from '../client/components';
+
 const { snapshots, report } = require('./summary');
 
 renderLuis({
   snapshots,
   report,
-  tests: () => require('~/**.test')
+  loadTests: () => require('~/**.test')
 });

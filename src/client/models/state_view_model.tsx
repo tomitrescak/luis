@@ -108,6 +108,12 @@ export class ViewState {
     if (this.sView === 'live') {
     } else if (this.snapshotName) {
       this.sView = this.sView == 'react' ? 'html' : this.sView;
+    } else if (this.testName) {
+      if (this.selectedTest && this.selectedTest.snapshots.length) {
+        this.sView = 'snapshots';
+      } else {
+        this.sView = 'react';
+      }
     } else if (!this.testName && this.sView != 'snapshots') {
       this.sView = 'react';
     }

@@ -91,10 +91,24 @@ function addTests(
           let actual = null;
 
           // equality matcher
-          let match = message.match(/Expected value to equal:\s+(.*)\s+Received:\s+(.*)/);
-          if (match) {
-            expected = match[2];
-            actual = match[1];
+          if (message.indexOf('expect(received).toEqual(expected)') > 0) {
+            expected = '';
+            actual = '';
+
+            let lines = message.split('\n');
+            lines = lines.slice(lines.findIndex(l => !!l.match(/\+ Received/)) + 2);
+            lines = lines.slice(0, lines.findIndex(l => !!l.match('^    at')));
+
+            for (let line of lines) {
+              if (line[0] === '-') {
+                expected += '  ' + line.substring(2) + '\n';
+              } else if (line[0] === '+') {
+                actual += '  ' + line.substring(2) + '\n';
+              } else {
+                expected += line + '\n';
+                actual += line + '\n';
+              }
+            }
           }
 
           // snapshot matcher
@@ -108,6 +122,7 @@ function addTests(
               let lines = message.split('\n');
 
               lines = lines.slice(lines.findIndex(l => !!l.match(/\+ Received/)) + 2);
+              lines = lines.slice(0, lines.findIndex(l => !!l.match('^    at')));
 
               let originalLines = original.split('\n');
               let current = [];
@@ -172,15 +187,21 @@ function addTests(
               }
               let actual = t.error ? t.error.actual : suiteSnapshots[m];
               if (actual) {
+                actual = actual.trim();
                 actual = actual.replace(/className=/g, 'class=');
                 actual = actual.replace(/<(\w+)([^>]+)\/>/gm, '<$1$2></$1>');
               }
+
+              let snapshotName = (m.match(new RegExp(test.fullName + '\\s+\\d+'))
+                ? `Snapshot ${index++}`
+                : m.replace(test.fullName, '')
+              )
+                .replace(/\b1$/, '') // remove the trailing number for the first snapshot
+                .replace(/^:\s+/, ''); // with custom names snapshot name starts with ': '
+
               return new Snapshot({
                 current: actual,
-                name: (m.match(new RegExp(test.fullName + '\\s+\\d+'))
-                  ? `Snapshot ${index++}`
-                  : m.replace(test.fullName, '')
-                ).replace(/\b1$/, ''), // 'Snapshot ' + index++,
+                name: snapshotName,
                 originalName: m,
                 matching: true,
                 test: t,
