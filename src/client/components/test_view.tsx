@@ -122,6 +122,13 @@ export class TestView extends React.Component<TestProps> {
           flex: '1 100%',
           minWidth: '60px'
         },
+        span: {
+          whiteSpace: 'nowrap',
+          textOverflow: 'ellipsis',
+          overflow: 'hidden',
+          flex: '1 100%',
+          minWidth: '60px'
+        },
         div: {
           whiteSpace: 'nowrap',
           textOverflow: 'ellipsis',
@@ -141,14 +148,16 @@ export class TestView extends React.Component<TestProps> {
           <Icon name="dropdown" className={this.canExpand() ? 'normal' : hidden} />
           <Icon {...test.icon as any} />
 
-          <a
-            className="text"
-            href={`${prefix}=${test.parent.id}&test=${test.urlName}/`}
-            data-path={`${test.parent.id}/${test.urlName}/`}
-            onClick={this.openSnapshot}
-          >
-            {test.name}
-          </a>
+          {React.createElement(
+            test.snapshots.length ? 'a' : 'span',
+            {
+              className: 'text',
+              href: `${prefix}=${test.parent.id}&test=${test.urlName}/`,
+              'data-path': `${test.parent.id}/${test.urlName}/`,
+              onClick: test.snapshots.length ? this.openSnapshot : undefined
+            },
+            test.name
+          )}
 
           <div className={floatShots}>
             {test.snapshots.slice(0, 3).map((s, i) => (

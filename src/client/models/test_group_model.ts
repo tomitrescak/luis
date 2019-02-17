@@ -35,7 +35,7 @@ export class TestGroup extends TestItem {
   @observable passingTests = 0;
   @observable failingTests = 0;
 
-  component: JSX.Element;
+  component: Function;
   decorator?: React.SFC;
   cssClassName: string;
   info: string;
@@ -57,15 +57,7 @@ export class TestGroup extends TestItem {
   }
 
   initStory(props: StoryConfig) {
-    this.component =
-      props.component ||
-      (props.componentWithData &&
-        ((props.componentWithData() as any).component || props.componentWithData()));
-    if (!this.component) {
-      throw new Error(
-        `Story "${name}" needs to either define a "get component()" or "componentWithData()"`
-      );
-    }
+    this.component = props.component;
     this.info = props.info;
     this.decorator = props.decorator;
     this.cssClassName = props.cssClassName;
