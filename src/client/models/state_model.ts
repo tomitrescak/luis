@@ -5,6 +5,7 @@ import { TestGroup } from './test_group_model';
 import { ViewState } from './state_view_model';
 import { AppConfig } from '../config/app_config';
 import { TestItem } from './test_item_model';
+import { ProxyConfig } from './proxy_store';
 
 // // var Client = require('fusebox-websocket').SocketClient
 // // var client = new Client({
@@ -35,6 +36,7 @@ export type RenderOptions = {
   loadTests?: () => any;
   report?: any;
   snapshots?: any;
+  proxies?: ProxyConfig[];
 };
 
 let id = 0;
@@ -56,7 +58,6 @@ export class StateModel {
   renderOptions: RenderOptions;
 
   timer: any;
-
   config: AppConfig;
   uid: number;
 

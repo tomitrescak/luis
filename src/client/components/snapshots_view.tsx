@@ -42,7 +42,7 @@ export class SnapshotsView extends React.Component<Props> {
       list = test.snapshots;
     }
     if (this.props.state.config.reverseList) {
-      list = list.reverse();
+      list = list.slice().reverse();
     }
     if (list.length == 0) {
       return <div>This test has no recorded snapshots.</div>;

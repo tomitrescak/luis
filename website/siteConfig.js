@@ -14,9 +14,8 @@ const users = [
     caption: 'Western Sydney University',
     // You will need to prepend the image path with your baseUrl
     // if it is not '/', like: '/test-site/img/docusaurus.svg'.
-    image: '/img/docusaurus.svg',
-    infoLink:
-      'https://www.westernsydney.edu.au/__data/assets/image/0008/961874/WesternSydney-logo-4.png',
+    image: '/img/wsu.png',
+    infoLink: 'https://www.westernsydney.edu.au',
     pinned: true
   }
 ];

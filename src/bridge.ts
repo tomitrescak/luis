@@ -140,10 +140,10 @@ function addTests(
                 if (both) {
                   let end = parseInt(both[1]);
                   // console.log(end);
-                  for (let i = index; i < end; i++) {
+                  for (let i = index; i < end - 1; i++) {
                     current.push(originalLines[i]);
                   }
-                  index = end;
+                  index = end - 1;
                   continue;
                 }
 

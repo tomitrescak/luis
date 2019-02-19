@@ -1,13 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Component Doo Bar renders 1`] = `
-<div>
-  Bar Component
-</div>
-`;
-
-exports[`Component Doo Bar renders1 with really long name there it is 1`] = `
-<div>
+exports[`Component With Context renders 1`] = `
+<div
+  style={
+    Object {
+      "backgroundColor": "#f1f1f1",
+      "color": "#222",
+    }
+  }
+>
   Bar Component
 </div>
 `;

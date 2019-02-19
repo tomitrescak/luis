@@ -1,7 +1,7 @@
 import { observable, computed, action } from 'mobx';
 import { SemanticCOLORS } from 'semantic-ui-react';
 
-import { TestItem, Impl, toUrlName } from './test_item_model';
+import { TestItem, toUrlName } from './test_item_model';
 import { Test } from './test_model';
 import { Snapshot } from './snapshot_model';
 
@@ -23,19 +23,12 @@ export class TestGroup extends TestItem {
   groups: TestGroup[];
   tests: Test[];
 
-  beforeAll: Impl;
-  before: Impl;
-  beforeEach: Impl;
-
-  afterAll: Impl;
-  after: Impl;
-  afterEach: Impl;
-
   @observable version: number = 0;
   @observable passingTests = 0;
   @observable failingTests = 0;
 
-  component: Function;
+  component: React.ComponentType;
+  proxyConfig: any;
   decorator?: React.SFC;
   cssClassName: string;
   info: string;
@@ -57,10 +50,12 @@ export class TestGroup extends TestItem {
   }
 
   initStory(props: StoryConfig) {
-    this.component = props.component;
-    this.info = props.info;
-    this.decorator = props.decorator;
-    this.cssClassName = props.cssClassName;
+    const { component, info, decorator, cssClassName, ...proxyConfig } = props;
+    this.component = component;
+    this.info = info;
+    this.decorator = decorator;
+    this.cssClassName = cssClassName;
+    this.proxyConfig = proxyConfig || {};
   }
 
   @computed

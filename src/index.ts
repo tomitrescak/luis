@@ -8,7 +8,7 @@ export { buildBridge } from './bridge';
 declare global {
   interface StoryConfig {
     [index: string]: any;
-    component?: JSX.Element;
+    component?: React.ComponentType;
     info?: string;
     cssClassName?: string;
     componentWithData?(

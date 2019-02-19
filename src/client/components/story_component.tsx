@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import { Segment, Message } from 'semantic-ui-react';
+import { Loader } from './loader';
 
 export type Props = {
   state: Luis.State;
@@ -15,13 +16,14 @@ const warningText = `describe('Name', () => {
 @observer
 export class StoryComponent extends React.Component<Props> {
   render() {
-    var state = this.props.state;
-    if (state.viewState.selectedStory == null) {
+    const state = this.props.state;
+    const story = state.viewState.selectedStory;
+    if (story == null) {
       return <div>No story selected ...</div>;
-    } else if (state.viewState.selectedStory.component) {
+    } else if (story.component) {
       return (
-        <div className={state.viewState.selectedStory.cssClassName}>
-          {state.viewState.selectedStory.component()}
+        <div className={story.cssClassName}>
+          <Loader component={story.component} proxyConfig={story.proxyConfig} />
         </div>
       );
     } else {

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // check if custom config exists
 const fs = require('fs');
+const path = require('path');
 
 if (process.argv[0] && process.argv[0] == 'init') {
   try {
@@ -23,20 +24,22 @@ renderLuis({
   }
 }
 
+const customConfig = path.resolve('luis.fuse.js');
+let root = path.resolve('./src');
+
 try {
-  fs.statSync(require.resolve('../../luis.fuse.js'));
+  fs.statSync(customConfig);
   console.log('Found custom luis config.');
-  require('../../luis.fuse.js');
+  require(customConfig);
   return;
 } catch (ex) {
   console.log('Custom config not found. Launching standard configuration.');
 }
 
-var root = '../../src';
 var file = 'luis.ts';
 
 if (process.argv.length == 4) {
-  root = '../../' + process.argv[2];
+  root = path.resolve(process.argv[2]);
   file = process.argv[3];
 } else if (process.argv.length == 2) {
   console.log(

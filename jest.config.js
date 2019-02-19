@@ -2,6 +2,7 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   rootDir: 'src',
+  setupFilesAfterEnv: ['<rootDir>/example/proxies.ts'],
   verbose: false,
   reporters: [
     'jest-dot-reporter',

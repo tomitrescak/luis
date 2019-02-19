@@ -5,12 +5,12 @@ import { Foo } from '../components/foo';
 
 describe('Component', () => {
   describe('Foo', () => {
-    function componentWithData() {
+    function component() {
       return <Foo />;
     }
 
     it('renders correctly', () => {
-      const wrapper = renderer.create(componentWithData());
+      const wrapper = renderer.create(component());
       expect(wrapper).toMatchSnapshot('rendered');
     });
 
@@ -30,5 +30,7 @@ describe('Component', () => {
         lolo: 'rer'
       });
     });
+
+    return { component };
   });
 });

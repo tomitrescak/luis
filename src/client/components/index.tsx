@@ -6,6 +6,7 @@ import { Layout } from './layout';
 import { initState, RenderOptions } from '../models/state_model';
 import { setupRouter } from '../config/router';
 import { buildBridge } from '../../bridge';
+import { ProxyStore } from '../models/proxy_store';
 
 const state = initState();
 
@@ -19,6 +20,11 @@ export async function renderLuis(options: RenderOptions = {}) {
     root = document.createElement('div');
     root.id = options.root || 'react-root';
     document.body.appendChild(root);
+  }
+
+  // remember proxies
+  if (options.proxies) {
+    ProxyStore.init(options.proxies);
   }
 
   // create new router

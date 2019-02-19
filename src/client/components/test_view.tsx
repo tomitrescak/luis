@@ -178,14 +178,14 @@ export class TestView extends React.Component<TestProps> {
           {test.snapshots.length > 0 && (
             <Segment secondary attached={test.error ? 'top' : undefined}>
               <List className={snapshotMenu}>
-                {test.snapshots.map(s => (
+                {test.snapshots.map((s, i) => (
                   <List.Item
                     as="a"
                     data-path={`${test.parent.id}/${test.urlName}/${s.url}`}
                     href={`${prefix}=${test.parent.id}&test=${test.urlName}&snapshot=${s.url}`}
                     onClick={this.openSnapshot}
                     icon="image"
-                    key={s.name}
+                    key={s.name + i}
                     content={s.name}
                   />
                 ))}

@@ -9,7 +9,7 @@ import { Snapshot } from './snapshot_model';
 import { TestGroup } from './test_group_model';
 
 const missingStory = new TestGroup(null, 'Missing', {
-  component: <div>Story not found. Maybe you renamed it?</div>,
+  component: () => <div>Story not found. Maybe you renamed it?</div>,
   info: 'Missing'
 });
 
@@ -62,7 +62,7 @@ export class ViewState {
     snapshotName = ''
   ) {
     e.preventDefault();
-    e.bubbles = false;
+    e.stopPropagation();
     this.openStory(storyPath, testName, snapshotName);
     return false;
   }
@@ -114,7 +114,7 @@ export class ViewState {
       } else {
         this.sView = 'react';
       }
-    } else if (!this.testName && this.sView != 'snapshots') {
+    } else if (!this.testName) {
       this.sView = 'react';
     }
   }

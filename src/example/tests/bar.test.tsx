@@ -1,30 +1,42 @@
 import * as React from 'react';
 import * as renderer from 'react-test-renderer';
 
+import * as PropTypes from 'prop-types';
+import { load } from '../../proxies/loader';
+
 describe('Component', () => {
-  describe('Doo', function() {
-    it('tests', function() {});
+  describe('With Context', function() {
+    const Component: React.FC = ({}, { theme }) => {
+      return (
+        <div style={{ backgroundColor: theme.backgroundColor, color: theme.color }}>
+          Bar Component
+        </div>
+      );
+    };
 
-    describe('Bar', () => {
-      function component() {
-        return <div>Bar Component</div>;
-      }
+    // test
+    Component.contextTypes = {
+      theme: PropTypes.object.isRequired
+    };
 
-      it('fails', function() {
-        throw new Error('Failed miserably');
-      });
-
-      it('renders', function() {
-        expect(renderer.create(component())).toMatchSnapshot();
-      });
-
-      it('renders1 with really long name there it is', function() {
-        expect(renderer.create(component())).toMatchSnapshot();
-      });
-
-      return {
-        component
-      };
+    it('fails', function() {
+      throw new Error('Failed miserably');
     });
+
+    const config = {
+      component: Component,
+      context: {
+        theme: {
+          backgroundColor: '#f1f1f1',
+          color: '#222'
+        }
+      }
+    };
+
+    it('renders', function() {
+      expect(renderer.create(load(config))).toMatchSnapshot();
+    });
+
+    return config;
   });
 });
