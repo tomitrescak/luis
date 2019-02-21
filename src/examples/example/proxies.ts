@@ -1,8 +1,8 @@
 import * as PropTypes from 'prop-types';
 
-import { createContextProxy } from '../proxies/context';
-import { createApolloProxy } from '../proxies/apollo';
-import { ProxyStore } from '../client/models/proxy_store';
+import { createContextProxy } from '../../proxies/context';
+import { createApolloProxy } from '../../proxies/apollo';
+import { ProxyStore } from '../../client/models/proxy_store';
 
 export const ContextProxy = createContextProxy({
   childContextTypes: {

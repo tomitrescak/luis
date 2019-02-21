@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as renderer from 'react-test-renderer';
 
 import * as PropTypes from 'prop-types';
-import { load } from '../../proxies/loader';
+import { load } from '../../../proxies/loader';
 
 describe('Component', () => {
   describe('With Context', function() {

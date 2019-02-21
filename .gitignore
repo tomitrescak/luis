@@ -5,6 +5,7 @@ public
 *.json
 /client/
 /example/
+/examples/
 /fuse-box
 /server
 /proxies

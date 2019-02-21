@@ -12,7 +12,7 @@ export const ProxyStore = {
 
   findProxies(proxyConfig: any) {
     if (!this._proxies) {
-      throw new Error('Please initialise proxy store by calling "init(proxies)" method!');
+      return [];
     }
     let keys = Object.getOwnPropertyNames(proxyConfig);
     return this._proxies.filter(p => keys.includes(p.key)).map(p => p.proxy);

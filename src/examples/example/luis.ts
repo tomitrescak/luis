@@ -1,4 +1,4 @@
-import { renderLuis } from '../client/components';
+import { renderLuis } from '../../client/components';
 
 import './proxies'; // this sets up proxies
 

@@ -39,7 +39,7 @@ luisFuse.dev({
   port: 9001
 });
 
-luisFuse.bundle('luis-vendor').instructions(' ~ example/luis.ts'); // nothing has changed here
+luisFuse.bundle('luis-vendor').instructions(' ~ examples/showcase/luis.ts'); // nothing has changed here
 
 luisFuse
   .bundle('luis-client')

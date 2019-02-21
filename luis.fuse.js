@@ -50,7 +50,9 @@ module.exports = function(root, entry) {
     .watch() // watch only client related code
     .hmr()
     .sourceMaps(true)
-    .instructions(' !> [luis.ts] + proxyrequire + **/*.test.* + **/__tests__/* + **/tests/*')
+    .instructions(
+      ' !> [luis.ts] + proxyrequire + **/*.fixture.* + **/*.story.* + **/*.test.* + **/__fixtures__/* + **/__stories__/* + **/__tests__/* + **/tests/*'
+    )
     .globals({
       proxyrequire: '*'
     });

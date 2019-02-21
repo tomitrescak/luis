@@ -3,7 +3,7 @@ import * as renderer from 'react-test-renderer';
 
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import { load, wait, renderApollo } from '../../proxies/loader';
+import { load, wait, renderApollo } from '../../../proxies/loader';
 
 describe('Component', () => {
   describe('With Apollo', function() {
