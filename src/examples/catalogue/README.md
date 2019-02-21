@@ -79,4 +79,4 @@ Please see the docs on how to create and export items of your catalogue.
 
 # Tests
 
-This setup does not support tests. If you want to see Luis with tests and snapshots, please see the `snapshots` example.
+This setup does not support tests. If you want to see Luis with tests and snapshots, please see the `snapshots` example (TBA).
