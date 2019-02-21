@@ -13,6 +13,8 @@ Then visit: `http://localhost:9001` and you will see the friendly Luis interface
 
 # How Did We do This?
 
+You can use this project as your starter project for building catalogues, but if you wish to start from the scratch and give this a go yourself, following are the instructions on how we created this project.
+
 Start with a fresh project, intialise the new node.js project, add luis and initialise the catalogue:
 
 ```
@@ -25,7 +27,7 @@ yarn add @types/react
 yarn luis --init
 ```
 
-Then we optimised our tsconfig.json. The most important bit is to disable `esModuleInterop` and enable `synteticDefaultImports`. It's a good attempt but does not work very well.
+Then we optimised our tsconfig.json. The most important bit is to disable `esModuleInterop` and enable `synteticDefaultImports`. The Typescript's interop is a good attempt but does not work very well.
 
 ```json
 {
