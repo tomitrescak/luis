@@ -9,6 +9,8 @@ public
 /fuse-box
 /server
 /proxies
+/bridges
+/tests/
 bridge.js
 bridge.d.ts
 index.js
