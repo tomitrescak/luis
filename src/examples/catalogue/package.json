@@ -1,0 +1,17 @@
+{
+  "name": "luis-catalogue",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "luis"
+  },
+  "keywords": [],
+  "author": "Tomi Trescak <tomi.trescak@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@types/react": "^16.8.4",
+    "fuse-box": "^3.7.1",
+    "luis": "3.2.4-rc.1"
+  }
+}

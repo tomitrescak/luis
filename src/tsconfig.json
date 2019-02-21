@@ -1,0 +1,27 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "jsx": "react",
+    "lib": ["dom", "es2015", "es2016"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmitHelpers": false,
+    "outDir": "..",
+    "declaration": true,
+    "preserveConstEnums": true,
+    "pretty": true,
+    "removeComments": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "target": "es2017",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "exclude": ["node_modules", "dist"]
+}

@@ -1,0 +1,31 @@
+{
+  "version": "0.1.0",
+  "configurations": [
+    {
+      "name": "Attach",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "url": "<url of the open browser tab to connect to>",
+      "webRoot": "${workspaceRoot}"
+    },
+    {
+      "name": "Attach to url with files served from ./out",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "url": "<url of the open browser tab to connect to>",
+      "webRoot": "${workspaceRoot}"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Chrome",
+      "url": "http://localhost:9001",
+      "webRoot": "${workspaceFolder}",
+      "sourceMapPathOverrides": {
+        "/*": "${webRoot}/*"
+      }
+    }
+  ]
+}
