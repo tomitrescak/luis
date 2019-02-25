@@ -48,7 +48,7 @@ export class SnapshotsView extends React.Component<Props> {
       return <div>This test has no recorded snapshots.</div>;
     }
     return (
-      <List>
+      <List className="m6">
         {list.map((s, i) => (
           <List.Item key={s.name + i}>
             <List.Content>

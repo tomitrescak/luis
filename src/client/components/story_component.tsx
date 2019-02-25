@@ -2,6 +2,8 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import { Segment, Message } from 'semantic-ui-react';
 import { Loader } from './loader';
+import { css } from './component_styles';
+import { Resolution } from '../models/state_view_model';
 
 export type Props = {
   state: Luis.State;
@@ -13,19 +15,53 @@ const warningText = `describe('Name', () => {
   return { component };
 }`;
 
+const mobile = (r: Resolution) => css`
+  float: left;
+  background-color: #dedede;
+  margin: 12px;
+  padding: 8px;
+
+  .mobileContent {
+    width: ${r.horizontal + 'px'};
+    height: ${r.vertical + 'px'};
+    background: white;
+    border: solid 1px #cdcdcd;
+    position: relative;
+  }
+`;
+
 @observer
 export class StoryComponent extends React.Component<Props> {
   render() {
     const state = this.props.state;
     const story = state.viewState.selectedStory;
+
     if (story == null) {
       return <div>No story selected ...</div>;
     } else if (story.component) {
-      return (
-        <div className={story.cssClassName}>
-          <Loader component={story.component} proxyConfig={story.proxyConfig} />
-        </div>
-      );
+      // // check if we have several resolutions
+      // let resolutions = state.viewState.resolutions.filter(r => r.active);
+      // if (resolutions.length) {
+      //   return resolutions.map((r, i) => (
+      //     <div key={i} className={mobile(r)}>
+      //       <b>
+      //         {r.name}
+      //         <span
+      //           className={css`
+      //             float: right;
+      //           `}
+      //         >
+      //           {r.horizontal}x{r.vertical}
+      //         </span>
+      //       </b>
+      //       <div className="mobileContent">
+      //         <Loader component={story.component} proxyConfig={story.proxyConfig} />
+      //       </div>
+      //     </div>
+      //   ));
+      // }
+
+      return <Loader component={story.component} proxyConfig={story.proxyConfig} />;
     } else {
       return (
         <div>

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { full, pane } from './component_styles';
 import { ErrorBoundary } from './error_boundary';
 import { StoryComponent } from './story_component';
 import { SnapshotHtml } from './snapshot_html';
@@ -12,39 +11,67 @@ import { StoryConfig } from './story_config';
 import { Story } from '../models/story_model';
 //@ts-ignore
 import { StateModel } from '../models/state_model';
+import { css } from './component_styles';
+import { ITheme } from '../config/themes';
 
 type ComponentProps = {
   state?: Luis.State;
+  bare?: boolean;
 };
 
-export const StoryView = observer(({ state }: ComponentProps) => (
-  <div className={full}>
-    {state.viewState.sView === 'react' && (
-      <div className={pane(state.hideTestMenus)}>
-        <ErrorBoundary>
-          <StoryComponent state={state} />
-        </ErrorBoundary>
-      </div>
-    )}
-    {state.viewState.sView === 'html' && (
-      <div>
-        <SnapshotHtml state={state} />
-      </div>
-    )}
-    {state.viewState.sView === 'json' && (
-      <div className={full}>
-        <SnapshotJson state={state} />
-      </div>
-    )}
-    {state.viewState.sView === 'snapshots' && (
-      <div className={pane(state.hideTestMenus)}>
-        <SnapshotsView state={state} />
-      </div>
-    )}
-    {state.viewState.sView === 'config' && (
-      <div className={pane(state.hideTestMenus)}>
-        <StoryConfig state={state} />
-      </div>
-    )}
-  </div>
-));
+const frameStyle = css`
+  border: 0px;
+  width: 100%;
+  height: 100%;
+`;
+
+const frameHolder = css`
+  position: absolute;
+  top: 40px;
+  right: 0px;
+  left: 0px;
+  bottom: 0px;
+`;
+
+const frameBack = (theme: ITheme) => css`
+  background-color: ${theme.backgroundColor};
+  height: 100%;
+  width: 100%;
+`;
+
+export const StoryView = observer(({ state }: ComponentProps) => {
+  return (
+    <div
+      className={
+        frameBack(state.theme) + ' ' + state.config.wrapperStyle
+          ? css`
+              ${state.config.wrapperStyle}
+            `
+          : ''
+      }
+    >
+      {state.viewState.sView === 'react' && (
+        <>
+          {state.viewState.bare || window.location !== window.parent.location ? (
+            <ErrorBoundary>
+              <StoryComponent state={state} />
+            </ErrorBoundary>
+          ) : (
+            <div className={frameHolder}>
+              <iframe
+                style={{ backgroundColor: 'red' }}
+                id="contentFrame"
+                className={frameStyle}
+                src={window.location.href.replace('?stories', '?story')}
+              />
+            </div>
+          )}
+        </>
+      )}
+      {state.viewState.sView === 'html' && <SnapshotHtml state={state} />}
+      {state.viewState.sView === 'json' && <SnapshotJson state={state} />}
+      {state.viewState.sView === 'snapshots' && <SnapshotsView state={state} />}
+      {state.viewState.sView === 'config' && <StoryConfig state={state} />}
+    </div>
+  );
+});

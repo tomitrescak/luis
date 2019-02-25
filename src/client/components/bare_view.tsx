@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { content } from './component_styles';
 import { TopPanelSingle } from './top_panel_bare';
 import { StoryView } from './story_view';
 
@@ -12,8 +11,8 @@ export type ComponentProps = {
 };
 
 export const BareView = ({ state }: ComponentProps) => (
-  <div className={content}>
-    {state.testResults && <TopPanelSingle state={state} />}
+  <>
+    {/* {!state.hideTestMenus */ false && <TopPanelSingle state={state} />}
     <StoryView state={state} />
-  </div>
+  </>
 );

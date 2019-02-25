@@ -7,7 +7,7 @@ const frameHolder = style({
   position: 'absolute',
   left: '0px',
   right: '0px',
-  top: '42px',
+  top: '40px',
   bottom: '0px',
   padding: '6px'
 });

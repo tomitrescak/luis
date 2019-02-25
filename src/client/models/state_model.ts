@@ -1,6 +1,6 @@
 import { observable, action, IObservableValue } from 'mobx';
 
-import { lightTheme, ITheme } from '../config/themes';
+import { lightTheme, ITheme, darkTheme } from '../config/themes';
 import { TestGroup } from './test_group_model';
 import { ViewState } from './state_view_model';
 import { AppConfig } from '../config/app_config';
@@ -42,10 +42,12 @@ export type RenderOptions = {
 let id = 0;
 
 export class StateModel {
-  @observable theme: ITheme = lightTheme;
+  @observable theme: ITheme =
+    localStorage.getItem('luisTheme') === 'light' ? lightTheme : darkTheme;
   @observable autoUpdateSnapshots = false;
   @observable showPassing = true;
   @observable showFailing = true;
+  @observable wrapperStyle = '';
   @observable running = false;
   @observable hideTestMenus = false; // = localStorage.getItem('LUIS.showTestMenus') === 'true';
 

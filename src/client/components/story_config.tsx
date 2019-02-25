@@ -8,7 +8,7 @@ export interface ModalProps {
 
 export const StoryConfig = inject('state')(
   observer(({ state }: ModalProps) => (
-    <div style={{ padding: '12px'}}>
+    <div style={{ padding: '12px' }}>
       <Header icon="cogs" content="Options" dividing />
       <Form>
         {state.config.tests.map((s, i) => (
@@ -35,6 +35,11 @@ export const StoryConfig = inject('state')(
           value={state.config.theme}
           options={[{ value: 'light', text: 'Light' }, { value: 'dark', text: 'Dark' }]}
           onChange={(_e, selected) => (state.config.theme = selected.value.toString())}
+        />
+        <Form.TextArea
+          label="Wrapper Style"
+          value={state.config.wrapperStyle}
+          onChange={(_e, value) => (state.config.wrapperStyle = value.value as string)}
         />
         <Form.Checkbox
           label="Reverse snapshot list"

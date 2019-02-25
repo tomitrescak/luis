@@ -146,10 +146,10 @@
     exenv "^1.2.2"
     prop-types "^15.6.2"
 
-"@tomino/toolbelt@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/@tomino/toolbelt/-/toolbelt-1.1.0.tgz#9c9c03265b23ee7a9fa6408fffdecca1479fe203"
-  integrity sha512-QRVKqlU7U0B3I9XiZQo4YJb1riQGg6NKToqKcOj+4anWHcKvJ5SYLFAHcNUBH/wGHYnMncd91V/QwXjE4lRTHw==
+"@tomino/toolbelt@^1.1.3":
+  version "1.1.3"
+  resolved "https://registry.npmjs.org/@tomino/toolbelt/-/toolbelt-1.1.3.tgz#a46f0c551daec322a75c90b8b9f27f9abdec5425"
+  integrity sha512-8dJLLfsnXGJARn5A13oNwfDgkWOu/fRRkZ5cP/QzSbBKWodbYwVSteqei9lJ/fmEWVNwgtkj2stlvOQv/xv7nw==
 
 "@types/history@*":
   version "4.7.2"
@@ -2929,32 +2929,6 @@ loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.2.0, loose-envify@^1.3
   integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
   dependencies:
     js-tokens "^3.0.0 || ^4.0.0"
-
-luis@3.2.4-rc.1:
-  version "3.2.4-rc.1"
-  resolved "https://registry.npmjs.org/luis/-/luis-3.2.4-rc.1.tgz#57a3a6caf29618988906aa217ff2c63db1571835"
-  integrity sha512-dNP8y6RLWNVtw7AcGsZo8LJMlz7wp6pFj/E2qQpBXnB+1q5RbSrdey2ftlEAraDMgAYTgFEjZQl8XgQTUv3ouQ==
-  dependencies:
-    body-parser "^1.18.3"
-    connect-history-api-fallback "^1.6.0"
-    diff-view "^1.0.12"
-    glob "^7.1.3"
-    jest "^24.1.0"
-    json-socket "^0.3.0"
-    jsx-controls-loader "^0.1.1"
-    marked "^0.6.0"
-    mobx "*"
-    mobx-react "*"
-    path-match "^1.2.4"
-    proxyrequire "^1.0.21"
-    react "*"
-    react-dom "*"
-    react-highlight "^0.12.0"
-    react-split-pane "^0.1.85"
-    semantic-ui-react "*"
-    tslib "^1.9.3"
-    typescript "^3.3.3"
-    typestyle "^2.0.1"
 
 make-dir@^1.3.0:
   version "1.3.0"

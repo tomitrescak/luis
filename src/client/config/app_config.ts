@@ -1,7 +1,6 @@
 import { observable, action, IObservableArray } from 'mobx';
 import { TestGroup } from '../models/test_group_model';
 
-
 export class TestConfig {
   @observable disabled = true;
   id: string;
@@ -22,16 +21,18 @@ export class AppConfig {
   @observable storyView: StoryView = 'list';
   @observable logLevel = '1';
   @observable theme = 'light';
+  @observable wrapperStyle = 'light';
   @observable showDevTools = false;
   @observable reverseList = true;
 
   constructor(state: Luis.State) {
     this.state = state;
-    this.storyView = localStorage.getItem('louisStoryView') as StoryView || 'tree';
+    this.storyView = (localStorage.getItem('louisStoryView') as StoryView) || 'tree';
     this.logLevel = localStorage.getItem('luisLog') || '1';
     this.showDevTools = localStorage.getItem('luisDevTools') == '1' ? true : false;
     this.theme = localStorage.getItem('luisTheme') || 'light';
     this.reverseList = !!localStorage.getItem('luisReverseList');
+    this.wrapperStyle = localStorage.getItem('luisWrapperStyle');
     this.tests = observable([]);
     this.loadTests();
   }
@@ -53,28 +54,34 @@ export class AppConfig {
       let current = queue.shift();
       if (current.tests.length > 0) {
         const value = storedConfig.find(c => c[0] === current.id);
-        testCollection.push(new TestConfig(current.id, current.path, value ? value[1] == '0' : false));
+        testCollection.push(
+          new TestConfig(current.id, current.path, value ? value[1] == '0' : false)
+        );
       }
       for (let group of current.groups) {
         queue.push(group);
       }
     }
 
-    testCollection.sort((a, b) => a.name < b.name ? -1 : 1);
+    testCollection.sort((a, b) => (a.name < b.name ? -1 : 1));
     this.tests.replace(testCollection);
   }
 
   saveConfig() {
-    localStorage.setItem('louisTestConfig', this.tests.map(t => `${t.id}#${t.disabled ? '0' : '1'}`).join('|'));
+    localStorage.setItem(
+      'louisTestConfig',
+      this.tests.map(t => `${t.id}#${t.disabled ? '0' : '1'}`).join('|')
+    );
     localStorage.setItem('louisStoryView', this.storyView);
     localStorage.setItem('luisTheme', this.theme);
+    localStorage.setItem('luisWrapperStyle', this.wrapperStyle);
     localStorage.setItem('luisLog', this.logLevel);
     localStorage.setItem('luisDevTools', this.showDevTools ? '1' : '0');
     localStorage.setItem('luisReverseList', this.reverseList ? '1' : '0');
   }
 
   @action toggleAllTests(disabled: boolean) {
-    this.tests.forEach(t => t.disabled = disabled);
+    this.tests.forEach(t => (t.disabled = disabled));
   }
 
   @action toggleStoryTests(id: string, disabled: boolean) {

@@ -1,17 +1,20 @@
 export interface ITheme {
-  sideBarColor: "red" | "orange" | "yellow" | "olive" | "green" | "teal" | "blue" | "violet" | "purple" | "pink" | "brown" | "grey" | "black";
+  sideBarColor: string;
   backgroundColor: string;
   textColor: string;
-} 
+  isDark: boolean;
+}
 
 export const lightTheme: ITheme = {
-  sideBarColor: 'blue',
-  backgroundColor: 'white', 
-  textColor: 'black'
+  sideBarColor: '#fbfbfb',
+  backgroundColor: 'white',
+  textColor: 'black',
+  isDark: false
 };
 
 export const darkTheme: ITheme = {
-  sideBarColor: 'black',
+  sideBarColor: '#333',
   backgroundColor: '#444',
-  textColor: '#eee',
+  textColor: '#eee!important',
+  isDark: true
 };

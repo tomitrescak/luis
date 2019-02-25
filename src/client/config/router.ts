@@ -29,21 +29,21 @@ export function setupRouter(state: Luis.State) {
   const router = createRouter(state.viewState, {
     '/:route?story=:name&test=:test&snapshot=:snapshot': ({ name, test, snapshot }: any) =>
       state.viewState.openSingleStory(name, test, snapshot),
-    '/:route?stories=:name&test=:test&snapshot=:snapshot': ({ name, test, snapshot }: any) =>
-      state.viewState.openStory(name, test, snapshot),
     '/:route?story=:name&test=:test': ({ name, test }: any) =>
       state.viewState.openSingleStory(name, test),
-    '/:route?stories=:name&test=:test': ({ name, test }: any) =>
-      state.viewState.openStory(name, test),
     '/:route?story=:name': ({ name }: any) => state.viewState.openSingleStory(name),
-    '/:route?stories=:name': ({ name }: any) => state.viewState.openStory(name)
+    '/:route?stories=:name&test=:test&snapshot=:snapshot': ({ name, test, snapshot }: any) =>
+      state.viewState.openStory(name, test, snapshot, false),
+    '/:route?stories=:name&test=:test': ({ name, test }: any) =>
+      state.viewState.openStory(name, test, null, false),
+    '/:route?stories=:name': ({ name }: any) => state.viewState.openStory(name, null, null, false)
 
     // '/': state.viewState.openStory
   });
 
   window.onpopstate = function historyChange(ev) {
     if (ev.type === 'popstate') {
-      router(window.location.pathname);
+      router(window.location.pathname + window.location.search);
     }
   };
   router(window.location.pathname + window.location.search);

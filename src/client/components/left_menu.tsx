@@ -13,15 +13,13 @@ export type ComponentProps = {
 };
 
 export const LeftMenu = observer(({ state }: ComponentProps) => (
-  <Menu pointing secondary inverted color="blue" className={noMargin}>
-    <Menu.Item name="home">
-      <Loader size="tiny" active={state.running} />
-    </Menu.Item>
-    <Menu.Item active={state.showPassing} onClick={() => (state.showPassing = !state.showPassing)}>
+  <Menu secondary inverted color="blue" className={noMargin}>
+    <Menu.Item name="home" icon="lightbulb outline" content="Luis" />
+    <Menu.Item onClick={() => (state.showPassing = !state.showPassing)}>
       <Icon name="check" color="green" />
       <div className="lbl">{state.liveRoot.passingTests}</div>
     </Menu.Item>
-    <Menu.Item active={state.showFailing} onClick={() => (state.showFailing = !state.showFailing)}>
+    <Menu.Item onClick={() => (state.showFailing = !state.showFailing)}>
       <Icon name="remove" color="red" />
       <div className="lbl">{state.liveRoot.failingTests}</div>
     </Menu.Item>

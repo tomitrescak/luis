@@ -13,6 +13,17 @@ const missingStory = new TestGroup(null, 'Missing', {
   info: 'Missing'
 });
 
+let num = 0;
+
+export type Resolution = {
+  horizontal: number;
+  vertical: number;
+  name: string;
+  tilt?: boolean;
+  active?: boolean;
+  click?: any;
+};
+
 export class ViewState {
   @observable storyPath = '';
   @observable testName = '';
@@ -23,15 +34,83 @@ export class ViewState {
   @observable selectedTest: Test = null;
 
   state: Luis.State;
-  bare: boolean;
+  @observable bare: boolean = false;
+  id = num++;
+
+  resolutions: Resolution[] = [
+    { horizontal: 320, vertical: 460, name: 'iPhone 5' },
+    { horizontal: 375, vertical: 559, name: 'iPhone 6' },
+    { horizontal: 768, vertical: 1024, name: 'iPad ' }
+  ];
 
   constructor(state: Luis.State) {
     this.state = state;
+
+    let max = this.resolutions.length;
+    for (let i = 0; i < max; i++) {
+      let r = this.resolutions[i];
+      r.tilt = false;
+      r.active = false;
+
+      let tilt = {
+        name: r.name,
+        active: false,
+        horizontal: r.vertical,
+        vertical: r.horizontal,
+        tilt: true
+      };
+
+      this.resolutions.push(tilt);
+    }
+    for (let i = 0; i < this.resolutions.length; i++) {
+      let r = this.resolutions[i];
+      r.click = () => {
+        let pw = window.open(
+          window.location.href.replace('?stories', '?story'),
+          '',
+          `width=${r.horizontal}, height=${
+            r.vertical
+          }, menubar=no, status=no, toolbar=no, resizable=no`
+        );
+
+        pw.document.onload = () => (pw.document.title = r.name);
+
+        setTimeout(() => {
+          pw.document.title = r.name;
+        }, 1000);
+
+        // this.resolutions[i].active = !this.resolutions[i].active;
+
+        // let frameState = this.frameState;
+        // if (frameState) {
+        //   frameState.resolutions[i].active = !frameState.resolutions[i].active;
+        // }
+      };
+    }
+    // this.resolutions = observable(this.resolutions);
+
+    (window as any).__viewState = this;
   }
 
   setSnapshotView(view: string) {
     localStorage.setItem('Luis.snapshotView', view);
     this.sView = view;
+  }
+
+  get frame(): Window {
+    let frame = document.getElementById('contentFrame') as HTMLIFrameElement;
+    if (frame) {
+      return frame.contentWindow;
+    }
+    return undefined;
+  }
+
+  get frameState(): ViewState {
+    let frame = document.getElementById('contentFrame') as HTMLIFrameElement;
+    if (frame) {
+      return (frame.contentWindow as any).__viewState;
+    }
+    return undefined;
   }
 
   @computed
@@ -67,21 +146,9 @@ export class ViewState {
     return false;
   }
 
-  @action
-  openAfterTest() {
-    this.openStory(this.storyPath, this.testName, this.snapshotName);
-
-    const selected = this.selectedTest || this.selectedStory;
-    // open the path
-    if (selected) {
-      // check if selected story is a child
-      let parent: TestItem = selected.parent;
-      while (parent != null) {
-        this.state.expanded[parent.id] = observable.box(true);
-        parent = parent.parent;
-      }
-    }
-  }
+  maximise = () => {
+    this.bare = true;
+  };
 
   @action
   openSingleStory(groupPath: string = '', testName: string = '', snapshotName = '') {
@@ -90,7 +157,20 @@ export class ViewState {
   }
 
   @action
-  openStory(groupPath: string = '', testName: string = '', snapshotName = '') {
+  openStory(
+    groupPath: string = '',
+    testName: string = '',
+    snapshotName = '',
+    bare: boolean = undefined
+  ) {
+    if (bare != null) {
+      this.bare = bare;
+    }
+    let frameState = this.frameState;
+    if (frameState) {
+      frameState.openStory(groupPath, testName, snapshotName);
+    }
+
     this.storyPath = groupPath;
     this.testName = testName;
     this.snapshotName = snapshotName;
