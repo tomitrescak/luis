@@ -1,10 +1,12 @@
 import * as React from 'react';
 
 import { TopPanelSingle } from './top_panel_bare';
-import { StoryView } from './story_view';
 
 //@ts-ignore
 import { StateModel } from '../models/state_model';
+import { ErrorBoundary } from './error_boundary';
+import { ThemedWrapper } from './themed_wrapper';
+import { StoryComponent } from './story_component';
 
 export type ComponentProps = {
   state?: Luis.State;
@@ -13,6 +15,10 @@ export type ComponentProps = {
 export const BareView = ({ state }: ComponentProps) => (
   <>
     {/* {!state.hideTestMenus */ false && <TopPanelSingle state={state} />}
-    <StoryView state={state} />
+    <ErrorBoundary>
+      <ThemedWrapper state={state}>
+        <StoryComponent state={state} />
+      </ThemedWrapper>
+    </ErrorBoundary>
   </>
 );

@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Greeting renders correctly 1`] = `
+<div>
+  Hello 
+  Tomas
+</div>
+`;

@@ -1,17 +1,21 @@
 import { reaction } from 'mobx';
-import * as route from 'path-match';
 
-export default function createRouter(view: any, routes: any) {
-  const matchers = Object.keys(routes).map(path => [route()(path), routes[path]]);
+const reg = /\/\?([^=]+)=([^&]+)(\&test=([^&]+))?(\&snapshot=([^&]+))?(\&view=([^&]+))?(\&fullscreen=([^&]+))?/;
+
+export default function createRouter(state: Luis.State) {
   return function(path: string) {
-    return matchers.some(([matcher, f]) => {
-      const result = matcher(path);
-      if (result === false) {
-        return false;
-      }
-      f.call(view, result);
-      return true;
-    });
+    let match = path.match(reg);
+
+    if (match) {
+      let viewType = match[1];
+      let name = match[2];
+      let test = match[4];
+      let snapshot = match[6];
+      // let view = match[8];
+      let fullscreen = match[10];
+      state.viewState.openStory(name, test, snapshot, viewType === 'story', fullscreen === 'true');
+    }
+    return true;
   };
 }
 
@@ -26,20 +30,7 @@ export function setupRouter(state: Luis.State) {
     }
   );
 
-  const router = createRouter(state.viewState, {
-    '/:route?story=:name&test=:test&snapshot=:snapshot': ({ name, test, snapshot }: any) =>
-      state.viewState.openSingleStory(name, test, snapshot),
-    '/:route?story=:name&test=:test': ({ name, test }: any) =>
-      state.viewState.openSingleStory(name, test),
-    '/:route?story=:name': ({ name }: any) => state.viewState.openSingleStory(name),
-    '/:route?stories=:name&test=:test&snapshot=:snapshot': ({ name, test, snapshot }: any) =>
-      state.viewState.openStory(name, test, snapshot, false),
-    '/:route?stories=:name&test=:test': ({ name, test }: any) =>
-      state.viewState.openStory(name, test, null, false),
-    '/:route?stories=:name': ({ name }: any) => state.viewState.openStory(name, null, null, false)
-
-    // '/': state.viewState.openStory
-  });
+  const router = createRouter(state);
 
   window.onpopstate = function historyChange(ev) {
     if (ev.type === 'popstate') {

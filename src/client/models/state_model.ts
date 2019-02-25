@@ -43,7 +43,11 @@ let id = 0;
 
 export class StateModel {
   @observable theme: ITheme =
-    localStorage.getItem('luisTheme') === 'light' ? lightTheme : darkTheme;
+    localStorage.getItem('luisTheme') === 'light'
+      ? lightTheme
+      : localStorage.getItem('luisTheme') === 'dark'
+      ? darkTheme
+      : lightTheme;
   @observable autoUpdateSnapshots = false;
   @observable showPassing = true;
   @observable showFailing = true;

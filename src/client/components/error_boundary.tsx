@@ -4,6 +4,8 @@ import { Segment } from 'semantic-ui-react';
 export type State = { hasError: boolean; error?: Error; info?: React.ErrorInfo };
 
 export class ErrorBoundary extends React.Component<any, State> {
+  static displayName = 'ErrorBoundary';
+
   constructor(props: any) {
     super(props);
     this.state = { hasError: false };
@@ -20,15 +22,13 @@ export class ErrorBoundary extends React.Component<any, State> {
       // You can render any custom fallback UI
       return (
         <div>
-          <Segment inverted attached="top" color="red">{ this.state.error.message}</Segment>
+          <Segment inverted attached="top" color="red">
+            {this.state.error.message}
+          </Segment>
           <Segment attached="bottom" color="red">
-            <pre>
-              {this.state.error.stack }
-            </pre>
+            <pre>{this.state.error.stack}</pre>
 
-            <pre>
-              {this.state.info.componentStack }
-            </pre>
+            <pre>{this.state.info.componentStack}</pre>
           </Segment>
         </div>
       );

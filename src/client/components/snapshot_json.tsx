@@ -2,6 +2,7 @@ import * as React from 'react';
 import { observer, inject } from 'mobx-react';
 import { MonacoDiffEditor } from './editor_diff';
 import { MonacoEditor } from './editor_single';
+import { InfoMessage } from './info_message';
 
 export interface SnapshotsProps {
   state?: Luis.State;
@@ -47,23 +48,23 @@ export class SnapshotJson extends React.Component<SnapshotsProps, {}> {
       selectedTest: test
     } = this.props.state.viewState;
 
-    if (!story || !test) {
-      return <div>Please select your story</div>;
+    if (!story) {
+      return <InfoMessage>Please select your story</InfoMessage>;
     }
 
-    if (story.duration == 0) {
-      return <div>Running tests ...</div>;
+    if (!test || !snapshot) {
+      return <InfoMessage>Please select the snapshot</InfoMessage>;
     }
 
     if (test.snapshots.length == 0) {
-      return <div style={{ padding: '6px' }}>This test has no recorded snapshots.</div>;
+      return <InfoMessage>This test has no recorded snapshots.</InfoMessage>;
     }
 
     if (!snapshot) {
       return (
-        <div style={{ padding: '6px' }}>
+        <InfoMessage>
           Sorry, we could not locate your snapshot: {this.props.state.viewState.selectedSnapshot}.
-        </div>
+        </InfoMessage>
       );
     }
 
@@ -72,7 +73,7 @@ export class SnapshotJson extends React.Component<SnapshotsProps, {}> {
       return (
         <MonacoDiffEditor
           key="HistoryView"
-          theme="vs-light"
+          theme={`vs-${this.props.state.config.theme}`}
           width="100%"
           height="100%"
           options={{
@@ -92,7 +93,7 @@ export class SnapshotJson extends React.Component<SnapshotsProps, {}> {
     return (
       <MonacoEditor
         key="HistoryView"
-        theme="vs-light"
+        theme={`vs-${this.props.state.config.theme}`}
         width="100%"
         height="100%"
         options={{

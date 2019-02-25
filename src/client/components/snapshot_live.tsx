@@ -4,72 +4,7 @@ import Highlight from 'react-highlight';
 import { observer } from 'mobx-react';
 import { DiffView } from 'diff-view';
 import { observable, IObservableArray } from 'mobx';
-
-import { style } from 'typestyle';
-
-export const diff = style({
-  $nest: {
-    '& table': {
-      width: '100%',
-      background: 'white',
-      color: 'black'
-    },
-    '& .diff': {
-      borderCollapse: 'collapse',
-      whiteSpace: 'pre-wrap'
-    },
-    '& .diff tbody': {
-      fontFamily: 'Courier, monospace',
-      fontSize: '11px'
-    },
-    '& .diff tbody th': {
-      background: '#EED',
-      fontSize: '11px',
-      fontWeight: 'normal',
-      border: '1px solid #BBC',
-      color: '#886',
-      padding: '.1em .4em .1em',
-      textAlign: 'right',
-      verticalAlign: 'top',
-      width: '30px'
-    },
-    '& .diff thead': {
-      borderBottom: '1px solid #BBC',
-      background: '#EFEFEF'
-    },
-    '& .diff thead th.texttitle': {
-      textAlign: 'left',
-      fontSize: '11px'
-    },
-    '& .diff tbody td': {
-      paddingLeft: '.4em',
-      verticalAlign: 'top',
-      width: '50%'
-    },
-    '& .diff .empty': {
-      backgroundColor: '#DDD'
-    },
-    '& .diff .replace': {
-      backgroundColor: '#FD8'
-    },
-    '& .diff .delete': {
-      backgroundColor: '#E99'
-    },
-    '& .diff .skip': {
-      backgroundColor: '#EFEFEF',
-      border: '1px solid #AAA',
-      borderRight: '1px solid #BBC'
-    },
-    '& .diff .insert': {
-      backgroundColor: '#9E9'
-    },
-    '& .diff th.author': {
-      textAlign: 'right',
-      borderTop: '˝1px solid #BBC',
-      background: '#EFEFEF'
-    }
-  }
-});
+import { diff } from './component_styles';
 
 type Props = {
   snapshot: any;
@@ -184,6 +119,8 @@ type HeaderProps = {
 
 @observer
 export class Header extends React.Component<HeaderProps> {
+  static displayName = 'LiveHeader';
+
   render() {
     return (
       <div className="ui fixed green inverted menu" style={{ marginBottom: '0px' }}>
@@ -242,6 +179,8 @@ type LiveSnapshot = {
 
 @observer
 export class LiveSnapshots extends React.Component<HeaderProps> {
+  static displayName = 'LiveSnapshots';
+
   timeout: any;
   snapshots: IObservableArray<LiveSnapshot> = observable([]);
 

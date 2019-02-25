@@ -1,41 +1,52 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { style } from 'typestyle/lib';
+import { css } from './component_styles';
+import { ThemedWrapper } from './themed_wrapper';
+import { InfoMessage } from './info_message';
 
-// const resultsHTML = style({ width: '100%' });
-const frameHolder = style({
-  position: 'absolute',
-  left: '0px',
-  right: '0px',
-  top: '40px',
-  bottom: '0px',
-  padding: '6px'
-});
-const leftFrame = style({
-  position: 'absolute',
-  left: '6px',
-  top: '6px',
-  right: '50%',
-  height: '100%',
-  borderRight: '1px dashed #ddd'
-});
-const rightFrame = style({
-  position: 'absolute',
-  left: '50%',
-  right: '0px',
-  height: '100%',
-  margin: '0px'
-});
-const fullFrame = style({ position: 'absolute', width: '100%', height: '100%', margin: '3px' });
+// const resultsHTML = css` width: '100%' });
+const frameHolder = css`
+  /* name:frame-holder */
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 40px;
+  bottom: 0px;
+`;
+
+const leftFrame = css`
+  /* name:left-html */
+  position: absolute;
+  left: 0%;
+  right: 50%;
+  height: 100%;
+  border-right: 1px dashed #ddd;
+`;
+
+const rightFrame = css`
+  /* name:right-html */
+  position: absolute;
+  left: 50%;
+  right: 0px;
+  height: 100%;
+  margin: 0px;
+`;
+
+const fullFrame = css`
+  /* name:full-html */
+  position: absolute;
+  width: 100%;
+  height: 100%;
+`;
 
 export interface PreviewProps {
   state: Luis.State;
 }
 
-const DefaultDecorator = ({ children }: any) => <div>{children}</div>;
-
 @observer
 export class SnapshotHtml extends React.Component<PreviewProps> {
+  static displayName = 'SnapshotHtml';
+
   render() {
     const state = this.props.state;
     const story = state.viewState.selectedStory;
@@ -43,11 +54,11 @@ export class SnapshotHtml extends React.Component<PreviewProps> {
     const snapshot = state.viewState.selectedSnapshot;
 
     if (!story || !test) {
-      return <div>Please select the snapshot</div>;
+      return <InfoMessage>Please select the snapshot</InfoMessage>;
     }
 
     if (!snapshot) {
-      return <div style={{ padding: '6px' }}>This test has no recorded snapshots.</div>;
+      return <InfoMessage>This test has no recorded snapshots.</InfoMessage>;
     }
 
     // deal with json
@@ -57,31 +68,27 @@ export class SnapshotHtml extends React.Component<PreviewProps> {
       expected = `<pre>${expected}</pre>`;
     }
 
-    const Decorator = story.decorator ? story.decorator : DefaultDecorator;
     return (
-      <Decorator>
-        {snapshot && (
-          <div className={story.cssClassName}>
-            {snapshot.expected && snapshot.expected !== snapshot.current ? (
-              <div className={frameHolder}>
-                <div
-                  className={leftFrame + '  leftPanel'}
-                  dangerouslySetInnerHTML={{ __html: current }}
-                />
-                <div
-                  className={rightFrame + '  rightPanel'}
-                  dangerouslySetInnerHTML={{ __html: expected || 'No saved snapshot' }}
-                />
-              </div>
-            ) : (
-              <div className={frameHolder}>
-                <div className={fullFrame} dangerouslySetInnerHTML={{ __html: current }} />
-              </div>
-            )}
-            <div style={{ clear: 'both' }} />
+      <>
+        {snapshot.expected && snapshot.expected !== snapshot.current ? (
+          <div className={frameHolder}>
+            <div className={leftFrame + '  leftPanel'}>
+              <ThemedWrapper state={state} content={current} />
+            </div>
+
+            <div className={rightFrame + '  rightPanel'}>
+              <ThemedWrapper state={state} content={expected || 'No saved snapshot'} />
+            </div>
+          </div>
+        ) : (
+          <div className={frameHolder}>
+            <div className={fullFrame}>
+              <ThemedWrapper state={state} content={current} />
+            </div>
           </div>
         )}
-      </Decorator>
+        <div style={{ clear: 'both' }} />
+      </>
     );
   }
 }

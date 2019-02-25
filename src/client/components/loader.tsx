@@ -8,6 +8,8 @@ type Props = {
 };
 
 export class Loader extends React.Component<Props> {
+  static displayName = 'Loader';
+
   // componentWillReceiveProps({ proxies, component }: Props) {
   //   if (this.props.component !== component || proxies !== this.props.proxies) {
   //     this.firstProxy = createProxyLinkedList([...proxies, this.props.component]);

@@ -15,9 +15,10 @@ const StubPlugin = require('proxyrequire').FuseBoxStubPlugin(/\.tsx?/);
 const SnapshotPlugin = require('./fuse-box/snapshot-plugin').SnapshotPlugin;
 
 // console.log(require('path').resolve('src'));
-const home = require('path').resolve('src');
 
 module.exports = function(root, entry) {
+  const home = require('path').resolve(root);
+
   const luisFuse = FuseBox.init({
     homeDir: home,
     output: 'public/$name.js',
@@ -43,7 +44,7 @@ module.exports = function(root, entry) {
     port: 9001
   });
 
-  luisFuse.bundle('luis-vendor').instructions(' ~ luis.ts'); // nothing has changed here
+  luisFuse.bundle('luis-vendor').instructions(` ~ ${entry}`); // nothing has changed here
 
   luisFuse
     .bundle('luis-client')
@@ -51,7 +52,7 @@ module.exports = function(root, entry) {
     .hmr()
     .sourceMaps(true)
     .instructions(
-      ' !> [luis.ts] + proxyrequire + **/*.fixture.* + **/*.story.* + **/*.test.* + **/__fixtures__/* + **/__stories__/* + **/__tests__/* + **/tests/*'
+      ` !> [${entry}] + proxyrequire + **/*.fixture.* + **/*.story.* + **/*.test.* + **/__fixtures__/* + **/__stories__/* + **/__tests__/* + **/tests/*`
     )
     .globals({
       proxyrequire: '*'

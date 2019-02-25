@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { ErrorBoundary } from './error_boundary';
-import { StoryComponent } from './story_component';
 import { SnapshotHtml } from './snapshot_html';
 import { SnapshotJson } from './snapshot_json';
 import { SnapshotsView } from './snapshots_view';
@@ -12,7 +10,6 @@ import { Story } from '../models/story_model';
 //@ts-ignore
 import { StateModel } from '../models/state_model';
 import { css } from './component_styles';
-import { ITheme } from '../config/themes';
 
 type ComponentProps = {
   state?: Luis.State;
@@ -33,45 +30,44 @@ const frameHolder = css`
   bottom: 0px;
 `;
 
-const frameBack = (theme: ITheme) => css`
-  background-color: ${theme.backgroundColor};
-  height: 100%;
-  width: 100%;
-`;
+class FrameView extends React.Component {
+  shouldComponentUpdate() {
+    return false;
+  }
+  render() {
+    let href = window.location.href;
+    return (
+      <iframe
+        id="contentFrame"
+        className={frameStyle}
+        src={
+          href.indexOf('stories') !== -1
+            ? window.location.href.replace('?stories', '?story')
+            : href + '/?story=__empty'
+        }
+      />
+    );
+  }
+}
+FrameView.displayName = 'FrameView';
 
 export const StoryView = observer(({ state }: ComponentProps) => {
   return (
-    <div
-      className={
-        frameBack(state.theme) + ' ' + state.config.wrapperStyle
-          ? css`
-              ${state.config.wrapperStyle}
-            `
-          : ''
-      }
-    >
-      {state.viewState.sView === 'react' && (
-        <>
-          {state.viewState.bare || window.location !== window.parent.location ? (
-            <ErrorBoundary>
-              <StoryComponent state={state} />
-            </ErrorBoundary>
-          ) : (
-            <div className={frameHolder}>
-              <iframe
-                style={{ backgroundColor: 'red' }}
-                id="contentFrame"
-                className={frameStyle}
-                src={window.location.href.replace('?stories', '?story')}
-              />
-            </div>
-          )}
-        </>
-      )}
+    <>
+      <div
+        className={frameHolder}
+        style={{
+          visibility: state.viewState.sView === 'react' ? 'visible' : 'hidden'
+        }}
+      >
+        <FrameView />
+      </div>
       {state.viewState.sView === 'html' && <SnapshotHtml state={state} />}
-      {state.viewState.sView === 'json' && <SnapshotJson state={state} />}
       {state.viewState.sView === 'snapshots' && <SnapshotsView state={state} />}
+      {state.viewState.sView === 'json' && <SnapshotJson state={state} />}
       {state.viewState.sView === 'config' && <StoryConfig state={state} />}
-    </div>
+    </>
   );
 });
+
+StoryView.displayName = 'StoryView';

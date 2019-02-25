@@ -25,7 +25,7 @@
 //     }
 //   };
 //   let w: any = window;
-//   if (!w.hmrRegistered) {
+//   if (!w.hmrRegistered && typeof FuseBox != 'undefined') {
 //     w.hmrRegistered = true;
 //     FuseBox.addPlugin(customizedHMRPlugin);
 //   }

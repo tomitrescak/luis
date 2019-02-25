@@ -1,20 +1,33 @@
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
-import { List, Label } from 'semantic-ui-react';
-import { style } from 'typestyle';
+import { Label } from 'semantic-ui-react';
 import { Snapshot } from '../models/snapshot_model';
+import { ThemedWrapper } from './themed_wrapper';
+import { css } from './component_styles';
+import { InfoMessage } from './info_message';
 
 export type Props = {
   state: Luis.State;
 };
 
-const margined = style({
-  marginTop: '6px!important',
-  background: '#e8e8e8',
-  borderRadius: '6px',
-  textAlign: 'center',
-  marginBottom: '6px!important'
-});
+const margined = css`
+  padding: 6px;
+
+  .label {
+    margin: 0px !important;
+    width: 100%;
+    text-align: center;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+  }
+
+  div {
+    margin: 0px !important;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+    margin-bottom: 6px !important;
+  }
+`;
 
 @inject('state')
 @observer
@@ -45,30 +58,25 @@ export class SnapshotsView extends React.Component<Props> {
       list = list.slice().reverse();
     }
     if (list.length == 0) {
-      return <div>This test has no recorded snapshots.</div>;
+      return <InfoMessage>This test has no recorded snapshots.</InfoMessage>;
     }
     return (
-      <List className="m6">
+      <div className={margined}>
         {list.map((s, i) => (
-          <List.Item key={s.name + i}>
-            <List.Content>
-              <List.Header className={margined}>
-                <Label
-                  as="a"
-                  data-path={`${story.id}/${s.parent.urlName}/${s.url}`}
-                  href={`/${story.id}/${s.parent.urlName}/${s.url}`}
-                  onClick={this.openSnapshot}
-                  icon="image"
-                  content={s.name}
-                />
-              </List.Header>
-              <List.Description>
-                <div dangerouslySetInnerHTML={{ __html: s.current }} />
-              </List.Description>
-            </List.Content>
-          </List.Item>
+          <React.Fragment key={i}>
+            <Label
+              as="a"
+              data-path={`${story.id}/${s.parent.urlName}/${s.url}`}
+              href={`/${story.id}/${s.parent.urlName}/${s.url}`}
+              onClick={this.openSnapshot}
+              icon="image"
+              content={s.name}
+            />
+
+            <ThemedWrapper state={this.props.state} content={s.current} />
+          </React.Fragment>
         ))}
-      </List>
+      </div>
     );
   }
 }

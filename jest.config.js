@@ -7,7 +7,7 @@ module.exports = {
   reporters: [
     'jest-dot-reporter',
     [
-      '../reporter',
+      '../jest/reporter',
       {
         path: 'src/example/summary.ts',
         merge: true

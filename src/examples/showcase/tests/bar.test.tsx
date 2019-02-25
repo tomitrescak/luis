@@ -9,7 +9,7 @@ describe('Component', () => {
     const Component: React.FC = ({}, { theme }) => {
       return (
         <div style={{ backgroundColor: theme.backgroundColor, color: theme.color }}>
-          Bar Component
+          Bar Component 333
         </div>
       );
     };

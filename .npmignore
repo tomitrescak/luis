@@ -7,3 +7,12 @@ yarn.lock
 tsconfig.json
 .fusebox
 public
+tests
+yarn-error.log
+examples
+wallaby.js
+jest.config.js
+us.js
+mocha.js
+fuse.js
+

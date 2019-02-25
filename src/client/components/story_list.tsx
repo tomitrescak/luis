@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import { Accordion, Icon } from 'semantic-ui-react';
-import { style } from 'typestyle';
 
 import { TestView } from './test_view';
-import { timing, pane, css } from './component_styles';
+import { timing, css } from './component_styles';
 import { TestGroup } from '../models/test_group_model';
 import { ITheme } from '../config/themes';
 
-const accordion = (hideTestMenu: boolean, theme: ITheme) => css`
+const accordion = (theme: ITheme) => css`
   .title {
     padding: 3px !important;
   }
@@ -17,7 +16,7 @@ const accordion = (hideTestMenu: boolean, theme: ITheme) => css`
   padding-left: 20px;
   position: absolute;
   width: 100%;
-  top: ${hideTestMenu ? '0px' : '42px'};
+  top: 42px;
   bottom: 0px;
   padding-bottom: 6px;
   background-color: ${theme.sideBarColor};
@@ -59,9 +58,9 @@ const bump = (bump: boolean) => css`
   }
 `;
 
-const bumpTitleSmall = style({
-  marginLeft: '5px'
-});
+const bumpTitleSmall = css`
+  margin-left: 5px;
+`;
 
 export type Props = {
   state: Luis.State;
@@ -70,6 +69,8 @@ export type Props = {
 
 @observer
 export class TestGroupView extends React.Component<Props> {
+  static displayName = 'TestGroup';
+
   render(): any {
     const { group, state } = this.props;
 
@@ -136,10 +137,7 @@ export const StoryList = observer(({ state }: Props) => {
     return <div>There are no tests</div>;
   }
   return (
-    <Accordion
-      className={accordion(state.hideTestMenus, state.theme)}
-      inverted={state.theme.isDark}
-    >
+    <Accordion className={accordion(state.theme)} inverted={state.theme.isDark}>
       {isList
         ? state.liveRoot.nestedGroupsWithTests.map(g => (
             <TestGroupView state={state} group={g} key={g.fileName + version} />

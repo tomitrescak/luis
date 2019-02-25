@@ -13,3 +13,5 @@ export const RightPanel = ({ state }: ComponentProps) => (
     <StoryView state={state} />
   </>
 );
+
+RightPanel.displayName = 'RightPanel';

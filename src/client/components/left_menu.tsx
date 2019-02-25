@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { Menu, Icon, Loader } from 'semantic-ui-react';
+import { Menu, Icon } from 'semantic-ui-react';
 
-import { style } from 'typestyle';
+import { css } from './component_styles';
 
-const noMargin = style({
-  marginBottom: '0px!important'
-});
+const noMargin = css`
+  margin-bottom: 0px !important;
+`;
 
 export type ComponentProps = {
   state: Luis.State;
@@ -15,11 +15,19 @@ export type ComponentProps = {
 export const LeftMenu = observer(({ state }: ComponentProps) => (
   <Menu secondary inverted color="blue" className={noMargin}>
     <Menu.Item name="home" icon="lightbulb outline" content="Luis" />
-    <Menu.Item onClick={() => (state.showPassing = !state.showPassing)}>
+    <Menu.Item
+      title="Toggle passing tests"
+      active={state.showPassing}
+      onClick={() => (state.showPassing = !state.showPassing)}
+    >
       <Icon name="check" color="green" />
       <div className="lbl">{state.liveRoot.passingTests}</div>
     </Menu.Item>
-    <Menu.Item onClick={() => (state.showFailing = !state.showFailing)}>
+    <Menu.Item
+      title="Toggle failing tests"
+      active={state.showFailing}
+      onClick={() => (state.showFailing = !state.showFailing)}
+    >
       <Icon name="remove" color="red" />
       <div className="lbl">{state.liveRoot.failingTests}</div>
     </Menu.Item>

@@ -1,14 +1,26 @@
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import { Button, Form, Divider, Header } from 'semantic-ui-react';
+import { css } from './component_styles';
+import { ITheme } from '../config/themes';
 
 export interface ModalProps {
   state?: Luis.State;
 }
 
+const configStyle = (theme: ITheme) => css`
+  padding: 12px;
+  label {
+    color: ${theme.textColor};
+  }
+  .header {
+    color: ${theme.textColor};
+  }
+`;
+
 export const StoryConfig = inject('state')(
   observer(({ state }: ModalProps) => (
-    <div style={{ padding: '12px' }}>
+    <div className={configStyle(state.theme)}>
       <Header icon="cogs" content="Options" dividing />
       <Form>
         {state.config.tests.map((s, i) => (
@@ -40,6 +52,11 @@ export const StoryConfig = inject('state')(
           label="Wrapper Style"
           value={state.config.wrapperStyle}
           onChange={(_e, value) => (state.config.wrapperStyle = value.value as string)}
+        />
+        <Form.TextArea
+          label="Full Screen Style"
+          value={state.config.fullscreenStyle}
+          onChange={(_e, value) => (state.config.fullscreenStyle = value.value as string)}
         />
         <Form.Checkbox
           label="Reverse snapshot list"

@@ -26,6 +26,8 @@ const tilt = css`
 
 @observer
 export class TopPanel extends React.Component<Props> {
+  static displayName = 'TopPanel';
+
   handleItemClick = (e: React.MouseEvent<any>) =>
     this.props.state.viewState.setSnapshotView(e.currentTarget.getAttribute('data-name'));
 

@@ -1,4 +1,17 @@
 {
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "files.exclude": {
+    "__error": "Not found",
+    "client": true,
+    "examples": true,
+    "fuse-box": true,
+    "jest": true,
+    "proxies": true,
+    "server": true,
+    "tests": true,
+    "bridge.d.ts": true,
+    "bridge.js": true,
+    "index.d.ts": true,
+    "index.js": true
+  }
 }
- 

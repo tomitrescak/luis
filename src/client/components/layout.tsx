@@ -10,7 +10,6 @@ import { splitPane, content } from './component_styles';
 //@ts-ignore
 import { StateModel } from '../config/state';
 import { BareView } from './bare_view';
-import { LiveSnapshots } from './snapshot_live';
 
 export type ComponentProps = {
   state?: Luis.State;
@@ -19,25 +18,30 @@ export type ComponentProps = {
 
 export const Layout = inject('state')(
   observer(({ state, localStorage }: ComponentProps) => {
-    document.body.style.backgroundColor = state.theme.backgroundColor;
-
-    if (state.viewState.sView === 'live') {
-      return <LiveSnapshots appState={state} />;
-    }
+    // if (state.viewState.sView === 'live') {
+    //   return <LiveSnapshots appState={state} />;
+    // }
     if (state.viewState.bare) {
       return <BareView state={state} />;
     }
     return (
-      <SplitPane
-        className={splitPane(state.theme) + ' ' + content}
-        split="vertical"
-        minSize={100}
-        defaultSize={parseInt(localStorage.getItem('luis-v-splitPos') || '280px', 10)}
-        onChange={(size: string) => localStorage.setItem('luis-v-splitPos', size)}
-      >
-        <LeftPanel state={state} />
-        <RightPanel state={state} />
-      </SplitPane>
+      <>
+        {/* <FrameView state={state} /> */}
+        <SplitPane
+          className={splitPane(state.theme) + ' ' + content}
+          split="vertical"
+          minSize={100}
+          defaultSize={parseInt(localStorage.getItem('luis-v-splitPos') || '280px', 10)}
+          onDragStarted={() => (state.viewState.frame.style.pointerEvents = 'none')}
+          onDragFinished={() => (state.viewState.frame.style.pointerEvents = 'auto')}
+          onChange={(size: string) => localStorage.setItem('luis-v-splitPos', size)}
+        >
+          <LeftPanel state={state} />
+          <RightPanel state={state} />
+        </SplitPane>
+        );
+      </>
     );
   })
 );
+Layout.displayName = 'Layout';

@@ -3,9 +3,8 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import { DiffView } from 'diff-view';
 import { Accordion, Icon, List, Segment } from 'semantic-ui-react';
-import { style } from 'typestyle';
 
-import { diff, timing, floatShots } from './component_styles';
+import { diff, timing, floatShots, css } from './component_styles';
 import { Test } from '../models/test_model';
 
 export type TestProps = {
@@ -13,32 +12,38 @@ export type TestProps = {
   test: Test;
 };
 
-export const errorMessage = style({
-  padding: '3px 6px!important',
-  fontSize: '11px',
-  margin: '0px!important',
-  overflow: 'auto'
-});
+export const errorMessage = css`
+  padding: 3px 6px !important;
+  font-size: 11px;
+  margin: 0px !important;
+  overflow: auto;
+`;
 
-export const noPadding = style({
-  padding: '0px!important'
-});
+export const noPadding = css`
+  padding: 0px !important;
+`;
 
-const snapshotMenu = style({
-  marginTop: '0px!important',
-  fontSize: '12px!important'
-});
+const snapshotMenu = css`
+  margin-top: 0px !important;
+  font-size: 12px !important;
+`;
 
-const hidden = style({
-  color: 'white!important',
-  visibility: 'hidden'
-});
+const hidden = css`
+  color: white !important;
+  visibility: hidden;
+`;
 
-const content = style({
-  padding: '0px!important',
-  marginTop: '-1px',
-  marginBottom: '6px'
-});
+const content = css`
+  padding: 0px !important;
+  margin-top: -1px;
+  margin-bottom: 6px;
+
+  .segment {
+    padding: 8px !important;
+    margin-top: 6px !important;
+    margin-right: 55px !important;
+  }
+`;
 
 type ErrorViewProps = {
   test: Test;
@@ -82,6 +87,8 @@ export const ErrorView = ({ test, single }: ErrorViewProps) => {
 
 @observer
 export class TestView extends React.Component<TestProps> {
+  static displayName = 'TestItem';
+
   errorView: HTMLDivElement;
 
   canExpand() {
@@ -107,35 +114,33 @@ export class TestView extends React.Component<TestProps> {
     // console.log('Rendering: ' + test.name + '[' + test.uid + ']');
     const prefix = state.viewState.bare ? '?story' : '?stories';
 
-    const bump = style({
-      marginLeft: '-22px',
-      display: 'flex',
-      $nest: {
-        i: {
-          flex: '1 auto!important',
-          minWidth: '15px'
-        },
-        a: {
-          whiteSpace: 'nowrap',
-          textOverflow: 'ellipsis',
-          overflow: 'hidden',
-          flex: '1 100%',
-          minWidth: '60px'
-        },
-        span: {
-          whiteSpace: 'nowrap',
-          textOverflow: 'ellipsis',
-          overflow: 'hidden',
-          flex: '1 100%',
-          minWidth: '60px'
-        },
-        div: {
-          whiteSpace: 'nowrap',
-          textOverflow: 'ellipsis',
-          overflow: 'hidden'
-        }
+    const bump = css`
+      margin-left: -22px;
+      display: flex;
+      i {
+        flex: 1 auto !important;
+        min-width: 15px;
       }
-    });
+      a {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        flex: 1 100%;
+        min-width: 60px;
+      }
+      span {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        flex: 1 100%;
+        min-width: 60px;
+      }
+      div {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    `;
 
     return (
       <div>

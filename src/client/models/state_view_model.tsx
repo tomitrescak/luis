@@ -3,13 +3,13 @@ import * as React from 'react';
 import { observable, computed, action } from 'mobx';
 
 import { Test } from './test_model';
-import { TestItem } from './test_item_model';
 //@ts-ignore
 import { Snapshot } from './snapshot_model';
 import { TestGroup } from './test_group_model';
+import { InfoMessage } from '../components/info_message';
 
 const missingStory = new TestGroup(null, 'Missing', {
-  component: () => <div>Story not found. Maybe you renamed it?</div>,
+  component: () => <InfoMessage>Please select a story.</InfoMessage>,
   info: 'Missing'
 });
 
@@ -35,6 +35,7 @@ export class ViewState {
 
   state: Luis.State;
   @observable bare: boolean = false;
+  @observable fullScreen: boolean = false;
   id = num++;
 
   resolutions: Resolution[] = [
@@ -97,8 +98,12 @@ export class ViewState {
     this.sView = view;
   }
 
-  get frame(): Window {
-    let frame = document.getElementById('contentFrame') as HTMLIFrameElement;
+  get frame(): HTMLIFrameElement {
+    return document.getElementById('contentFrame') as HTMLIFrameElement;
+  }
+
+  get frameWindow(): Window {
+    let frame = this.frame;
     if (frame) {
       return frame.contentWindow;
     }
@@ -106,7 +111,7 @@ export class ViewState {
   }
 
   get frameState(): ViewState {
-    let frame = document.getElementById('contentFrame') as HTMLIFrameElement;
+    let frame = this.frame;
     if (frame) {
       return (frame.contentWindow as any).__viewState;
     }
@@ -115,16 +120,20 @@ export class ViewState {
 
   @computed
   get currentUrl() {
-    const prefix = this.bare ? '?story' : '?stories';
-    if (this.snapshotName) {
-      return (
-        prefix + '=' + this.storyPath + '&test=' + this.testName + '&snapshot=' + this.snapshotName
-      );
-    }
+    let url = this.bare ? '?story' : '?stories';
+    url += '=' + this.storyPath;
     if (this.testName) {
-      return prefix + '=' + this.storyPath + '&test=' + this.testName;
+      url += '&test=' + this.testName;
     }
-    return prefix + '=' + this.storyPath;
+    if (this.snapshotName) {
+      url += '&snapshot=' + this.snapshotName;
+    }
+    // url += '&view=' + this.sView;
+    if (this.fullScreen) {
+      url += '&fullscreen=' + this.fullScreen;
+    }
+
+    return url;
   }
 
   get selectedSnapshot() {
@@ -134,6 +143,7 @@ export class ViewState {
     return null;
   }
 
+  @action
   openStoryFromList(
     e: React.SyntheticEvent<HTMLAnchorElement>,
     storyPath: string = '',
@@ -142,11 +152,25 @@ export class ViewState {
   ) {
     e.preventDefault();
     e.stopPropagation();
-    this.openStory(storyPath, testName, snapshotName);
+    this.sView = 'react';
+    this.openStory(storyPath, testName, snapshotName, false, false);
+
+    // setTimeout(
+    //   action(() => {
+    //     this.openStory(storyPath, testName, snapshotName, false, false);
+    //   }),
+    //   50
+    // );
+
     return false;
   }
 
+  @action
   maximise = () => {
+    this.sView = 'react';
+    this.testName = '';
+    this.snapshotName = '';
+    this.fullScreen = true;
     this.bare = true;
   };
 
@@ -161,16 +185,18 @@ export class ViewState {
     groupPath: string = '',
     testName: string = '',
     snapshotName = '',
-    bare: boolean = undefined
+    bare: boolean = undefined,
+    fullscreen = false
   ) {
     if (bare != null) {
       this.bare = bare;
     }
     let frameState = this.frameState;
     if (frameState) {
-      frameState.openStory(groupPath, testName, snapshotName);
+      frameState.openStory(groupPath, testName, snapshotName, true);
     }
 
+    this.fullScreen = fullscreen;
     this.storyPath = groupPath;
     this.testName = testName;
     this.snapshotName = snapshotName;
@@ -185,16 +211,14 @@ export class ViewState {
       this.selectedStory = missingStory;
     }
 
-    if (this.sView === 'live') {
+    if (this.fullScreen || this.bare) {
+      this.sView = 'react';
+    } else if (this.sView === 'live') {
     } else if (this.snapshotName) {
-      this.sView = this.sView == 'react' ? 'html' : this.sView;
+      this.sView = 'html';
     } else if (this.testName) {
-      if (this.selectedTest && this.selectedTest.snapshots.length) {
-        this.sView = 'snapshots';
-      } else {
-        this.sView = 'react';
-      }
-    } else if (!this.testName) {
+      this.sView = 'snapshots';
+    } else {
       this.sView = 'react';
     }
   }

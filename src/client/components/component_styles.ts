@@ -155,6 +155,7 @@ export const timing = (color: string) =>
   `;
 
 export const floatShots = css`
+  flex: 1 50px;
   min-width: 35px;
   text-align: left;
   margin-left: 5px;

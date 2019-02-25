@@ -7,20 +7,33 @@ import { initState, RenderOptions } from '../models/state_model';
 import { setupRouter } from '../config/router';
 import { buildBridge } from '../../bridge';
 import { ProxyStore } from '../models/proxy_store';
+// import { setupHmr } from '../config/setup_hmr';
 
 const state = initState();
 
+// setupHmr();
+
 export async function renderLuis(options: RenderOptions = {}) {
-  buildBridge(options.report, options.snapshots);
-
-  options.loadTests();
-
   let root = document.querySelector(options.root || '#react-root');
   if (!root) {
     root = document.createElement('div');
     root.id = options.root || 'react-root';
     document.body.appendChild(root);
   }
+
+  // render application
+  ReactDOM.render(<Luis options={options} />, root);
+}
+
+type Props = {
+  options: RenderOptions;
+};
+
+export const Luis: React.FC<Props> = ({ options = {} }) => {
+  state.renderOptions = options;
+
+  buildBridge(options.report, options.snapshots);
+  options.loadTests();
 
   // remember proxies
   if (options.proxies) {
@@ -33,17 +46,6 @@ export async function renderLuis(options: RenderOptions = {}) {
   // make sure the left bar refreshes
   state.liveRoot.version++;
 
-  // render application
-  ReactDOM.render(
-    <Provider state={state}>
-      <Layout localStorage={localStorage} />
-    </Provider>,
-    root
-  );
-}
-
-export const Luis = ({ options = {} }) => {
-  state.renderOptions = options;
   return (
     <Provider state={state}>
       <Layout localStorage={localStorage} />

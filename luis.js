@@ -5,7 +5,6 @@ const path = require('path');
 
 // parse parameters
 let init = false;
-let file = 'src/luis.ts';
 let tests = false;
 let root = 'src';
 let run = 'luis.ts';
@@ -15,10 +14,6 @@ for (let i = 0; i < process.argv.length; i++) {
   let arg = process.argv[i];
   if (arg === '--init') {
     init = true;
-  }
-  if (arg.startsWith('--file')) {
-    file = process.argv[i + 1];
-    i++;
   }
   if (arg === '--tests') {
     tests = true;
@@ -35,29 +30,55 @@ for (let i = 0; i < process.argv.length; i++) {
   }
 }
 
+const testLoadTemplate = `loadTests: () => {
+    // keep whatever your preference is
+    // make sure these files are packed by your bundler
+    // we pack following by fuse-box by default
+    require('**.test');
+    require('**.story');
+    require('**.fixture');
+  }`;
+
 if (init) {
-  if (!file) {
-    console.error('Please specify file such as "--file src/luis.ts"');
+  let file = path.resolve(path.join(root, run));
+  let dir = path.dirname(file);
+
+  try {
+    fs.statSync(dir);
+  } catch {
+    console.log('Root directory does not exist');
+    console.log('Creating: ' + dir);
+    fs.mkdirSync(dir, { recursive: true });
   }
+
   let configPath = path.resolve(file);
   try {
     fs.statSync(configPath);
     console.log('Luis config already exists');
     return;
   } catch (ex) {
-    if (!tests) {
+    if (tests) {
+      console.log('Creating luis config with tests at: ' + file);
+      fs.writeFileSync(
+        configPath,
+        `import { renderLuis } from 'luis';
+
+const { snapshots, report } = require('./summary');
+renderLuis({
+  snapshots,
+  report,
+  ${testLoadTemplate}
+});`,
+        { encoding: 'utf-8' }
+      );
+    } else {
       console.log('Creating standard luis config at: ' + file);
       fs.writeFileSync(
         configPath,
         `import { renderLuis } from 'luis';
 
 renderLuis({
-  loadTests: () => {
-    // remove whatever your preference is
-    require('**.test');
-    require('**.story');
-    require('**.fixture');
-  }
+  ${testLoadTemplate}
 });`,
         { encoding: 'utf-8' }
       );
@@ -87,12 +108,13 @@ if (!customConfig) {
   );
 }
 // validate paths
-root = path.resolve(root);
-let fullPath = path.resolve(path.join(root, run));
+let fullRoot = path.resolve(root);
+let fullPath = path.join(fullRoot, run);
 try {
   fs.statSync(fullPath);
-  console.log(require.resolve('./luis.fuse'));
-  require('./luis.fuse')(root, file);
+  console.log('Config: ' + require.resolve('./luis.fuse'));
+  console.log('Luis: ' + fullPath);
+  require('./luis.fuse')(root, run);
   return;
 } catch (ex) {
   console.log(`Could not find your run file at: ${fullPath}`);

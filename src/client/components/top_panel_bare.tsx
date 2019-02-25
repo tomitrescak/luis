@@ -1,26 +1,26 @@
 import * as React from 'react';
 
-import { style } from 'typestyle';
 import { Menu, Icon, Dropdown, Popup } from 'semantic-ui-react';
 import { inject, observer } from 'mobx-react';
 
 import { ErrorView } from './test_view';
 import { Test } from '../models/test_model';
 import { Snapshot } from '../models/snapshot_model';
+import { css } from './component_styles';
 
-const menuImage = style({
-  width: '18px!important',
-  height: '18px',
-  margin: '-2px 6px -2px 0px!important'
-});
+const menuImage = css`
+  width: 18px !important;
+  height: 18px;
+  margin: -2px 6px -2px 0px !important;
+`;
 
 export type Props = {
   state: Luis.State;
 };
 
-const noMargin = style({
-  marginBottom: '0px!important'
-});
+const noMargin = css`
+  margin-bottom: 0px !important;
+`;
 
 export const SnapshotTitle = ({ s }: { s: Snapshot }) => {
   if (s.expected == null) {
@@ -47,6 +47,8 @@ export const SnapshotTitle = ({ s }: { s: Snapshot }) => {
 @inject('state')
 @observer
 export class TopPanelSingle extends React.Component<Props> {
+  static displayName = 'TopPanelSingle';
+
   handleItemClick = (e: React.MouseEvent<any>) =>
     (this.props.state.viewState.sView = e.currentTarget.getAttribute('data-name'));
 

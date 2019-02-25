@@ -1,0 +1,31 @@
+{
+  "name": "luis-catalogue-example-with-route",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node fuse.js",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "Tomi Trescak <tomi.trescak@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/react": "^16.8.4",
+    "fuse-box": "^3.7.1",
+    "jest-cli": "^24.1.0",
+    "jest-dot-reporter": "^1.0.7",
+    "luis": "^3.2.11",
+    "react-test-renderer": "^16.8.3",
+    "ts-jest": "^24.0.0",
+    "typescript": "^3.3.3333"
+  },
+  "dependencies": {
+    "@types/jest": "^24.0.9",
+    "@types/node": "^11.10.4",
+    "@types/react-dom": "^16.8.2",
+    "@types/react-router-dom": "^4.3.1",
+    "@types/react-test-renderer": "^16.8.1",
+    "react-router-dom": "^4.3.1"
+  }
+}

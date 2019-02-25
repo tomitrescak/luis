@@ -21,7 +21,8 @@ export class AppConfig {
   @observable storyView: StoryView = 'list';
   @observable logLevel = '1';
   @observable theme = 'light';
-  @observable wrapperStyle = 'light';
+  @observable wrapperStyle = '';
+  @observable fullscreenStyle = '';
   @observable showDevTools = false;
   @observable reverseList = true;
 
@@ -33,6 +34,7 @@ export class AppConfig {
     this.theme = localStorage.getItem('luisTheme') || 'light';
     this.reverseList = !!localStorage.getItem('luisReverseList');
     this.wrapperStyle = localStorage.getItem('luisWrapperStyle');
+    this.fullscreenStyle = localStorage.getItem('luisFullscreenStyle');
     this.tests = observable([]);
     this.loadTests();
   }
@@ -75,6 +77,7 @@ export class AppConfig {
     localStorage.setItem('louisStoryView', this.storyView);
     localStorage.setItem('luisTheme', this.theme);
     localStorage.setItem('luisWrapperStyle', this.wrapperStyle);
+    localStorage.setItem('luisFullscreenStyle', this.fullscreenStyle);
     localStorage.setItem('luisLog', this.logLevel);
     localStorage.setItem('luisDevTools', this.showDevTools ? '1' : '0');
     localStorage.setItem('luisReverseList', this.reverseList ? '1' : '0');

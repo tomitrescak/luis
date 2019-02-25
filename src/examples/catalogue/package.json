@@ -1,5 +1,5 @@
 {
-  "name": "luis-catalogue",
+  "name": "luis-catalogue-example",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,6 +12,6 @@
   "dependencies": {
     "@types/react": "^16.8.4",
     "fuse-box": "^3.7.1",
-    "luis": "3.2.4-rc.1"
+    "luis": "^3.2.10"
   }
 }

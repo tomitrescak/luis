@@ -2,8 +2,6 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import { Segment, Message } from 'semantic-ui-react';
 import { Loader } from './loader';
-import { css } from './component_styles';
-import { Resolution } from '../models/state_view_model';
 
 export type Props = {
   state: Luis.State;
@@ -15,23 +13,25 @@ const warningText = `describe('Name', () => {
   return { component };
 }`;
 
-const mobile = (r: Resolution) => css`
-  float: left;
-  background-color: #dedede;
-  margin: 12px;
-  padding: 8px;
+// const mobile = (r: Resolution) => css`
+//   float: left;
+//   background-color: #dedede;
+//   margin: 12px;
+//   padding: 8px;
 
-  .mobileContent {
-    width: ${r.horizontal + 'px'};
-    height: ${r.vertical + 'px'};
-    background: white;
-    border: solid 1px #cdcdcd;
-    position: relative;
-  }
-`;
+//   .mobileContent {
+//     width: ${r.horizontal + 'px'};
+//     height: ${r.vertical + 'px'};
+//     background: white;
+//     border: solid 1px #cdcdcd;
+//     position: relative;
+//   }
+// `;
 
 @observer
 export class StoryComponent extends React.Component<Props> {
+  static displayName = 'StoryComponent';
+
   render() {
     const state = this.props.state;
     const story = state.viewState.selectedStory;
