@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/tomitrescak/louis#readme",
   "dependencies": {
+    "@tomino/toolbelt": "^1.1.0",
     "body-parser": "^1.18.3",
     "connect-history-api-fallback": "^1.6.0",
     "diff-view": "^1.0.12",
@@ -61,16 +62,16 @@
     "apollo-link": "^1.2.8",
     "apollo-link-http": "^1.5.11",
     "express": "^4.16.4",
-    "fuse-box": "^4.0.0-next.6",
+    "fuse-box": "^3.7.1",
     "graphql": "^14.1.1",
     "graphql-tag": "^2.10.1",
     "jest-dot-reporter": "^1.0.7",
     "prop-types": "^15.7.2",
     "react-apollo": "^2.4.1",
     "react-router": "^4.3.1",
-    "react-test-renderer": "^16.8.1",
-    "ts-jest": "^23.10.5",
-    "tslint": "^5.12.1",
+    "react-test-renderer": "*",
+    "ts-jest": "^24.0.0",
+    "tslint": "^5.13.0",
     "typescript": "^3.3.3"
   }
 }

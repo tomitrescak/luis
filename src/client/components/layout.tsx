@@ -1,5 +1,5 @@
 import * as React from 'react';
-import SplitPane from 'react-split-pane';
+import * as SplitPane from 'react-split-pane';
 
 import { style } from 'typestyle';
 import { ITheme } from '../config/themes';

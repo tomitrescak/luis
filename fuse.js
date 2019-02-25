@@ -46,7 +46,9 @@ luisFuse
   .watch() // watch only client related code
   .hmr()
   .sourceMaps(true)
-  .instructions(' !> [example/luis.ts] + proxyrequire + **/*.test.* + **/__tests__/* + **/**.snap')
+  .instructions(
+    ' !> [examples/showcase/luis.ts] + proxyrequire + **/*.test.* + **/__tests__/* + **/**.snap'
+  )
   .globals({
     proxyrequire: '*'
   });
