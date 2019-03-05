@@ -1,6 +1,6 @@
 workflow "Build, Test, and Publish" {
   on = "push"
-  resolves = ["Publish"]
+  resolves = ["Test"]
 }
 
 action "Build" {
@@ -9,7 +9,8 @@ action "Build" {
 }
 
 action "Test" {
-  needs = "Build"
+  needs = ["Build"]
   uses = "actions/npm@master"
   args = "test"
 }
+
