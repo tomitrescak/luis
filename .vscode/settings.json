@@ -13,5 +13,10 @@
     "bridge.js": true,
     "index.d.ts": true,
     "index.js": true
+  },
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#063422",
+    "titleBar.activeBackground": "#09492F",
+    "titleBar.activeForeground": "#EFFDF8"
   }
 }
