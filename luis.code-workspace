@@ -1,0 +1,32 @@
+{
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "luis"
+    },
+    {
+      "path": "examples/catalogue"
+    },
+    {
+      "path": "examples/jest-tests"
+    },
+    {
+      "path": "examples/react-router"
+    },
+    {
+      "path": "examples/proxies"
+    },
+    {
+      "path": "examples/mocha-tests"
+    }
+  ],
+  "settings": {
+    "workbench.colorCustomizations": {
+      "activityBar.background": "#5D072E",
+      "titleBar.activeBackground": "#820A40",
+      "titleBar.activeForeground": "#FFFCFD"
+    }
+  }
+}

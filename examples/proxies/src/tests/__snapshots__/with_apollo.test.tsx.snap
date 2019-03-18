@@ -1,0 +1,76 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`With Apollo renders 1`] = `
+<div>
+  Loading ...
+</div>
+`;
+
+exports[`With Apollo renders with error: Error 1`] = `
+<pre>
+  {
+  "graphQLErrors": [],
+  "networkError": {},
+  "message": "Network error: Missing mock for operation 'People'. You mocked only: ['failWith']"
+}
+</pre>
+`;
+
+exports[`With Apollo renders with error: Rendered 1`] = `
+<pre>
+  {
+  "graphQLErrors": [
+    {
+      "path": [
+        "author"
+      ],
+      "message": [
+        "Author id -1 not found"
+      ],
+      "locations": [
+        {
+          "line": 1,
+          "column": 0
+        }
+      ]
+    }
+  ],
+  "networkError": null,
+  "message": "GraphQL error: Author id -1 not found"
+}
+</pre>
+`;
+
+exports[`With Apollo renders with helper: Rendered 1`] = `
+<ul>
+  <li>
+    Fail
+  </li>
+  <li>
+    Tomas
+  </li>
+  <li>
+    Valeria
+  </li>
+</ul>
+`;
+
+exports[`With Apollo renders: Loading 1`] = `
+<div>
+  Loading ...
+</div>
+`;
+
+exports[`With Apollo renders: Rendered 1`] = `
+<ul>
+  <li>
+    Fail
+  </li>
+  <li>
+    Tomas
+  </li>
+  <li>
+    Valeria
+  </li>
+</ul>
+`;

@@ -1,0 +1,33 @@
+{
+  "name": "luis-catalogue-example-proxies",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "luis",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "Tomi Trescak <tomi.trescak@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^24.0.11",
+    "@types/react": "^16.8.8",
+    "@types/react-test-renderer": "^16.8.1",
+    "fuse-box": "^3.7.1",
+    "jest-dot-reporter": "^1.0.7",
+    "luis": "*",
+    "react-test-renderer": "^16.8.4",
+    "ts-jest": "^24.0.0",
+    "typescript": "^3.3.3333"
+  },
+  "dependencies": {
+    "apollo-cache-inmemory": "^1.5.1",
+    "apollo-client": "^2.5.1",
+    "apollo-link-http": "^1.5.14",
+    "graphql": "^14.1.1",
+    "graphql-tag": "^2.10.1",
+    "jest": "^24.5.0",
+    "react-apollo": "^2.5.2"
+  }
+}

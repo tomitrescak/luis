@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`With Actions renders correctly: changed to 9 1`] = `
+<div>
+  <div>
+    Current mobx number: 
+    9
+  </div>
+  <div>
+    Current state number: 
+    1
+  </div>
+  <button
+    onClick={[Function]}
+  >
+    Increase
+  </button>
+</div>
+`;
+
+exports[`With Actions renders correctly: changed to 10 1`] = `
+<div>
+  <div>
+    Current mobx number: 
+    10
+  </div>
+  <div>
+    Current state number: 
+    2
+  </div>
+  <button
+    onClick={[Function]}
+  >
+    Increase
+  </button>
+</div>
+`;

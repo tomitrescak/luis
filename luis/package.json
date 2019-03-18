@@ -1,0 +1,54 @@
+{
+  "name": "luis",
+  "version": "3.2.13",
+  "description": "List-of-uis book and testing of uis",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "scripts": {
+    "ccopy": "cp -r templates ../dist/ && cp package.json ../dist && cp README.md ../dist",
+    "copy": "rm -rf ../dist && tsc && cp -r templates ../dist/templates && cp package.json ../dist && cp README.md ../dist",
+    "link": "npm run copy && npm link",
+    "publish": "npm run copy && npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomitrescak/luis.git"
+  },
+  "keywords": [
+    "ui",
+    "react"
+  ],
+  "author": "tomi.trescak@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tomitrescak/luis/issues"
+  },
+  "bin": {
+    "luis": "./luis.js"
+  },
+  "homepage": "https://github.com/tomitrescak/luis#readme",
+  "dependencies": {
+    "@tomino/toolbelt": "^1.1.3",
+    "diff-view": "^1.0.12",
+    "glob": "^7.1.3",
+    "jest-diff": "^24.5.0",
+    "jest-snapshots": "^1.1.2",
+    "mobx": "*",
+    "mobx-react": "*",
+    "react-highlight": "^0.12.0",
+    "react-split-pane": "^0.1.85",
+    "semantic-ui-react": "*",
+    "tslib": "*"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^3.3.10",
+    "@types/node": "^11.11.3",
+    "@types/react": "^16.8.8",
+    "@types/react-router": "^4.4.5",
+    "fuse-box": "^3.7.1",
+    "react": "*",
+    "react-dom": "*",
+    "tslint": "^5.14.0",
+    "typescript": "*"
+  }
+}

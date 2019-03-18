@@ -1,0 +1,2 @@
+exports["Greeting renders correctly 1"] = "\n<div>\n  Hello1 \n  Tomas\n</div>\n";
+

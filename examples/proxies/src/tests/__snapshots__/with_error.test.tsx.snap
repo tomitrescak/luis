@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`With Error renders correctly: rendered 1`] = `
+<div>
+  <div
+    className="ui red inverted top fixed menu"
+  >
+    <div
+      className="item"
+      onClick={[Function]}
+    >
+      Test
+    </div>
+    <a
+      className="icon item"
+      onClick={[Function]}
+    >
+      <i
+        aria-hidden="true"
+        className="plus icon"
+        onClick={[Function]}
+      />
+      
+    </a>
+    <a
+      className="icon item"
+      onClick={[Function]}
+    >
+      <i
+        aria-hidden="true"
+        className="minus icon"
+        onClick={[Function]}
+      />
+      
+    </a>
+  </div>
+  <div
+    style={
+      Object {
+        "paddingTop": "40px",
+      }
+    }
+  >
+    This is the component version ERROR: 
+    0
+  </div>
+</div>
+`;

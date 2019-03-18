@@ -1,0 +1,27 @@
+{
+  "name": "luis-catalogue-example-jest-tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "luis",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "Tomi Trescak <tomi.trescak@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^24.0.11",
+    "@types/react": "^16.8.8",
+    "@types/react-test-renderer": "^16.8.1",
+    "eslint-config-react-app": "^3.0.8",
+    "fuse-box": "^3.7.1",
+    "jest-cli": "^24.5.0",
+    "jest-dot-reporter": "^1.0.7",
+    "luis": "*",
+    "react-test-renderer": "^16.8.4",
+    "ts-jest": "^24.0.0",
+    "typescript": "^3.3.3333"
+  },
+  "dependencies": {}
+}

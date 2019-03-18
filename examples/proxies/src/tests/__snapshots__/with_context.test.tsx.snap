@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`With Context renders 1`] = `
+<div
+  style={
+    Object {
+      "backgroundColor": "#f1f1f1",
+      "color": "#222",
+    }
+  }
+>
+  Bar Component 333
+</div>
+`;
