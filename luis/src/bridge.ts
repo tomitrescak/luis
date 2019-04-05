@@ -1,4 +1,7 @@
-import { TestGroup, Test, Snapshot, StateModel, mapBridgeToState } from './index';
+import { mapBridgeToState, StateModel } from './client/models/state_model';
+import { TestGroup } from './client/models/test_group_model';
+import { Test } from './client/models/test_model';
+import { Snapshot } from './client/models/snapshot_model';
 
 export type Impl = () => void;
 

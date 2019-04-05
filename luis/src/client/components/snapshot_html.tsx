@@ -54,11 +54,11 @@ export class SnapshotHtml extends React.Component<PreviewProps> {
     const snapshot = state.viewState.selectedSnapshot;
 
     if (!story || !test) {
-      return <InfoMessage>Please select the snapshot</InfoMessage>;
+      return <InfoMessage state={state}>Please select the snapshot</InfoMessage>;
     }
 
     if (!snapshot) {
-      return <InfoMessage>This test has no recorded snapshots.</InfoMessage>;
+      return <InfoMessage state={state}>This test has no recorded snapshots.</InfoMessage>;
     }
 
     // deal with json

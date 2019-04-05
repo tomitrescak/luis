@@ -42,6 +42,7 @@ export class SnapshotJson extends React.Component<SnapshotsProps, {}> {
   // };
 
   render() {
+    const state = this.props.state;
     const {
       selectedStory: story,
       selectedSnapshot: snapshot,
@@ -49,20 +50,20 @@ export class SnapshotJson extends React.Component<SnapshotsProps, {}> {
     } = this.props.state.viewState;
 
     if (!story) {
-      return <InfoMessage>Please select your story</InfoMessage>;
+      return <InfoMessage state={state}>Please select your story</InfoMessage>;
     }
 
     if (!test || !snapshot) {
-      return <InfoMessage>Please select the snapshot</InfoMessage>;
+      return <InfoMessage state={state}>Please select the snapshot</InfoMessage>;
     }
 
     if (test.snapshots.length == 0) {
-      return <InfoMessage>This test has no recorded snapshots.</InfoMessage>;
+      return <InfoMessage state={state}>This test has no recorded snapshots.</InfoMessage>;
     }
 
     if (!snapshot) {
       return (
-        <InfoMessage>
+        <InfoMessage state={state}>
           Sorry, we could not locate your snapshot: {this.props.state.viewState.selectedSnapshot}.
         </InfoMessage>
       );

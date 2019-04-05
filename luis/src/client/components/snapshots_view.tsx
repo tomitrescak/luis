@@ -43,6 +43,7 @@ export class SnapshotsView extends React.Component<Props> {
 
   render() {
     let list: Snapshot[];
+    const state = this.props.state;
     let view = this.props.state.viewState;
     let story = view.selectedStory;
     const test = view.selectedTest;
@@ -58,7 +59,7 @@ export class SnapshotsView extends React.Component<Props> {
       list = list.slice().reverse();
     }
     if (list.length == 0) {
-      return <InfoMessage>This test has no recorded snapshots.</InfoMessage>;
+      return <InfoMessage state={state}>This test has no recorded snapshots.</InfoMessage>;
     }
     return (
       <div className={margined}>

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import * as SplitPane from 'react-split-pane';
+
+import SplitPane from 'react-split-pane';
 
 import { inject, observer } from 'mobx-react';
 

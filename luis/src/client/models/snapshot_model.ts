@@ -1,4 +1,3 @@
-import { Test } from './test_model';
 import { toUrlName } from './test_item_model';
 
 export interface ISnapshot {
@@ -7,14 +6,14 @@ export interface ISnapshot {
   expected: string;
   current: string;
   matching?: boolean;
-  test: Test
+  test: Luis.TestModel;
 }
 
 export class Snapshot {
   name: string;
   originalName: string;
   url: string;
-  parent: Test;
+  parent: Luis.TestModel;
 
   expected: string;
   current: string;

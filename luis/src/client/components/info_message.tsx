@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { getState } from '../models/state_model';
 import { ITheme } from '../config/themes';
 import { css } from './component_styles';
 
@@ -8,8 +7,10 @@ const infoMessage = (theme: ITheme) => css`
   color: ${theme.textColor};
 `;
 
-export const InfoMessage: React.FC = ({ children }) => {
-  let state = getState();
+type Props = {
+  state: Luis.State;
+};
 
+export const InfoMessage: React.FC<Props> = ({ children, state }) => {
   return <div className={infoMessage(state.theme)}>{children}</div>;
 };

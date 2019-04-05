@@ -6,10 +6,10 @@ import { Test } from './test_model';
 //@ts-ignore
 import { Snapshot } from './snapshot_model';
 import { TestGroup } from './test_group_model';
-import { InfoMessage } from '../components/info_message';
+// import { InfoMessage } from '../components/info_message';
 
 const missingStory = new TestGroup(null, 'Missing', {
-  component: () => <InfoMessage>Please select a story.</InfoMessage>,
+  component: () => null, // <InfoMessage state={null}>Please select a story.</InfoMessage>,
   info: 'Missing'
 });
 

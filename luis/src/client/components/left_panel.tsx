@@ -11,7 +11,7 @@ export type ComponentProps = {
 
 export const LeftPanel = observer(({ state }) => (
   <>
-    <LeftMenu state={state} />}
+    <LeftMenu state={state} />
     <StoryList state={state} />
   </>
 ));

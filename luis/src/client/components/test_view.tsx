@@ -41,12 +41,12 @@ const content = css`
   padding: 0px 12px 0px 0px !important;
   padding-right: 12px !important;
   margin-top: -1px;
-  margin-bottom: 6px;
+  margin-bottom: 3px;
 `;
 
 const bump = css`
   margin-left: -22px;
-  margin-bottom: 6px;
+  margin-bottom: 3px;
   display: flex;
   i {
     flex: 1 auto !important;

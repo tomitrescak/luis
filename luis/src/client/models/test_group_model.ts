@@ -2,7 +2,6 @@ import { observable, computed, action } from 'mobx';
 import { SemanticCOLORS } from 'semantic-ui-react';
 
 import { TestItem, toUrlName } from './test_item_model';
-import { Test } from './test_model';
 import { Snapshot } from './snapshot_model';
 
 const sortGroups = (a: TestGroup, b: TestGroup) =>
@@ -21,7 +20,7 @@ export class TestGroup extends TestItem {
   parent: TestGroup;
 
   groups: TestGroup[];
-  tests: Test[];
+  tests: Luis.TestModel[];
 
   @observable version: number = 0;
   @observable passingTests = 0;
@@ -131,7 +130,7 @@ export class TestGroup extends TestItem {
   }
 
   get allTests() {
-    let tests: Test[] = [...this.tests];
+    let tests: Luis.TestModel[] = [...this.tests];
     this.groups.forEach(g => (tests = tests.concat(g.allTests)));
     return tests;
   }
@@ -208,7 +207,7 @@ export class TestGroup extends TestItem {
     return this.tests.find(t => t.urlName == urlName);
   }
 
-  searchTest(test: (group: Test) => boolean): Test {
+  searchTest(test: (group: Luis.TestModel) => boolean): Luis.TestModel {
     const queue: TestGroup[] = [this];
     while (queue.length > 0) {
       let current = queue.shift();

@@ -6,6 +6,7 @@ import { TestView } from './test_view';
 import { timing, css } from './component_styles';
 import { TestGroup } from '../models/test_group_model';
 import { ITheme } from '../config/themes';
+import { InfoMessage } from './info_message';
 
 const accordion = (theme: ITheme) => css`
   .title {
@@ -134,7 +135,7 @@ export const StoryList = observer(({ state }: Props) => {
   const isList = state.config.storyView === 'list';
   let version = state.liveRoot.version;
   if (state.liveRoot.groups.length === 0) {
-    return <div>There are no tests</div>;
+    return <InfoMessage state={state}>There are no tests....</InfoMessage>;
   }
   return (
     <Accordion className={accordion(state.theme)} inverted={state.theme.isDark}>

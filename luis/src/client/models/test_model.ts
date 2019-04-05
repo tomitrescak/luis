@@ -5,9 +5,14 @@ import { TestItem, toUrlName } from './test_item_model';
 import { TestGroup } from './test_group_model';
 import { Snapshot } from './snapshot_model';
 
+declare global {
+  namespace Luis {
+    type TestModel = Test;
+  }
+}
 
 let uid = 0;
-export class Test extends TestItem  {
+export class Test extends TestItem {
   private _duration: number;
 
   parent: TestGroup;
@@ -15,12 +20,12 @@ export class Test extends TestItem  {
 
   @observable startTime: number = 0;
   @observable endTime: number = 0;
-  
+
   @computed get duration() {
     if (this._duration) {
       return this._duration;
     }
-    return (this.endTime - this.startTime < 0) ? 0 : (this.endTime - this.startTime);
+    return this.endTime - this.startTime < 0 ? 0 : this.endTime - this.startTime;
   }
 
   set duration(value: number) {
@@ -29,10 +34,10 @@ export class Test extends TestItem  {
 
   impl: () => void;
   snapshots: IObservableArray<Snapshot>;
-  error: Error & { actual: string, expected: string } ;
+  error: Error & { actual: string; expected: string };
 
   url: string;
-  uid: number;;
+  uid: number;
 
   constructor(name: string, group: TestGroup, impl: () => void) {
     super(name, group);
@@ -45,11 +50,11 @@ export class Test extends TestItem  {
     // console.log('Constructed: ' + name + '[' + this.uid  + ']');
   }
 
-  get icon(): { name: string, color: SemanticCOLORS } {
+  get icon(): { name: string; color: SemanticCOLORS } {
     return {
       name: this.error ? 'remove' : 'check',
       color: this.error ? 'red' : 'green'
-    }
+    };
   }
 
   get simplePath(): string {
@@ -60,4 +65,3 @@ export class Test extends TestItem  {
     return this.snapshots.find(s => s.url === urlName);
   }
 }
-
